@@ -1,0 +1,503 @@
+---
+title: "Componentes principales y análisis factorial"
+author: "Miguel Hernández"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+bibliography: ref/refm3.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Componentes Principales y Análisis Factorial
+
+En algunas áreas no es posible medir directamente las variables que interesan. En ese caso, es necesario recoger medidas indirectas que estén relacionadas con los conceptos que interesan.
+
+Recordar que cuando se rechaza la $H_0$, en realidad lo que se está diciendo es que no hay evidencia suficiente para demostrar lo contrario.
+
+En diversas ocasiones se presentan cuando las variables se relacionan entre sí. Es decir, el modelo que se utiliza no cumple con los supuestos necesarios para ello. Los análisis factoriales se usan para esto.
+
+Las variables que interesan reciben el nombre de **variables latentes** y la metodología que las relaciona con variables observadas recibe el nombre de **Análisis Factorial**. Es decir, se extraen nuevas variables a partir de variables observadas. Se buscan con la condición de que las nuevas variables sean independientes entre sí.
+
+Ejemplos:
+
+* Diferentes asignaturas que componen la enseñanza media se dividen en Ciencias y Letras.
+* Ciertos síntomas clínicos propios de los enfermos mentales se clasifican en síntomas de tipo neurótico y síntomas de tipo psicótico.
+* El estudio de los conflictos internos de las naciones descubre la existencia de tres factores: agitación, revolución y subversión.
+* Los ítems de un test de BURNOUT conforman tres dimensiones latentes: Autoestima, Agotamiento y Despersonalización.
+
+
+En análisis de componentes principales, la **variabilidad** es equivalente a **información**. Altas correlaciones entre las variables implican éxito.
+
+# Análisis de Componentes Principales
+
+@pearson1901 trata de contrar una matriz de menor dimensión que la original, que mejor resuma la información de los datos originales, en el sentido de los mínimos cuadrados.
+
+@hotelling1933 @hotelling1936 lo aplicó 20 años después para ponerle dimensionalidad en un plano.
+
+Es una técnica de reducción de la dimensión que describe la información de un conjunto de variables **latentes**, más pequeño.
+
+Las nuevas variables (componentes principales) son incorreladas y se obtienen en orden decreciente de importancia.
+
+Queremos que sólo unas pocas recojan la mayor parte de la información de los datos.
+
+El espacio generado por las primeras $q$ componentes es un subespacio vectorial del espacio $p$-dimensional original.
+
+## Métodos de obtención
+
+Buscando el subespacio de mejor ajuste por el método de los mínimos cuadrados. (Minimizado la suma de cuadrados de las distancia de cada punto al subespacio). (Pearson).
+
+Buscando aquella combinación lineal de las variables que maximiza la variabilidad (Hotteling).
+
+Minimizando la discrepancia entre las distancias euclídeas entre los puntos calculadas en el espacio original y en el subespacio de baja dimensión (Coordenadas principales, Gower).
+
+Regresiones alternadas (Métodos biplot)
+
+### ACP Bidimensional
+
+Se busca que la relación entre las variables sea elipsoide. Donde en los modelos lineales es un problema, para los ACP es una esencia.
+
+Los componentes son información de variables en una matriz.
+
+Pearson y Hotelling demuestran que basta con:
+
+1. Calcular la matriz de covarianzas (o correlaciones)
+$$S_{(pxp)} = X' X$$
+
+2. Buscar los valores propios y los vectores propios de esa matriz de covarianzas (o correlaciones).
+
+Si la $X'X$ tiene correlación baja, no estarán los componentes relacionados y el análisis no será tan bueno para simplificar el problema.
+
+La variabilidad se mide a través de los eigenvectors asociados.
+
+eigenvectors<>vectores propios: componentes principales
+eigenvalues<>valores propios: varianzas de eigenvectors
+
+### Escalas de medida
+
+Si las escalas de medida de las variables son muy diferentes, la variabilidad estaría dominada por las variables con magnitudes mayores de forma que las primeras componentes pueden mostrar simplemente las diferencias en la escala. En este caso conviente tomar la matriz **X estandarizada** por columnas y centrando y dividiendo por la desviación típica. En este caso, las componentes estarían calculadas sobre la matriz de correlaciones.
+
+### Propiedades de componentes
+
+Proporción de varianza absorbida por cada componente
+
+$$\frac{\lambda_j}{\sum^p_{j=1}\lambda_{j}}\ \times100$$
+
+El eigenvalue asociado a cada variable latente, dividido por la suma de todos ellos, nos indica la importancia relativa de la correspondiente variable latente.
+
+Con este método no se hace inferencia, sino es una técnica de ordenación. Por lo tanto, si ordena 70% o 60% parece bien.
+
+Inercia explicada, alta variabilidad, distancia importancia al origen. Conceptos de inercia.
+
+### Interpretación de resultados
+
+Autovector, variable latente, 
+
+Se analizan las saturaciones (en valor absoluto). Aquellas variables que presentan altas saturaciones son las que tiene mayor importancia en la interpretación del eje.
+
+Las más interesantes suelen ser las que presentan altas saturaciones.
+
+**Diagramas de dispersión** que representan los valores de los individuos en las primeras componentes principales.
+
+**Interpretación de distancias** en términos de similitud.
+
+Búsqueda de **clusters** (grupos) y patrones.
+
+**Interpretación de las componentes** utilizando las correlaciones con las variables originales. Las posiciones de los individuos se interpretan después en relación a la interpretación dada a las componentes.
+
+### Ejemplo
+$n = 20$ pacientes
+
+$p = 7$ variables
+
+$X_1 =$ Presión arterial media (mmHg)
+
+$X_2 =$ Edad (años)
+
+$X_3 =$ Peso (kg)
+
+$X_4 =$ Superficie corporal (m^2)
+
+$X_5 =$ Duración de la hipertensión (años)
+
+$X_6 =$ Pulso (pulsaciones/minuto)
+
+$X_7 =$ Medida del estress (0-100)
+
+```{r, include=FALSE}
+
+datos = data.frame(
+  X1 = c(
+    105,
+    115,
+    116,
+    117,
+    112,
+    121,
+    121,
+    110,
+    110,
+    114,
+    114,
+    115,
+    114,
+    106,
+    125,
+    114,
+    106,
+    113,
+    110,
+    122
+  ),
+  X2 = c(
+    47,
+    49,
+    49,
+    50,
+    51,
+    48,
+    49,
+    47,
+    49,
+    48,
+    47,
+    49,
+    50,
+    45,
+    52,
+    46,
+    46,
+    46,
+    48,
+    56
+  ),
+  X3 = c(
+    85.4,
+    94.2,
+    95.3,
+    94.7,
+    89.4,
+    99.5,
+    99.8,
+    90.9,
+    89.2,
+    92.7,
+    94.4,
+    94.1,
+    91.6,
+    87.1,
+    101.3,
+    94.5,
+    87,
+    94.5,
+    90.5,
+    95.7
+  ),
+  X4 = c(
+    1.75,
+    2.1,
+    1.98,
+    2.01,
+    1.89,
+    2.25,
+    2.25,
+    1.9,
+    1.83,
+    2.07,
+    2.07,
+    1.98,
+    2.05,
+    1.92,
+    2.19,
+    1.98,
+    1.87,
+    1.9,
+    1.88,
+    2.09
+  ),
+  X5 = c(
+    5.1,
+    3.8,
+    8.2,
+    5.8,
+    7,
+    9.3,
+    2.5,
+    6.2,
+    7.1,
+    5.6,
+    5.3,
+    5.6,
+    10.2,
+    5.6,
+    10,
+    7.4,
+    3.6,
+    4.3,
+    9,
+    7
+  ),
+  X6 = c(
+    63,
+    70,
+    72,
+    73,
+    72,
+    71,
+    69,
+    66,
+    69,
+    64,
+    74,
+    71,
+    68,
+    67,
+    76,
+    69,
+    62,
+    70,
+    71,
+    75
+  ),
+  X7 = c(33, 14, 10, 99, 95, 10, 42, 8, 62, 35, 90, 21, 47, 80, 98, 95,
+         18, 12, 99, 99)
+)
+```
+
+```{r}
+nrow(datos) # pacientes
+ncol(datos) # variables
+
+datos
+```
+
+
+Considerando solo dos variables, podemos interpretar la similitud entre individuos
+
+Si consideramos las 7 variables necesitaríamos un hiperespacio de 7 dimensiones para representar a los sujetos
+
+Podemos simplificar el problema calculando las Componentes Principales (2 por ejemplo).
+
+Después de calcular $S_{(pxp)} = X'X$, los valorers propios ($\lambda_j$) representan la varianza de las nuevas variables; es decir su capacidad informativa.
+
+Factores de carga se denotan por $Y$.
+
+Coeficientes que busco de las restantes.
+
+Cuando una fuente de carga eso solo de pocas variables, no suele considerarse como importante.
+
+ACP nos interesa la información de los individuos
+Queremos describir los valores de los individuos mediante un pequeño número de variables que sean la combinación de las originales. Representamos individuos.
+
+AF nos interesan la información de las variables.
+
+
+# Análisis factorial
+
+Tiene como objetivo reducir la dimensionalidad de los datos.
+
+Surge del interés por comprender las dimensiones de la inteligencia humana en los años 30. Sus orígenes se deben a @Spearman1904, psicólogo inglés. También contribuyeron de forma significativa @pearson1901, @hotelling1933 y @thurstone1947. Los mayores avances en esta técnica se han producido en el campo de la psicometría.
+
+El modelo de análisis factorial especifica las variables que vienen determinadas por los *factores comunes* (calculados como en el ACP) y por *factores únicos* (uno específico para cada variable); las estimaciones calculadas se basan en el supuesto de que ningún factor único está correlacionado con los demás, ni con los factores comunes.
+
+## AF vs ACP
+
+
+
+## Diferencias con otras técnicas
+
+**No es una técnica de dependencia**. No hay selección *a priori* de dependendiente y exógenas. Es una técnica de **Interdependencia**.
+
+**No es una técnica de agrupación**. Aunque puede aplicarse con fines de agrupación sobre matrices de correlaciones entre objetos/sujetos (Factorial Q), lo habitual es su aplicación sobre matrices de correlaciones entre variables (Factorial R).
+
+
+## Flujo de trabajo
+
+![](m3/T1/workflow_AF.svg)
+
+### Modelo factorial
+
+Este modelo es un modelo de regresión múltiple que relaciona variables latentes con variables observadas.
+
+Sean $X_1,...,X_p$ variables aleatorias observables sobre una población. Se trata de encontrar $p+q$ nuevas variables denominadas factores $F_1,...,F_q, U_1,...U_p$, tales que 
+
+$$
+X_1 = a_{11}F_1 + a_{12}F_2+ ...+a_{1q}F_q + d_1U_1 \\
+X_2 = a_{21}F_1 + a_{22}F_2+ ...+a_{2q}F_q + d_2U_2 \\
+... \\
+X_p = a_{p1}F_1 + a_{p2}F_2+ ...+a_{pq}F_q + d_pU_p
+$$
+
+con 
+
+$$F_1,...,F_q \equiv Factores\ comunes$$
+$$U_1,...,U_p \equiv Factores\ Únicos$$
+
+En el modelo factorial lineal suponemos:
+
+* $q<p$. Queremos explicar las variables observadas con un número reducido de variables hipotéticas - factores.
+* Los $q+p$ factores son variables incorreladas.
+
+Coeficientes $a_{ij}$ se llaman **saturaciones**, que son el equivalente a eigenvalues.
+Las saturaciones de la variable $X_i$ en el factor $F_j$. Si las variables y los factores están estandarizados:
+
+$$Var|(X_i) = a^2_{i1}Var(F_1) + ... + a^2_{iq}Var(F_q) + d^2_iVar(U_i) \Rightarrow \\
+1 = a^2_{i1} + ...+ a^2_{iq} + d^2_i \Rightarrow$$
+
+$a^2_{ij}$ es la **contribución** del Factor $F_j$ en la variabilidad de la variable $X_i$. Con el biplot veremos cómo se conforman.
+
+$d^2_i$ es la contribución del factor único (**unicidad**).
+
+La **suma de las contribuciones** de todos los factores comunes $h^2_i = a^2_{i1} + ...+ a^2_{iq}$ se denomina **comunalidad**.
+
+### Análisis exploratorio inicial
+
+Orden para ver si las variables están correlacionadas, vía SPSS.
+
+Primero.
+
+*Determinante* Si están correlacionadas, el determinante de la matriz de correlaciones será próximo a cero. Si no es cero (o casi), el AF no funcionará.
+
+Segundo.
+
+*Coeficientes* Correlaciones entre las variables del estudio. Si son bajas, no habrá un buen modelo. Si no están relacionaddas las que teóricamente forman una dimensión, esa dimensión no aflorará.
+
+*Niveles de significación*. Si no son significativas las correlaciones entre las variables, no habrá un buen modelo.
+
+Tercera.
+
+*Reproducida* La matriz de correlaciones se obtiene a partir de la solución factorial. Si el modelo es bueno y el número de factores es adecuado, deben estar muy próximas. Ve si cada componente está correlacionado con el valor original. También proporciona la matriz residual (diferencia entre ambas). Si el modelo es bueno, el número de residuos con valor elevado debe ser muy pequeño.
+
+Además, en la diagonal de la matriz reproducida se encuentran las **comunalidades**. Es decir, hasta dónde las distintas componentes principales explican la ecuación.
+
+Cuarto.
+
+*Anti-imagen*. Proporciona las Matrices de Covarianzas/Correlaciones anti-imagen, las cuales son Covarianzas/Correlaciones parciales cambiadas de signo. Es decir, calcula correlaciones manteniendo constantes las demás.
+
+En la diagonal de la matriz se encuentran las medidas de adecuación muestral para cada variable (similar al KMO).
+
+En la diagonal de la matriz de covarianzas anti-imagen está una estimación de las **unicidades** de cada variable. Considerarlas permite saber si vale la pena ir a un ACP o ir con otro nivel.
+
+Si el modelo factorial elegido es adecuado para explicar los datos, los elementos de la diagonal de la matriz de correlaciones anti-imagen deben tener un valor próximo a 1 y el resto deben ser pequeños para que las variables compartan factores comunes.
+
+Simbólicamente, $r_{y12}$ representa la correlación parcial entre $Y$ y $X_1$ después de que se ha excluido de ellas el efecto de $X_2$. La fórmula que se emplea es:
+
+$$
+r_{y12} = \frac{r_{y1}-r_{y2}r_{12}}{\sqrt{(1 - r^2_{y2})(1-r^2_{12})}}
+$$
+
+Es decir, el numerador tenemos:
+
+$r_{y1}$: correlación simple entre $Y$ y $X_1$
+$r_{y2}$: correlación simple entre $Y$ y $X_2$
+$r_{12}$: correlación simple entre $X_1$ y $X_2$
+
+En el denominador figura:
+$r^2_{y2}$: coeficiente de determinación entre $Y$ y $X_2$
+$r^2_{12}$: coeficiente de determinación entre $X_1$ y $X_2$
+
+Ahora ver si la muestra es adecuada, se usa la medida de adecuación muestral KMO (Kaiser-Meyer-Olkin) **contrasta si las correlaciones parciales entre las variables son suficientemente pequeñas. Permite comparar la magnitud de los coeficientes de correlación observados con la magnitud de los coeficientes de correlación parcial. El estadístico KMO varía entre 0 y 1.
+
+$$KMO = \frac{\displaystyle \sum_{i \ne j}r^2_{ij}}{\displaystyle \sum_{i \ne j}r^2_{ij} + \sum_{i\ne j}r^2_{ij,m}}$$
+
+Para realizar un Análisis Factorial, proponen:
+
+$$
+\begin{align*}
+\mathrm{KMO} &\geq 0.75 \Rightarrow \mathrm{Bien} \\
+\mathrm{KMO} &\geq 0.5 \Rightarrow \mathrm{Aceptable} \\
+\mathrm{KMO} &< 0.5 \Rightarrow \mathrm{Inaceptable}
+\end{align*}
+$$
+
+Los valores pequeños indican que el AF puede no ser adecuado, dado que las correlaciones entre pares pueden no ser explicadas por las relaciones.
+
+La prueba de esfericidad de Bartlett contrasta la hipótesis nula de que la matriz de correlaciones es una matriz de identidad, en cuyo caso no existirían correlaciones significativas entre las variables y el modelo factorial no sería pertinente.
+
+$H_0$: Matriz de correlaciones = Matriz de identidad. 
+
+Ver si en las dimensiones, el aspecto de la información tiene forma de una esfera (unos en diagonal y ceros fuera de la diagonal). $H_0$ la información es una bola y no tiene caso hacer un AF. $H_a$ es ver si es esferoide o como balón de rugby.
+
+Si el $p-value < 0.05$, se rechaza la esfericidad, y eso significa que el AF puede ser adecuado.
+
+El test se obtiene a partir de una transformación del determinante de la matriz de correlación. El estadístico de dicho test viene dado por:
+
+$$d_R = -[n -1 - \frac{1}{6}(2p+5)]\mathrm{log}|R| = - \left[ n -\frac{2p+11}{6} \right] \displaystyle \sum^p_{j=1}\mathrm{log}(\lambda_j)$$
+donde $n$ es el número de individuos de la muestra y $\lambda_j (j = 1, \dots, p)$ son los eigenvalues de $R$.
+
+Bajo $H_0$, este estadístico se distribuye asintóticamente según una distribución $\chi^2$ con $p(p-1)/2$ grados de libertad.
+
+### Modelo factorial
+
+Retomando 
+$$
+X_1 = a_{11}F_1 + a_{12}F_2+ ...+a_{1q}F_q + d_1U_1 \\
+X_2 = a_{21}F_1 + a_{22}F_2+ ...+a_{2q}F_q + d_2U_2 \\
+... \\
+X_p = a_{p1}F_1 + a_{p2}F_2+ ...+a_{pq}F_q + d_pU_p
+$$
+Las saturaciones $a_ij$  y la comunalidad $h^2_i$.
+
+Vía SPSS
+
+El problema consiste en que las comunalidades dependen de las saturaciones y éstas solo son conocidas después de la estimación.
+
+Entonces el modelo factorial se define como $X = AF + DU$
+
+$$
+X = (X_1, \dots, X_p)' \ ; \ F = (F_1, \dots, F_q) \ ; \ U = (U_1,\dots,U_p)' \\
+\mathbf{A} = (a_ij) \ ; \ \mathbf{D} = diag(d_i)
+$$
+
+La matriz de correlaciones entre las variables observables es:
+
+$$
+\mathbf{R} = \mathbf{A}\mathbf{A}' +\mathbf{D}^2 \\
+\mathbf{R^\star} = \mathbf{A}\mathbf{A}'
+$$
+
+Es decir, $\mathbf{R^\star}$ es la matriz de correlaciones donde las comunalidades están en la diagonal o, dicho en otras palabras, $\mathbf{R^\star}$ es la matriz de correlaciones reducida.
+
+$$
+\mathbf{R^\star} = \begin{pmatrix}
+  h^2_1 & r_{1,2} & \cdots & r_{1,p} \\
+  r_{2,1} & h^2_2 & \cdots & r_{2,p} \\
+  \vdots  & \vdots  & \ddots & \vdots  \\
+  r_{p,1} & r_{p,2} & \cdots & h^2_p 
+ \end{pmatrix}
+$$
+
+El problema consiste en que las comunalidades dependen de las saturaciones y estas solo son conocidas después de la estimación.
+
+### Búsqueda de Matriz factorial A
+
+#### Método de las componentes principales
+
+Considera solo los factores comunes y prescinde de los factores únicos
+
+
+
+
+oblicuo = que hay dependencia
+
+ortogonal, que existe independencia.
+
+Rotación varimax. Más utilizada en todos los sitios. Ortogonal y sale mejor ortogonal que en una no rotada.
+
+maximizar la simplicidad, empezamos a ser diferentes. Rotación de la varianza de los cuadrados de los saturaciones sea máxima
+
+Ejes a elegir
+
+Lo importante de ver gráficos de sedimentación, es ver bien que los factores estén bien diferenciados. 
+
+Regla del 75% de la varianza, el número de factores está determinado por la porción de inercia.
+
+## Puntuaciones factoriales
+
+Método de Anderson-Rubin, Puri la considera la mejor. obtienen puntuaciones de factores que están incorreladas y que tienen varianza 1 (que se comportan bien).
+
+
+***
