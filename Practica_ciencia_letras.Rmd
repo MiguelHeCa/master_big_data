@@ -235,6 +235,7 @@ La varianza absorbida podemos ver que `.518` con 3 variables absorbemos mucho. E
 Lo que podemos ver en un gráfico de los dos primeros factores. Con esto estaremos viendo nuestra varianza. 
 ```{r}
 plot(af2$scores[, 1:2], xlab = "Atención", ylab = "Claridad", pch = 19)
+abline(h = 0, v = 0)
 ```
 
 En el análisis puntual, podemos pintar dos líneas para identificar a los individuos que caen dentro de las dimensiones. Estas líneas estarán en el centro, con las coordenas
