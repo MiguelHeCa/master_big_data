@@ -10,27 +10,41 @@ mainfont: "Quicksand-Medium"
 fontsize: 11pt
 geometry: margin=1in
 lang: es
+bibliography: ref/refm3.bib
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(knitr)
+library(kableExtra)
+library(magrittr)
 ```
 
 # Introducción
 
 Antes de realizar un análisis, lo importante es tener clara la formulación del problema. En este caso trabajaremos con investigar con detectar las materias de matemáticas y ciencias naturales pertenecen a un grupo distinto que materias de francés y latín.
 
-Contamos con las notas de las materias de 8 alumnos, las cuales se presentan de la siguiente manera:
-
 ```{r, include=FALSE}
-library(flextable)
 CL = foreign::read.spss("data/Ciencias-Letras TOY EJEMPLO.sav", to.data.frame = T)
-CL = as.data.frame(apply(CL, 2, as.integer))
+CL_mat = as.data.frame(apply(CL, 2, as.integer))
+nom_CL = c("Matemáticas", "Ciencias naturales", "Francés", "Latín")
+names(CL_mat) = nom_CL
 ```
 
+```{r CL_tab, include=FALSE}
+CL_tab = kable(CL_mat,
+               format = "latex",
+               caption = "Calificaciones de materias",
+               booktabs = T) %>% 
+  kable_styling(position = "center",
+                latex_options = "hold_position") %>% 
+  column_spec(1:4, width = "2cm")
+```
+
+En el cuadro \ref{tab:CL_tab} se muestran las notas de las materias de 8 alumnos, las cuales se presentan de la siguiente manera:
+
 ```{r, echo=FALSE}
-CL
+CL_tab
 ```
 
 La investigación seguirá la siguiente estructura:
@@ -44,4 +58,106 @@ La investigación seguirá la siguiente estructura:
 * Cálculo de puntuaciones factoriales
 * Selección de variables representativas
 * Análisis posterior
+
+# Proceso en R
+
+## Exploración de datos
+
+Importamos datos que vienen en formato SPSS.
+
+```{r}
+CL = foreign::read.spss("data/Ciencias-Letras TOY EJEMPLO.sav", to.data.frame = T)
+```
+
+Calculamos la media y la desviación estándar de cada variable.
+
+```{r}
+# Media
+summary(CL)
+
+# Desviación estándar
+print("Desviación estándar")
+apply(CL, 2, sd)
+```
+
+Matriz de correlaciones
+
+```{r}
+CL_cor = cor(CL)
+CL_cor
+```
+
+## Relación entre variables
+
+La primera aproximación es ver si existen relaciones entre las variables que esperamos que pertenezcan a sus grupos. En este caso, `r nom_CL[1]` y `r nom_CL[2]` están correlacionados; análogamente `r nom_CL[3]` y `r nom_CL[4]`.
+
+También se puede ver gráficamente mediante el paquete `corrplot`, en donde se pone la matriz de correlaciones `CL_cor`
+```{r}
+corrplot::corrplot(CL_cor, title = "Matriz de correlaciones de materias")
+```
+
+Otra vía de verlo es ver si en general las variables están relacionadas mediante el determinante aplicando la función `det()` a la matriz de correlaciones `CL_cor`. Si el determinante se acerca a 0, significa que hay relación entre las variables y podemos seguir explorando si el análisis de factores es adecuado. 
+
+```{r}
+det(CL_cor)
+```
+
+En efecto, el determinante se acerca a cero y podemos continuar.
+
+## Prueba de esfericidad
+
+Queremos descartar si los datos tienen una forma esférica. Es decir, una esfericidad complete se presenta mediante la matriz:
+
+$$
+\begin{pmatrix}
+  1 & 0 & 0 & 0 \\
+  0 & 1 & 0 & 0 \\
+  \vdots  & \vdots  & \ddots & \vdots  \\
+  0 & 0 & \cdots & 1 
+ \end{pmatrix}
+$$
+
+Entonces, para descartar que los datos se comportan de esa forma, utilizamos la prueba de esfericidad de Bartlett, en donde la $H_0$ es que los datos presentan esfericidad completa. Es decir, mide el grado en que la matriz se desvía de la matriz de identidad $\mathbf{R}$. Para ello usamos la función `cortest.bartlett()` del paquete `psych`. Los argumentos que requiere esta función son la matriz de correlaciones `CL_cor` y el número de observaciones, que lo podemos calcular con `nrow()`.
+
+```{r}
+psych::cortest.bartlett(CL_cor, nrow(CL))
+```
+
+Dado que el p-valor es $< 0.05$, podemos decir que tenemos evidencia suficiente para rechazar que los datos tienen esfericidad completa y, por lo tanto, son aptos para el análisis factorial.
+
+También se puede evaluar la esfericidad directamente sobre la matriz mediante la prueba Kaiser-Mayer-Olkin, la cual mide el cuadrado de los elementos de la "imagen" de la matriz comparada con los cuadrados de las correlaciones originales. 
+
+En nuestro caso, utilizamos la función `KMO()` del paquete `psych` directamente sobre los datos o sobre la matriz de correlaciones. Esta prueba muestra la Medida de Adecuación del Muestreo (`MSA`. por sus siglas en inglés). @Kaiser1974 describió la interpretación de la `MSA` de la siguiente manera:
+
+$$
+\begin{align*}
+\mathrm{KMO} &\geq 0.9 \Rightarrow \mathrm{Estupendo} \\
+\mathrm{KMO} &\geq 0.8 \Rightarrow \mathrm{Meritorio} \\
+\mathrm{KMO} &\geq 0.7 \Rightarrow \mathrm{Intermedio} \\
+\mathrm{KMO} &\geq 0.6 \Rightarrow \mathrm{Mediocre} \\
+\mathrm{KMO} &\geq 0.5 \Rightarrow \mathrm{Miserable} \\
+\mathrm{KMO} &< 0.5 \Rightarrow \mathrm{Inaceptable}
+\end{align*}
+$$
+ Aunque otros usuarios la sugieren de esta forma:
+ 
+$$
+\begin{align*}
+\mathrm{KMO} &\geq 0.75 \Rightarrow \mathrm{Bien} \\
+\mathrm{KMO} &\geq 0.5 \Rightarrow \mathrm{Aceptable} \\
+\mathrm{KMO} &< 0.5 \Rightarrow \mathrm{Inaceptable}
+\end{align*}
+$$
+
+Veamos el resultado.
+
+```{r}
+psych::KMO(CL)
+```
+
+Podemos observar que la MSA es mediocre para Kaiser, y aceptable para la mayoría de los usuarios. Digamos que mientras no sea inaceptable, podemos seguir con el análisis.
+
+
+***
+
 

@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>guia_AF_norot.htm</title>
+<meta charset="utf-8"/>
+<style type="text/css">.details{position: absolute;left: -9999px;}
+.IELargeImage{display:inline-block;font-family: Arial, Helvetica, sans-serif;font-size: medium;color:#ff0000;font-weight:normal;vertical-align:middle;}</style></head>
+<body>
+<p align="left"><html><BR>  <head><BR>    <style type="text/css"><BR>      <!--<BR>        p { color: 000000; font-family: Monospaced; font-size: 14pt; font-style: normal; font-weight: normal; text-decoration: none }<BR>      --><BR>    </style><BR>    <BR>  </head><BR>  <body><BR>    <font size="4" face="Monospaced" color="#000000">GET<br>&#160;&#160;FILE='/Users/mhc/Projects/master_big_data/data/Ciencias-Letras&#160;TOY&#160;EJEMPLO.sav'.<br>DATASET&#160;NAME&#160;ConjuntoDatos1&#160;WINDOW=FRONT.<br>FACTOR<br>&#160;&#160;/VARIABLES&#160;Matematicas&#160;Naturales&#160;Franc&#233;s&#160;Lat&#237;n<br>&#160;&#160;/MISSING&#160;LISTWISE<br>&#160;&#160;/ANALYSIS&#160;Matematicas&#160;Naturales&#160;Franc&#233;s&#160;Lat&#237;n<br>&#160;&#160;/PRINT&#160;INITIAL&#160;CORRELATION&#160;SIG&#160;DET&#160;KMO&#160;REPR&#160;AIC&#160;EXTRACTION<br>&#160;&#160;/PLOT&#160;EIGEN<br>&#160;&#160;/CRITERIA&#160;MINEIGEN(1)&#160;ITERATE(25)<br>&#160;&#160;/EXTRACTION&#160;PAF<br>&#160;&#160;/ROTATION&#160;NOROTATE<br>&#160;&#160;/METHOD=CORRELATION.<br><br>&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;&#160;&#160;F&#160;A&#160;C&#160;T&#160;O&#160;R&#160;&#160;&#160;A&#160;N&#160;A&#160;L&#160;Y&#160;S&#160;I&#160;S&#160;&#160;&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-&#160;-<br></font><BR>  </body><BR></html><BR></p><BR><CENTER><H1><b><head><style type="text/css">p{color:0;font-family:SansSerif;font-size:18pt;font-style:normal;font-weight:bold;text-decoration:none}</style></head><BR>Análisis&nbsp;factorial</b></H1></CENTER><BR>
+<div>
+<style>
+*{
+border-collapse:collapse;
+}
+.Default .title{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:bold;
+padding-left:6pt;
+vertical-align:middle;
+font-size:11pt;
+padding-bottom:6pt;
+font-family:sans-serif;
+text-align:center;
+padding-right:8pt;
+}
+.Default .layers{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:3pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .cornerLabels{
+background-color:#ffffff;
+padding-top:3pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:1pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .columnLabels{
+background-color:#ffffff;
+padding-top:2pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:center;
+padding-right:8pt;
+}
+.Default .rowLabels{
+background-color:#e0e0e0;
+padding-top:3pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .o, .Default .e{
+background-color:#ffffff;
+padding-top:3pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:right;
+padding-right:8pt;
+}
+.Default .o{
+background-color:null;
+color:null;
+}
+.Default .e{
+background-color:#ffffff;
+color:#010205;
+}
+.Default .caption{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:1pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .footnotes{
+background-color:#ffffff;
+padding-top:2pt;
+color:#010205;
+font-weight:normal;
+padding-left:18pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:3pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:18pt;
+}
+.Default .titleLayerSeparator{
+border-top:1px none #152935;
+}
+.Default .innerFrameBd{
+border-top:1px none #152935;
+border-right:1px none #152935;
+border-left:1px none #152935;
+border-bottom:1px solid #152935;
+}
+.Default .dataAreaLeft{
+border-left:1px none #152935;
+}
+.Default .dataAreaTop{
+border-top:1px solid #152935;
+}
+.Default .hCR{
+border-top:1px solid #aeaeae;
+}
+.Default .hDR{
+border-top:1px none #aeaeae;
+}
+.Default .vCR{
+border-left:1px none #aeaeae;
+}
+.Default .vDR{
+border-left:1px none #aeaeae;
+}
+.Default .hCC{
+border-bottom:1px none #aeaeae;
+}
+.Default .hDC{
+border-bottom:1px none #aeaeae;
+}
+.Default .vCC{
+border-right:1px solid #e0e0e0;
+}
+.Default .vDC{
+border-right:1px none #aeaeae;
+}
+</style>
+</div>
+<div class="itemBody">
+<table summary="Notas, tabla, 0 niveles de cabeceras de columna y 2 niveles de cabeceras de fila, tabla con 3 columnas y 15 filas" style="width:482px" class="Default PivotTable" aria-label="Notas" role="complementary" data-lookName="Default" data-rowLabelWidth="2" data-colLabelHeight="0" data-NumRows="14" data-NumCols="1" data-rowLabels="Corner" data-decimal-char="." data-col-labels="" data-row-labels="Salida creada ;Comentarios ;Entrada Datos; Conjunto de datos activo; Filtro; Ponderación; Segmentar archivo; N de filas en el archivo de datos de trabajo;Manejo de valores perdidos Definición de perdidos; Casos utilizados;Sintaxis ;Recursos Tiempo de procesador; Tiempo transcurrido; Memoria máxima necesaria" data-layer-dimension="" data-column-dimension="" data-row-dimension="Contenido;" data-maxColWidth="122">
+<caption class="title" style="width:482px">Notas<span class="details">Notas, tabla, 0 niveles de cabeceras de columna y 2 niveles de cabeceras de fila, tabla con 3 columnas y 15 filas</span></caption>
+<tbody class="PivotBody defaultLayer innerFrameBd">
+<tr>
+<td class="rowLabels dataAreaTop role3" colspan="2">Salida creada</td>
+<td class=" o dataAreaTop dataAreaLeft">08-NOV-2019 17:39:26</td>
+</tr>
+<tr>
+<td class="rowLabels hCR role3" colspan="2">Comentarios</td>
+<td class=" e dataAreaLeft hCR" style="text-align:left;">&nbsp;</td>
+</tr>
+<tr>
+<td class="rowLabels hCR role2" rowspan="6">Entrada</td>
+<td class="rowLabels hCR vCR role3">Datos</td>
+<td class=" o dataAreaLeft hCR" style="text-align:left;">/Users/mhc/Projects/master_big_data/data/Ciencias-Letras TOY EJEMPLO.sav</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Conjunto de datos activo</td>
+<td class=" e dataAreaLeft hCR" style="text-align:left;">ConjuntoDatos1</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Filtro</td>
+<td class=" o dataAreaLeft hCR" style="text-align:left;">&lt;ninguno&gt;</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Ponderación</td>
+<td class=" e dataAreaLeft hCR" style="text-align:left;">&lt;ninguno&gt;</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Segmentar archivo</td>
+<td class=" o dataAreaLeft hCR" style="text-align:left;">&lt;ninguno&gt;</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">N de filas en el archivo de datos de trabajo</td>
+<td class=" e dataAreaLeft hCR">8</td>
+</tr>
+<tr>
+<td class="rowLabels hCR role2" rowspan="2">Manejo de valores perdidos</td>
+<td class="rowLabels hCR vCR role3">Definición de perdidos</td>
+<td class=" o dataAreaLeft hCR" style="text-align:left;">MISSING=EXCLUDE: Los valores perdidos definidos por el usuario se tratan como perdidos.</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Casos utilizados</td>
+<td class=" e dataAreaLeft hCR" style="text-align:left;">LISTWISE: Los estadísticos se basan en casos sin valores perdidos para cualquier variable utilizada.</td>
+</tr>
+<tr>
+<td class="rowLabels hCR role3" colspan="2">Sintaxis</td>
+<td class=" o dataAreaLeft hCR" style="text-align:left;">FACTOR<br>  /VARIABLES Matematicas Naturales Francés Latín<br>  /MISSING LISTWISE<br>  /ANALYSIS Matematicas Naturales Francés Latín<br>  /PRINT INITIAL CORRELATION SIG DET KMO REPR AIC EXTRACTION<br>  /PLOT EIGEN<br>  /CRITERIA MINEIGEN(1) ITERATE(25)<br>  /EXTRACTION PAF<br>  /ROTATION NOROTATE<br>  /METHOD=CORRELATION.</td>
+</tr>
+<tr>
+<td class="rowLabels hCR role2" rowspan="3">Recursos</td>
+<td class="rowLabels hCR vCR role3">Tiempo de procesador</td>
+<td class=" e dataAreaLeft hCR">00:00:01.13</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Tiempo transcurrido</td>
+<td class=" o dataAreaLeft hCR">00:00:00.00</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Memoria máxima necesaria</td>
+<td class=" e dataAreaLeft hCR" style="text-align:left;">3008 (2.938K) bytes</td>
+</tr>
+<tr>
+<td  style="width:160px;padding:0px;border-spacing:0px"></td>
+<td  style="width:160px;padding:0px;border-spacing:0px"></td>
+<td  style="width:162px;padding:0px;border-spacing:0px"></td>
+</tr>
+</tbody>
+</table>
+</div><p align="left"><head><style type="text/css">p{color:0;font-family:Monospaced;font-size:14pt;font-style:normal;font-weight:normal;text-decoration:none}</style></head><BR>[ConjuntoDatos1]&nbsp;/Users/mhc/Projects/master_big_data/data/Ciencias-Letras&nbsp;TOY&nbsp;EJEMPLO.sav</p><BR>
+<div>
+<style>
+*{
+border-collapse:collapse;
+}
+.Default .title{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:bold;
+padding-left:6pt;
+vertical-align:middle;
+font-size:11pt;
+padding-bottom:6pt;
+font-family:sans-serif;
+text-align:center;
+padding-right:8pt;
+}
+.Default .layers{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:3pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .cornerLabels{
+background-color:#ffffff;
+padding-top:3pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:1pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .columnLabels{
+background-color:#ffffff;
+padding-top:2pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:center;
+padding-right:8pt;
+}
+.Default .rowLabels{
+background-color:#e0e0e0;
+padding-top:3pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .o, .Default .e{
+background-color:#ffffff;
+padding-top:3pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:right;
+padding-right:8pt;
+}
+.Default .o{
+background-color:null;
+color:null;
+}
+.Default .e{
+background-color:#ffffff;
+color:#010205;
+}
+.Default .caption{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:1pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .footnotes{
+background-color:#ffffff;
+padding-top:2pt;
+color:#010205;
+font-weight:normal;
+padding-left:18pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:3pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:18pt;
+}
+.Default .titleLayerSeparator{
+border-top:1px none #152935;
+}
+.Default .innerFrameBd{
+border-top:1px none #152935;
+border-right:1px none #152935;
+border-left:1px none #152935;
+border-bottom:1px solid #152935;
+}
+.Default .dataAreaLeft{
+border-left:1px none #152935;
+}
+.Default .dataAreaTop{
+border-top:1px solid #152935;
+}
+.Default .hCR{
+border-top:1px solid #aeaeae;
+}
+.Default .hDR{
+border-top:1px none #aeaeae;
+}
+.Default .vCR{
+border-left:1px none #aeaeae;
+}
+.Default .vDR{
+border-left:1px none #aeaeae;
+}
+.Default .hCC{
+border-bottom:1px none #aeaeae;
+}
+.Default .hDC{
+border-bottom:1px none #aeaeae;
+}
+.Default .vCC{
+border-right:1px solid #e0e0e0;
+}
+.Default .vDC{
+border-right:1px none #aeaeae;
+}
+</style>
+</div>
+<div class="itemBody">
+<table summary="Matriz de correlaciones, tabla, 1 niveles de cabeceras de columna y 2 niveles de cabeceras de fila, tabla con 6 columnas y 11 filas" style="width:506px" class="Default PivotTable" aria-label="Matriz de correlaciones" role="complementary" data-lookName="Default" data-rowLabelWidth="2" data-colLabelHeight="1" data-NumRows="8" data-NumCols="4" data-rowLabels="Corner" data-decimal-char="." data-col-labels="Matematicas;C Naturales;Francés;Latín" data-row-labels="Correlación Matematicas; C Naturales; Francés; Latín;Sig. (unilateral) Matematicas; C Naturales; Francés; Latín" data-layer-dimension="" data-column-dimension="Variables;" data-row-dimension="Estadísticos;Variables;" data-maxColWidth="72">
+<caption class="title" style="width:506px" title="a. Determinante = .001">Matriz de correlaciones<sup>a</sup><span class="details">Matriz de correlaciones, tabla, 1 niveles de cabeceras de columna y 2 niveles de cabeceras de fila, tabla con 6 columnas y 11 filas</span></caption>
+<tbody class="PivotBody defaultLayer innerFrameBd">
+<tr>
+<td class="cornerLabels" colspan="2">&nbsp;</td>
+<td class="columnLabels dataAreaLeft vCC role3">Matematicas</td>
+<td class="columnLabels vCC role3">C Naturales</td>
+<td class="columnLabels vCC role3">Francés</td>
+<td class="columnLabels vCC role3">Latín</td>
+</tr>
+<tr>
+<td class="rowLabels dataAreaTop role3" rowspan="4">Correlación</td>
+<td class="rowLabels dataAreaTop vCR role3">Matematicas</td>
+<td class=" e dataAreaTop dataAreaLeft vCC">1.000</td>
+<td class=" e dataAreaTop vCC">.943</td>
+<td class=" e dataAreaTop vCC">.302</td>
+<td class=" e dataAreaTop vCC">.560</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">C Naturales</td>
+<td class=" o dataAreaLeft hCR vCC">.943</td>
+<td class=" o hCR vCC">1.000</td>
+<td class=" o hCR vCC">.544</td>
+<td class=" o hCR vCC">.758</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Francés</td>
+<td class=" e dataAreaLeft hCR vCC">.302</td>
+<td class=" e hCR vCC">.544</td>
+<td class=" e hCR vCC">1.000</td>
+<td class=" e hCR vCC">.934</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Latín</td>
+<td class=" o dataAreaLeft hCR vCC">.560</td>
+<td class=" o hCR vCC">.758</td>
+<td class=" o hCR vCC">.934</td>
+<td class=" o hCR vCC">1.000</td>
+</tr>
+<tr>
+<td class="rowLabels hCR role3" rowspan="4">Sig. (unilateral)</td>
+<td class="rowLabels hCR vCR role3">Matematicas</td>
+<td class=" e dataAreaLeft hCR vCC">&nbsp;</td>
+<td class=" e hCR vCC">.000</td>
+<td class=" e hCR vCC">.233</td>
+<td class=" e hCR vCC">.074</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">C Naturales</td>
+<td class=" o dataAreaLeft hCR vCC">.000</td>
+<td class=" o hCR vCC">&nbsp;</td>
+<td class=" o hCR vCC">.082</td>
+<td class=" o hCR vCC">.015</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Francés</td>
+<td class=" e dataAreaLeft hCR vCC">.233</td>
+<td class=" e hCR vCC">.082</td>
+<td class=" e hCR vCC">&nbsp;</td>
+<td class=" e hCR vCC">.000</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Latín</td>
+<td class=" o dataAreaLeft hCR vCC">.074</td>
+<td class=" o hCR vCC">.015</td>
+<td class=" o hCR vCC">.000</td>
+<td class=" o hCR vCC">&nbsp;</td>
+</tr>
+</tbody><tfoot style="display:table-footer-group">
+<tr>
+<td class="footnotes" colspan="6">a. Determinante = .001</td>
+<td class="footnotes"  bgcolor="#ffffff"><font color="#000000">&nbsp;</font></td>
+</tr>
+<tr>
+<td  style="width:104px;padding:0px;border-spacing:0px"></td>
+<td  style="width:91px;padding:0px;border-spacing:0px"></td>
+<td  style="width:91px;padding:0px;border-spacing:0px"></td>
+<td  style="width:86px;padding:0px;border-spacing:0px"></td>
+<td  style="width:67px;padding:0px;border-spacing:0px"></td>
+<td  style="width:67px;padding:0px;border-spacing:0px"></td>
+</tr>
+</tfoot>
+</table>
+</div>
+<div>
+<style>
+*{
+border-collapse:collapse;
+}
+.Default .title{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:bold;
+padding-left:6pt;
+vertical-align:middle;
+font-size:11pt;
+padding-bottom:6pt;
+font-family:sans-serif;
+text-align:center;
+padding-right:8pt;
+}
+.Default .layers{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:3pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .cornerLabels{
+background-color:#ffffff;
+padding-top:3pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:1pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .columnLabels{
+background-color:#ffffff;
+padding-top:2pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:center;
+padding-right:8pt;
+}
+.Default .rowLabels{
+background-color:#e0e0e0;
+padding-top:3pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .o, .Default .e{
+background-color:#ffffff;
+padding-top:3pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:right;
+padding-right:8pt;
+}
+.Default .o{
+background-color:null;
+color:null;
+}
+.Default .e{
+background-color:#ffffff;
+color:#010205;
+}
+.Default .caption{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:1pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .footnotes{
+background-color:#ffffff;
+padding-top:2pt;
+color:#010205;
+font-weight:normal;
+padding-left:18pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:3pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:18pt;
+}
+.Default .titleLayerSeparator{
+border-top:1px none #152935;
+}
+.Default .innerFrameBd{
+border-top:1px none #152935;
+border-right:1px none #152935;
+border-left:1px none #152935;
+border-bottom:1px solid #152935;
+}
+.Default .dataAreaLeft{
+border-left:1px none #152935;
+}
+.Default .dataAreaTop{
+border-top:1px solid #152935;
+}
+.Default .hCR{
+border-top:1px solid #aeaeae;
+}
+.Default .hDR{
+border-top:1px none #aeaeae;
+}
+.Default .vCR{
+border-left:1px none #aeaeae;
+}
+.Default .vDR{
+border-left:1px none #aeaeae;
+}
+.Default .hCC{
+border-bottom:1px none #aeaeae;
+}
+.Default .hDC{
+border-bottom:1px none #aeaeae;
+}
+.Default .vCC{
+border-right:1px solid #e0e0e0;
+}
+.Default .vDC{
+border-right:1px none #aeaeae;
+}
+</style>
+</div>
+<div class="itemBody">
+<table summary="Prueba de KMO y Bartlett, tabla, 0 niveles de cabeceras de columna y 2 niveles de cabeceras de fila, tabla con 3 columnas y 5 filas" style="width:387px" class="Default PivotTable" aria-label="Prueba de KMO y Bartlett" role="complementary" data-lookName="Default" data-rowLabelWidth="2" data-colLabelHeight="0" data-NumRows="4" data-NumCols="1" data-rowLabels="Corner" data-decimal-char="." data-col-labels="" data-row-labels="Medida Kaiser-Meyer-Olkin de adecuación de muestreo ;Prueba de esfericidad de Bartlett Aprox. Chi-cuadrado; gl; Sig." data-layer-dimension="" data-column-dimension="" data-row-dimension="Estadísticos;" data-maxColWidth="72">
+<caption class="title" style="width:387px">Prueba de KMO y Bartlett<span class="details">Prueba de KMO y Bartlett, tabla, 0 niveles de cabeceras de columna y 2 niveles de cabeceras de fila, tabla con 3 columnas y 5 filas</span></caption>
+<tbody class="PivotBody defaultLayer innerFrameBd">
+<tr>
+<td class="rowLabels dataAreaTop role3" colspan="2">Medida Kaiser-Meyer-Olkin de adecuación de muestreo</td>
+<td class=" o dataAreaTop dataAreaLeft">.618</td>
+</tr>
+<tr>
+<td class="rowLabels hCR role2" rowspan="3">Prueba de esfericidad de Bartlett</td>
+<td class="rowLabels hCR vCR role3">Aprox. Chi-cuadrado</td>
+<td class=" e dataAreaLeft hCR">32.139</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">gl</td>
+<td class=" o dataAreaLeft hCR">6</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Sig.</td>
+<td class=" e dataAreaLeft hCR">.000</td>
+</tr>
+<tr>
+<td  style="width:160px;padding:0px;border-spacing:0px"></td>
+<td  style="width:160px;padding:0px;border-spacing:0px"></td>
+<td  style="width:67px;padding:0px;border-spacing:0px"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div>
+<style>
+*{
+border-collapse:collapse;
+}
+.Default .title{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:bold;
+padding-left:6pt;
+vertical-align:middle;
+font-size:11pt;
+padding-bottom:6pt;
+font-family:sans-serif;
+text-align:center;
+padding-right:8pt;
+}
+.Default .layers{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:3pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .cornerLabels{
+background-color:#ffffff;
+padding-top:3pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:1pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .columnLabels{
+background-color:#ffffff;
+padding-top:2pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:center;
+padding-right:8pt;
+}
+.Default .rowLabels{
+background-color:#e0e0e0;
+padding-top:3pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .o, .Default .e{
+background-color:#ffffff;
+padding-top:3pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:right;
+padding-right:8pt;
+}
+.Default .o{
+background-color:null;
+color:null;
+}
+.Default .e{
+background-color:#ffffff;
+color:#010205;
+}
+.Default .caption{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:1pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .footnotes{
+background-color:#ffffff;
+padding-top:2pt;
+color:#010205;
+font-weight:normal;
+padding-left:18pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:3pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:18pt;
+}
+.Default .titleLayerSeparator{
+border-top:1px none #152935;
+}
+.Default .innerFrameBd{
+border-top:1px none #152935;
+border-right:1px none #152935;
+border-left:1px none #152935;
+border-bottom:1px solid #152935;
+}
+.Default .dataAreaLeft{
+border-left:1px none #152935;
+}
+.Default .dataAreaTop{
+border-top:1px solid #152935;
+}
+.Default .hCR{
+border-top:1px solid #aeaeae;
+}
+.Default .hDR{
+border-top:1px none #aeaeae;
+}
+.Default .vCR{
+border-left:1px none #aeaeae;
+}
+.Default .vDR{
+border-left:1px none #aeaeae;
+}
+.Default .hCC{
+border-bottom:1px none #aeaeae;
+}
+.Default .hDC{
+border-bottom:1px none #aeaeae;
+}
+.Default .vCC{
+border-right:1px solid #e0e0e0;
+}
+.Default .vDC{
+border-right:1px none #aeaeae;
+}
+</style>
+</div>
+<div class="itemBody">
+<table summary="Matrices anti-imagen, tabla, 1 niveles de cabeceras de columna y 2 niveles de cabeceras de fila, tabla con 6 columnas y 11 filas" style="width:560px" class="Default PivotTable" aria-label="Matrices anti-imagen" role="complementary" data-lookName="Default" data-rowLabelWidth="2" data-colLabelHeight="1" data-NumRows="8" data-NumCols="4" data-rowLabels="Corner" data-decimal-char="." data-col-labels="Matematicas;C Naturales;Francés;Latín" data-row-labels="Covarianza anti-imagen Matematicas; C Naturales; Francés; Latín;Correlación anti-imagen Matematicas; C Naturales; Francés; Latín" data-layer-dimension="" data-column-dimension="Variables;" data-row-dimension="Estadísticos;Variables;" data-maxColWidth="72">
+<caption class="title" style="width:560px">Matrices anti-imagen<span class="details">Matrices anti-imagen, tabla, 1 niveles de cabeceras de columna y 2 niveles de cabeceras de fila, tabla con 6 columnas y 11 filas</span></caption>
+<tbody class="PivotBody defaultLayer innerFrameBd">
+<tr>
+<td class="cornerLabels" colspan="2">&nbsp;</td>
+<td class="columnLabels dataAreaLeft vCC role3">Matematicas</td>
+<td class="columnLabels vCC role3">C Naturales</td>
+<td class="columnLabels vCC role3">Francés</td>
+<td class="columnLabels vCC role3">Latín</td>
+</tr>
+<tr>
+<td class="rowLabels dataAreaTop role3" rowspan="4">Covarianza anti-imagen</td>
+<td class="rowLabels dataAreaTop vCR role3">Matematicas</td>
+<td class=" e dataAreaTop dataAreaLeft vCC">.047</td>
+<td class=" e dataAreaTop vCC">-.037</td>
+<td class=" e dataAreaTop vCC">.019</td>
+<td class=" e dataAreaTop vCC">-.002</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">C Naturales</td>
+<td class=" o dataAreaLeft hCR vCC">-.037</td>
+<td class=" o hCR vCC">.034</td>
+<td class=" o hCR vCC">-.003</td>
+<td class=" o hCR vCC">-.011</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Francés</td>
+<td class=" e dataAreaLeft hCR vCC">.019</td>
+<td class=" e hCR vCC">-.003</td>
+<td class=" e hCR vCC">.056</td>
+<td class=" e hCR vCC">-.042</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Latín</td>
+<td class=" o dataAreaLeft hCR vCC">-.002</td>
+<td class=" o hCR vCC">-.011</td>
+<td class=" o hCR vCC">-.042</td>
+<td class=" o hCR vCC">.039</td>
+</tr>
+<tr>
+<td class="rowLabels hCR role3" rowspan="4">Correlación anti-imagen</td>
+<td class="rowLabels hCR vCR role3">Matematicas</td>
+<td class=" e dataAreaLeft hCR vCC" title="a. Medidas de adecuación de muestreo (MSA)">.570<sup>a</sup></td>
+<td class=" e hCR vCC">-.918</td>
+<td class=" e hCR vCC">.363</td>
+<td class=" e hCR vCC">-.042</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">C Naturales</td>
+<td class=" o dataAreaLeft hCR vCC">-.918</td>
+<td class=" o hCR vCC" title="a. Medidas de adecuación de muestreo (MSA)">.653<sup>a</sup></td>
+<td class=" o hCR vCC">-.074</td>
+<td class=" o hCR vCC">-.291</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Francés</td>
+<td class=" e dataAreaLeft hCR vCC">.363</td>
+<td class=" e hCR vCC">-.074</td>
+<td class=" e hCR vCC" title="a. Medidas de adecuación de muestreo (MSA)">.570<sup>a</sup></td>
+<td class=" e hCR vCC">-.903</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Latín</td>
+<td class=" o dataAreaLeft hCR vCC">-.042</td>
+<td class=" o hCR vCC">-.291</td>
+<td class=" o hCR vCC">-.903</td>
+<td class=" o hCR vCC" title="a. Medidas de adecuación de muestreo (MSA)">.661<sup>a</sup></td>
+</tr>
+</tbody><tfoot style="display:table-footer-group">
+<tr>
+<td class="footnotes" colspan="6">a. Medidas de adecuación de muestreo (MSA)</td>
+<td class="footnotes"  bgcolor="#ffffff"><font color="#000000">&nbsp;</font></td>
+</tr>
+<tr>
+<td  style="width:158px;padding:0px;border-spacing:0px"></td>
+<td  style="width:91px;padding:0px;border-spacing:0px"></td>
+<td  style="width:91px;padding:0px;border-spacing:0px"></td>
+<td  style="width:86px;padding:0px;border-spacing:0px"></td>
+<td  style="width:67px;padding:0px;border-spacing:0px"></td>
+<td  style="width:67px;padding:0px;border-spacing:0px"></td>
+</tr>
+</tfoot>
+</table>
+</div>
+<div>
+<style>
+*{
+border-collapse:collapse;
+}
+.Default .title{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:bold;
+padding-left:6pt;
+vertical-align:middle;
+font-size:11pt;
+padding-bottom:6pt;
+font-family:sans-serif;
+text-align:center;
+padding-right:8pt;
+}
+.Default .layers{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:3pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .cornerLabels{
+background-color:#ffffff;
+padding-top:3pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:1pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .columnLabels{
+background-color:#ffffff;
+padding-top:2pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:center;
+padding-right:8pt;
+}
+.Default .rowLabels{
+background-color:#e0e0e0;
+padding-top:3pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .o, .Default .e{
+background-color:#ffffff;
+padding-top:3pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:right;
+padding-right:8pt;
+}
+.Default .o{
+background-color:null;
+color:null;
+}
+.Default .e{
+background-color:#ffffff;
+color:#010205;
+}
+.Default .caption{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:1pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .footnotes{
+background-color:#ffffff;
+padding-top:2pt;
+color:#010205;
+font-weight:normal;
+padding-left:18pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:3pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:18pt;
+}
+.Default .titleLayerSeparator{
+border-top:1px none #152935;
+}
+.Default .innerFrameBd{
+border-top:1px none #152935;
+border-right:1px none #152935;
+border-left:1px none #152935;
+border-bottom:1px solid #152935;
+}
+.Default .dataAreaLeft{
+border-left:1px none #152935;
+}
+.Default .dataAreaTop{
+border-top:1px solid #152935;
+}
+.Default .hCR{
+border-top:1px solid #aeaeae;
+}
+.Default .hDR{
+border-top:1px none #aeaeae;
+}
+.Default .vCR{
+border-left:1px none #aeaeae;
+}
+.Default .vDR{
+border-left:1px none #aeaeae;
+}
+.Default .hCC{
+border-bottom:1px none #aeaeae;
+}
+.Default .hDC{
+border-bottom:1px none #aeaeae;
+}
+.Default .vCC{
+border-right:1px solid #e0e0e0;
+}
+.Default .vDC{
+border-right:1px none #aeaeae;
+}
+</style>
+</div>
+<div class="itemBody">
+<table summary="Comunalidades, tabla, 1 niveles de cabeceras de columna y 1 niveles de cabeceras de fila, tabla con 3 columnas y 7 filas" style="width:236px" class="Default PivotTable" aria-label="Comunalidades" role="complementary" data-lookName="Default" data-rowLabelWidth="1" data-colLabelHeight="1" data-NumRows="4" data-NumCols="2" data-rowLabels="Corner" data-decimal-char="." data-col-labels="Inicial;Extracción" data-row-labels="Matematicas;C Naturales;Francés;Latín" data-layer-dimension="" data-column-dimension="Comunalidad;" data-row-dimension="Variables;" data-maxColWidth="72">
+<caption class="title" style="width:236px">Comunalidades<span class="details">Comunalidades, tabla, 1 niveles de cabeceras de columna y 1 niveles de cabeceras de fila, tabla con 3 columnas y 7 filas</span></caption>
+<tbody class="PivotBody defaultLayer innerFrameBd">
+<tr>
+<td class="cornerLabels">&nbsp;</td>
+<td class="columnLabels dataAreaLeft vCC role3">Inicial</td>
+<td class="columnLabels vCC role3">Extracción</td>
+</tr>
+<tr>
+<td class="rowLabels dataAreaTop role3">Matematicas</td>
+<td class=" e dataAreaTop dataAreaLeft vCC">.953</td>
+<td class=" e dataAreaTop vCC">.519</td>
+</tr>
+<tr>
+<td class="rowLabels hCR role3">C Naturales</td>
+<td class=" o dataAreaLeft hCR vCC">.966</td>
+<td class=" o hCR vCC">.877</td>
+</tr>
+<tr>
+<td class="rowLabels hCR role3">Francés</td>
+<td class=" e dataAreaLeft hCR vCC">.944</td>
+<td class=" e hCR vCC">.497</td>
+</tr>
+<tr>
+<td class="rowLabels hCR role3">Latín</td>
+<td class=" o dataAreaLeft hCR vCC">.961</td>
+<td class=" o hCR vCC">.875</td>
+</tr>
+</tbody><tfoot style="display:table-footer-group">
+<tr>
+<td class="caption" colspan="3">Método de extracción: factorización de eje principal.</td>
+</tr>
+<tr>
+<td  style="width:91px;padding:0px;border-spacing:0px"></td>
+<td  style="width:67px;padding:0px;border-spacing:0px"></td>
+<td  style="width:78px;padding:0px;border-spacing:0px"></td>
+</tr>
+</tfoot>
+</table>
+</div>
+<div>
+<style>
+*{
+border-collapse:collapse;
+}
+.Default .title{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:bold;
+padding-left:6pt;
+vertical-align:middle;
+font-size:11pt;
+padding-bottom:6pt;
+font-family:sans-serif;
+text-align:center;
+padding-right:8pt;
+}
+.Default .layers{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:3pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .cornerLabels{
+background-color:#ffffff;
+padding-top:3pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:1pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .columnLabels{
+background-color:#ffffff;
+padding-top:2pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:center;
+padding-right:8pt;
+}
+.Default .rowLabels{
+background-color:#e0e0e0;
+padding-top:3pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .o, .Default .e{
+background-color:#ffffff;
+padding-top:3pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:right;
+padding-right:8pt;
+}
+.Default .o{
+background-color:null;
+color:null;
+}
+.Default .e{
+background-color:#ffffff;
+color:#010205;
+}
+.Default .caption{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:1pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .footnotes{
+background-color:#ffffff;
+padding-top:2pt;
+color:#010205;
+font-weight:normal;
+padding-left:18pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:3pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:18pt;
+}
+.Default .titleLayerSeparator{
+border-top:1px none #152935;
+}
+.Default .innerFrameBd{
+border-top:1px none #152935;
+border-right:1px none #152935;
+border-left:1px none #152935;
+border-bottom:1px solid #152935;
+}
+.Default .dataAreaLeft{
+border-left:1px none #152935;
+}
+.Default .dataAreaTop{
+border-top:1px solid #152935;
+}
+.Default .hCR{
+border-top:1px solid #aeaeae;
+}
+.Default .hDR{
+border-top:1px none #aeaeae;
+}
+.Default .vCR{
+border-left:1px none #aeaeae;
+}
+.Default .vDR{
+border-left:1px none #aeaeae;
+}
+.Default .hCC{
+border-bottom:1px none #aeaeae;
+}
+.Default .hDC{
+border-bottom:1px none #aeaeae;
+}
+.Default .vCC{
+border-right:1px solid #e0e0e0;
+}
+.Default .vDC{
+border-right:1px none #aeaeae;
+}
+</style>
+</div>
+<div class="itemBody">
+<table summary="Varianza total explicada, tabla, 2 niveles de cabeceras de columna y 1 niveles de cabeceras de fila, tabla con 7 columnas y 8 filas" style="width:599px" class="Default PivotTable" aria-label="Varianza total explicada" role="complementary" data-lookName="Default" data-rowLabelWidth="1" data-colLabelHeight="2" data-NumRows="4" data-NumCols="6" data-rowLabels="Corner" data-decimal-char="." data-col-labels="Autovalores iniciales Total; % de varianza; % acumulado;Sumas de cargas al cuadrado de la extracción Total; % de varianza; % acumulado" data-row-labels="1;2;3;4" data-layer-dimension="" data-column-dimension="Fase;Estadísticos;" data-row-dimension="Factor;" data-maxColWidth="72">
+<caption class="title" style="width:599px">Varianza total explicada<span class="details">Varianza total explicada, tabla, 2 niveles de cabeceras de columna y 1 niveles de cabeceras de fila, tabla con 7 columnas y 8 filas</span></caption>
+<tbody class="PivotBody defaultLayer innerFrameBd">
+<tr>
+<td class="cornerLabels" rowspan="2">Factor</td>
+<td class="columnLabels dataAreaLeft hCC vCC role3" colspan="3">Autovalores iniciales</td>
+<td class="columnLabels hCC vCC role3" colspan="3">Sumas de cargas al cuadrado de la extracción</td>
+</tr>
+<tr>
+<td class="columnLabels dataAreaLeft vCC role3">Total</td>
+<td class="columnLabels vCC role3">% de varianza</td>
+<td class="columnLabels vCC role3">% acumulado</td>
+<td class="columnLabels vCC role3">Total</td>
+<td class="columnLabels vCC role3">% de varianza</td>
+<td class="columnLabels vCC role3">% acumulado</td>
+</tr>
+<tr>
+<td class="rowLabels dataAreaTop role3">1</td>
+<td class=" o dataAreaTop dataAreaLeft vCC">3.038</td>
+<td class=" o dataAreaTop vCC">75.960</td>
+<td class=" o dataAreaTop vCC">75.960</td>
+<td class=" o dataAreaTop vCC">2.769</td>
+<td class=" o dataAreaTop vCC">69.224</td>
+<td class=" o dataAreaTop vCC">69.224</td>
+</tr>
+<tr>
+<td class="rowLabels hCR role3">2</td>
+<td class=" e dataAreaLeft hCR vCC">.918</td>
+<td class=" e hCR vCC">22.960</td>
+<td class=" e hCR vCC">98.920</td>
+<td class=" e hCR vCC">&nbsp;</td>
+<td class=" e hCR vCC">&nbsp;</td>
+<td class=" e hCR vCC">&nbsp;</td>
+</tr>
+<tr>
+<td class="rowLabels hCR role3">3</td>
+<td class=" o dataAreaLeft hCR vCC">.023</td>
+<td class=" o hCR vCC">.583</td>
+<td class=" o hCR vCC">99.503</td>
+<td class=" o hCR vCC">&nbsp;</td>
+<td class=" o hCR vCC">&nbsp;</td>
+<td class=" o hCR vCC">&nbsp;</td>
+</tr>
+<tr>
+<td class="rowLabels hCR role3">4</td>
+<td class=" e dataAreaLeft hCR vCC">.020</td>
+<td class=" e hCR vCC">.497</td>
+<td class=" e hCR vCC">100.000</td>
+<td class=" e hCR vCC">&nbsp;</td>
+<td class=" e hCR vCC">&nbsp;</td>
+<td class=" e hCR vCC">&nbsp;</td>
+</tr>
+</tbody><tfoot style="display:table-footer-group">
+<tr>
+<td class="caption" colspan="7">Método de extracción: factorización de eje principal.</td>
+</tr>
+<tr>
+<td  style="width:54px;padding:0px;border-spacing:0px"></td>
+<td  style="width:67px;padding:0px;border-spacing:0px"></td>
+<td  style="width:96px;padding:0px;border-spacing:0px"></td>
+<td  style="width:94px;padding:0px;border-spacing:0px"></td>
+<td  style="width:96px;padding:0px;border-spacing:0px"></td>
+<td  style="width:96px;padding:0px;border-spacing:0px"></td>
+<td  style="width:96px;padding:0px;border-spacing:0px"></td>
+</tr>
+</tfoot>
+</table>
+</div><div><img title="Gráfico de sedimentación" alt="Gráfico de sedimentación" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA1IAAAH0CAYAAAA3/BzdAAAgAElEQVR42uzdDXzN9f//8ZeZ62Fp2E8uRpKrUK1axRc1ochFU0g1TEYjkigXIySVLr7SCCFqCslVJte5zlyVi7memuvFMAxjf69338/5n8PONmyzsz3u3T63c87nnJ2d8/6c5vM87/f79c6VdI0AAAAAANLMjSYAAAAAAIIUAAAAABCkAAAAAIAgBQAAAAAEKQAAAAAgSAEAAAAACFIAAAAAQJACAAAAAIIUAAAAABCkAAAAAIAgBQAAAAAgSAEAAAAAQQoAAAAAMpY7TQAAKYuNjZXdu3dL7ty5pUyZMuLt7S1ubjf/PdS4ceOkT58+UqFCBVm6dKkUKVLEdt8ff/wh7777rrnMnz+/3HvvvdK7d2+JiYmRokWLSvPmze/Ie9fX06NHD3P9s88+k5o1a2a545Pca1y1apXs27fvjrbdnZDa+z5z5ozUqVNH/v77b/n0008lMDCQ/8EBgCAFAOnn8uXL5kTz448/ln/++cfhvjx58kjTpk1l5syZaX6+P//8U7p37y4lS5aUn376ySFEnTt3Tho1aiRHjhyRfPnyyYMPPigrVqwwj5k+fbpUqlTpjoWBU6dOybJly8z1kydPZsljldxrDAsLk++///6Ott2dkNr7fv31103wHDp0KCEKAAhSAJC+Ll26JI8//rhs2rTJ3C5RooT5Fv/uu++WvXv3yurVq+X48eM39ZwjR44UX19f+fbbb6Vs2bIO9+nzaYhSev+LL74oiYmJMnjwYHnooYfEx8eHg3KTtNcvq7ad9hrNnTvXfIYmTpyYae975cqVsmfPHhk2bJi89957fEgAgCAFAOnr888/t4Uof39/+fHHH+Wuu+6y3R8fHy87duy4qeecNGmS0/t0mJVFw5b54+zuLkOGDDEbbl5WbjsNUR999JEULFgw3YNUSu9bvwzYuHEjHw4AIEgBQPq7cuWKGfakPDw8JDw83CFEWfsfffRR2+3+/fvLggULpFy5cmauzsCBA2Xt2rVy/vx5M4xvzpw5JpjpPCt9rqCgIDNXSuexjBgxQr788kvbczVr1kzy5s0rY8aMkdmzZ9ueV5/Hoj0LerK8bds2M3+rfPny0rBhQ/nvf/9r7l+8eLF5D3p/QkKCVK1a1fzOTp06Sa5cuVJ8//pavvrqK9m/f7/UqlVLnn322WQfp8MaNQzo79D3Ub9+ffOz17eVvatXr5rnXrRokSxfvtzMOdOeE30eDaxpfd60vEb7Y2K1nbXv4YcflrZt28r7778v69evN8dSj4POS3vzzTclIiLC9Oy89dZb0rp16zS/Z/vfqe2vx1jfpwYYnf+mlzpPzgpP+vnQ11KtWjXTE6nDOFP6rKTl+Cf3vtP6mUjL6wcAEKQAIFnR0dFy9uxZc/2ll14SLy+vVH/mwIED5uR3165dZm6T/VwiPUGeN2+e1KhRwwwXXLNmjQwfPlzi4uJMGNC5WLpZLl68aAKHbtbzag+YRU/CO3bsKElJSVKoUCFzQqwn3RrclJ6o6zwYVblyZXMyrvdt2LBBIiMj5euvv3b6PnROWK9evcx1HX6ohQlCQ0NveJyesGvgUFWqVDGBRuflaNvpMEVndHjjO++8Y07ca9eubULr5s2b5dChQ2l+3rS+xuTaztqnBTymTZtmO84aFjp06GDmp1k9kTovrlu3bmaYpRYWSctrs55fh89pQDt8+LDZr+FE79u5c6cZsqnv26KhRo95Wj4raTn+yb3vtH4m0vL6AQAEKQBIloYhy3333XdTP6tFI7R3QXukPD09TY+LzkUZO3aslCpVyjxGT9j1ZFhPmPXkWHsBihcvLsHBweZ+7W3QghTJ0RNq7fHSk+h77rnHnOzqpZ6c6xwrLbqglf6UzpNZt26dKYyhPQ8TJkwwJ9T6+/38/G54bu0d+eCDD8x1LVSgAUeHnuk8rUGDBtkepwGjX79+5vqrr74qkydPNoUennrqKXPiryfi+ruTo7176oEHHpDffvvNXNfXrltanldDQFpeY2p0blLLli1Nj5SGsoULF8r27dvl/vvvN6FIe6S0x0d7e3QonPZO3cx71oBWvXp1M4Tvm2++kdGjR0tUVJQJIl26dDHhyxrap7/XktpnJbXjn5xb+Uyk9Po1RAIA/sU6UgBgRwtNWPSE83p6Eq2V/KxQYE97r/Sk/LnnnpMnn3zS7NOeBe05mD9/vjlptSoAXl8JMC30pF57YFRAQIA5iVY6n0rLsmuwOH36tNnXpEkT2+tv0aKF7Tms6nbX0xN66zU1btzYnOSrevXqOTzOvrejcOHC8sMPP8hff/1lu3/r1q1OX/9//vMfc6lV47R9ZsyYYXqntNx7Wp43ra8xNRqQtTdJQ6/9sEDteXniiSdML5RF2/tm37MWJdHwo8Hl+eefdwhwKUnts5La8U/OrXwmbvX1A0BOQ48UANjRXgmLDnG6ng4t0yCgJ9xt2rRxuK9YsWKmJ8qeDpvSuTbaW3W7dH0gS3LzVXS4mcW+h0Tn4Vh0iFZyDh48mOzjr6e9KRbtqdDNnrOeEfX222+bMKBV67QnRzcNNTrMLi3PqyEmLa8xNf/3f/9nhvGpAgUK2PZble7s993Ke9Ygop8FZf2etEjts5La8U/OrXwmbvX1AwBBCgByMC04oMUetGdKq/XpULKUCiikZMuWLRISEmLmQOm8Ft1+/fXXmxqGZq906dK267///ru88MILDvdbQ8KUzptJ7gTc/jH27MODfW+L/XweZV+6XYeZde7c2eF+LRWf0uvXOWRaVEEDqb4HDas6vK5v376pPq81Dyi115jebuc9p0SH6N3MZyW145+c2/lMAABSxtA+ALCjIUp7TpQWjXjllVdueSFa7XGxCknoPJ7HHnvMNkxL57VoQYmboRXqdBiX0mFx1/dc2N+/ZMkS2377oVtWefXkAqRFqwUePXrUzBHS4hDX/w6rl+KXX34xJ/c6d8naru/NsafvXQs3aBEPnaujleaUFnvQYXapPW9aX2N6u533nByr1/LChQu23q60fFZSO/6pfWZu9jMBAEgZPVIAcJ0BAwaYOSI6hE/nq+jJsg6l0nko9ms+pcYq6a103pRWaLOKWWiPV8+ePeWLL75I8/Npz4H23mipbh2yVbNmTXn66afN0CwtRKC9FNb9OldLA4sWDtC5P0rnEuk8meRY71GLXWg1Ny2prT091km4RQthaIEMbSPt4dBCGfoa9P1oBTgtpqALviZHT9h1TlTdunVNL5++XtW8eXMTTtLyvGl5jentdt5zcpo2bWpbEFfnemnRCqsiYGqfldSOf0qfmZv9TAAAUkaPFABcR4sf6Im6nhzrCf+JEyfMmjx6IqtV0PREWstOW6x1eK5fo0kry2lvia4BpAUJtMy1FqmwhlJp1bTrfy656/b79DVpxTft1dDhWTqvZunSpeY1W/frSbP+Th2aqCfMep9WBfz5559TfN9aftuaR6Mn8lpdT6u2Xf96tIKdVpfz9vY2j9Owqb0d+po03DijJ/56wq+LE3/22WdmPS4ty63PldbnTetrTK7tUtpnL7n70/LaUnt+67pWxNOhjFqcRKvhaQGTtH5WUjv+zj4zaflMpPX1AwD+93cxyX6QNgDgBseOHTNzebTimZ7w3uycKR3CpQUJtIy20l4UfT49SS5SpMgtvy5dD0nLluuJfHIVBnUekf4uXWBVh9Slla4fpI/X0JAaDZnWorDWyXxafkYDVUrl5VN73pt5jentVt5zcrSnSXud9HOh1fpu9rOS2vFPzq1+JgAABCkAAAAAuG18HQUAAAAABCkAAAAAIEgBAAAAAEEKAAAAAAhSLkArLAEAAAAAQeom9O7dm6MNAAAAgCAFAAAAAAQpAAAAACBIAQAAAABBCgAAAAAIUjQBAAAAABCkAAAAAIAgBQAAAAAEKQAAAAAgSAEAAAAAQQoAAAAAQJACAAAAAIIUAAAAABCkAAAAAIAgBQAAAAAEKQAAAAAAQQoAAAAAcmqQ+uWXX6RatWqSkJDAUQUAAACQodyzw5s4cuSIdOrUSQ4fPixXr17lqAIAAAAgSKVEg1O7du3k7bfflj59+qT42HXr1nHEAQAAAKTIz88v+wepDz/8UAoWLCg9e/ZMNUj5+PjwqQAAAABw21w6SK1du1Y++ugjiYiIkD179khSUpLs3btXqlevLm5uN07/8vb25ogDAAAAuG0uXWxi06ZNUq5cOencubO0bNlSEhMT5eWXX5Zz585xZAEAAABkGJfukXrjjTfMpjQ8eXh4yPr1681QPwAAAADIKNluHalcuXJxVAEAAABkKPfs8kYKFSpk5kgBAAAAQEZzowkAAAAAgCAFAAAAAAQpAAAAACBIAQAAAABBCgAAAAAIUgAAAAAAghQAAAAAEKQAAAAAgCAFAAAAAAQpAAAAACBIAQAAAAAIUgAAAABAkAIAAAAAghQAAAAAEKQAAAAAgCAFAAAAAAQpAAAAAABBCgAAAAAIUgAAAABAkAIAAAAAghQAAAAAEKQAAAAAAAQpAAAAACBIAQAAAABBCgAAAAAIUgAAAABAkAIAAAAAghQAAAAAgCAFAAAAAAQpAAAAACBIAQAAAABBCgAAAAAIUgAAAAAAghQAAAAAEKQAAAAAgCAFAAAAAAQpAAAAACBIAQAAAABBCgAAAABAkAIAAAAAghQAAAAAEKQAAAAAgCAFAAAAAAQpAAAAAABBCgAAAAAIUgAAAABAkAIAAAAAghQAAAAAEKQAAAAAgCAFAAAAACBIAQAAAABBCgAAAAAIUgAAAABAkAIAAAAAghQAAAAAgCAFAAAAAAQpAAAAACBIAQAAAABBCgAAAAAIUgAAAABAkAIAAAAAEKQAAAAAgCAFAAAAAAQpAAAAACBIAQAAAABBCgAAAABAkAIAAAAAghQAAAAAEKQAAAAAgCAFAAAAAAQpAAAAACBIAQAAAAAIUgAAAABAkAIAAAAAghQAAAAAEKQAAAAAINtypwmQXV29elX+/PNP+evgX5I7d26pXKWyVKhQgYYBAAAAQQpIzoULF2T8uPESeyJWLl++LEnX/lu3bp08+eST0rBRQxoIAAAAt4WhfciW5syZIydOnJCLly7K1aSrkpSUJJcuXZLVq1fL/v37aSAAAAAQpIDr7YraZYLT9S4nXpYd23fQQAAAACBIaW8DYE/nRyX7WbmaJImJiTQQAAAAbovLz5Fq1qyZrF27Vs6dO2euf/PNN5I/f36ObA5XomQJU2TietpL9c8//9BAAAAAyNlBatCgQVKtWjWJi4uTihUrytKlS+XZZ5/lyOZwzZs3l7CvwuRK4hUzR0rpsL7TcaelR88eUtK7pDRp0oSGAgAAQM4MUg8++KC5dHNzM1v16tWdPnbhwoUc8RykZq2asnv3bjkXf84M9Ys+EC0LIhaYin4vvPCCDB06VGrUqEFDAQAAwEHDhqlXeXb5IKUnygMGDJAVK1ZI//79pWzZsk4fW6dOHT4VOYx97+TUqVPlp1k/mes6xG/YsGEyb948eeihh2goAAAA3BSXD1LFixeXli1biqenp4wcOVKeeeYZp70MBQsW5IjnYK+//rqcP39eevbsaW6fPn1aWrVqJStXrjTDQgEAAIC0cvmqfXfddZe89NJLMnbsWClfvrxMmjSJowqnevToIX379rXdPnr0qLRo0UJiY2NpHAAAAOScIHXmzBlzmZCQIIcOHZJ77rmHo4oUDR8+XIKCgmy3t23bJg0aNJD4+HgaBwAAAGni8kP7NDjpsKwjR47II488Il26dOGoIlVhYWESExMjERER5vaWLVukadOmMn36dPHy8qKBAAAAkKLcg7R+uAvr3bu36U3o16+fBAYGSp48eZJ93OzZs01JbEBphcfWrVvLhg0bZO/evWZfdHS0bN68WV588UVxd3enkQAAAOD8fNLV34AGp/vuu088PDw4mrgpGpbCw8PF19fXtm/x4sXSqVMnSUxMpIEAAACQfYMUcDu02uPcuXPFx8fHtk/LpGtPJwAAAECQApzw9va+oQT6559/Li4+6hUAAAAEKSBjlS5dWmbNmuVQaGLw4MGU0wcAAABBCkhJ9erVzTC//Pnz2/bpfKl58+bROAAAACBIAc74+fk5hCktOqFl0X/++WcaBwAAAAQpwBl/f3+ZMmWKQwn0Vq1a2dacAgAAAAhSQDICAgJk1KhRttvaM9WmTRuzcC8AAABAkAKcCA4OliFDhthux8XFmWF+1gK+AAAAIEgBSEb//v1NoLLExMRI48aNJTY2lsYBAAAgSAFwJiwsTIKCgmy3tUeqQYMGhCkAAACCFIDUwlSjRo1st3WulIap+Ph4GgcAAIAgBSA5WsFPy6JreXT7MKXV/BISEmggAAAAghQAZ2FqwYIFUrFiRds+LYnevn17U9UPAAAABCkAyfD09JSVK1eKj4+Pbd+0adOkW7duNA4AAABBCoAz3t7eJkzppWXMmDHy4Ycf0jgAAAAEKQDOlC5d2gzz8/DwsO179913Zfz48TQOAAAAQQqAM7Vq1ZJFixZJ/vz5bfs6depEmAIAACBIAUiJVvELDw83hSjsw5TOmwIAAABBCoATzZs3l3Hjxjns00p+y5cvp3EAAAAIUgCcCQwMlM8++8x2W9eWatGihURGRtI4AAAABCkAzvTo0UP69+9vux0XFycNGjSQbdu20TgAAAAEKQDODBkyRIKCghzCVNOmTSU6OprGAQAAIEgBcEbnS+lQP4uGqPr168vRo0dpHAAAAIIUgJTCVKNGjRzCVOPGjSU2NpbGAQAAIEgBSI6WQ581a5bUq1fPtm/Lli3SqlUrU4gCAAAABCkAydCFejVM+fr62vZpSXSt5gcAAACCFAAnPD09ZcGCBVK5cmXbvoiICLPOVGJiIg0EAABAkAKQHC8vLxOmfHx8bPsmTZok3bp1o3EAAAAIUgCc0RClYUp7qCxjxoyRQYMG0TgAAAAEKQDO6PA+nTOlc6csgwcPNoEKAAAABCkATmgVPw1TWtXP0qVLF5k6dSqNAwAAQJAC4IyuLxUeHu4Qpjp16mSKUAAAAIAgBcCJgIAAhzCla0tpWXQtjw4AAACCFIAUwtTw4cNtt60wFRkZSeMAAAAQpAA48/bbb0toaKjtdlxcnDRt2lSio6NpHAAAAIIUAGe0BHpwcLDt9tGjR6V+/fqEKQAAAIIUgJSEhYVJu3btbLc1RDVu3FhiY2NpHAAAAIIUAGcmTpxoKvpZoqKipEGDBhIfH0/jAAAAEKQAJEcr+M2dO1f8/Pxs+7Zs2SKtWrUyhSgAAABAkAKQQpiqXLmybZ+uL9W+fXtJTEykgQAAAAhSAJLj5eUlCxYsEB8fH9u+adOmmUV7CVMAAAAEKQBOaIjSMKWhyjJp0iQZMGAAjQMAAECQAuCMDu9btGiReHh42PZ9+OGHZgMAAEA2DFLHjx+XQ4cOyfnz52lh4DbUqlVLZs2aZeZOWd59910ZP348jQMAAJDdgtTTTz8tpUuXltmzZ9PCwG3y9/c3pdHtw5TOl5o3bx6NAwAAkJ2C1H/+8x9zefToUVoYSAe6WO+4ceMcwpSWRdeKfgAAAMgmQapPnz7ywAMPyMcffyw7duyglYF0EBgYaMKURdeWatGihVlrCgAAAJnLPSOedODAgbJ9+3a5evWqmeNRoECBGx6zd+9eKV68OEcAuMkwpT29Ok/KClP169eXlStXSvXq1WkgAACATJIhPVLnzp0zIUpdvnxZzpw5c8Nm3Q/g5vTt21eCg4Ntt+Pi4qRp06YSHR1N4wAAAGSSDOmR0pO6smXLpviYQoUK0frALQoLC5P4+HiZOnWqua0hqnHjxqZnyn7tKQAAALhQkHr11VdpWSCDaSW/2NhYW8GJqKgoadCggVl7ijAFAACQsXIPuiajnnzZsmUyevRosy1ZskQOHjwoNWrUkDx58mT6G9VS7M2bN+eII9twc3OT1q1bm+AUExNj9un8qQ0bNpj99hX+AAAA4CJB6o033pCQkBBZu3at7Nq1SzZv3iwLFiyQ8PBwadKkiRQrVowgBaRDmNLP9dy5c03vlNJhfhs3bjQl0wEAAJBB52EZ8aQ//fSTfPXVV/8/reXObbu+f/9+ef3112l5IJ3oMD79ksLHx8e2T4f7denShcYBAADIIBky9kd7nZQGptdee018fX3l2LFjsnr1aunQoYMsXbpUjh8/LiVKlOAIAOlAQ5SGqTp16th6psaMGSM1a9Z0qPAHAACA9JEhPVI66b1cuXIyduxYeeKJJyRv3rxSpkwZM2+jY8eO5jF79uyh9YF0VLly5RsKTWiv1Pjx42kcAAAAVwhSRYsWlZMnT5peqOudP3/eXCa3SC+A26MLYGvPlIeHh0OYsir7AQAAIH1kSLGJyMhIM4xP17jZtm2bHDlyRGbNmiUDBw6UOXPmmB6qkSNHZmr1PopNIKcoVaqUPProozJ9+nRJTEw0i1/PnDnTDLGtWLEiDQQAAJAOMqRHqm/fvuYbcS3FPHnyZOnatasMHz5c1qxZY+5/77336JECMpC/v79MmTLFVgI9ISFBWrVqZb7kAAAAQBYNUmXLljXDi3TOhr18+fJJaGioCVIAMlZAQICMGzfOdjs+Pt4s2LtlyxYaBwAA4DZl2IqdtWvXNsP69u3bZzZdN6pKlSpSpEgRWh3IJIGBgWax3gEDBpjbcXFx0rRpU7NYNsP8AAAAbp1bRj65rh9VqVIlady4sTz22GOEKOAO6N+/vwQFBdlua7DSnikdegsAAIBbky49Ul9//bX07t37pn5m7969Urx4cY4AkAmsIX5WKfTo6GgzZ0qLwNiXSwcAAEDapEuP1MWLF+XMmTM3tWklMQCZG6bsK1euWrXKhCmdOwUAAICbky49Ug899JC89dZbN/UzhQoVovWBTBYeHm7C07x588zt5cuXS/v27U2Fv/z589NAAAAAmRmknnzySbOlRVJSklmUt2DBgrQ+kMk0LOlwvgcffNAUg1EzZsww+zVMAQAAIG0ytNiELgZ69uxZ23bq1Cl58803zRpTUVFRtD5wB+jaUnPnzhUfHx/bPl08u1u3bjQOAABAWs+pMuJJNTC99tprsnDhQrl06ZLTxwC4MzREaQn0+vXrm8IT6ssvv5S7775bBg0aRAMBAACkIkN6pEaMGGG+8XYWory9veXRRx+l9YEsEKb0/0fL4MGD5fPPP6dxAAAA7kSQ+u2338zlG2+8Id27dzfXhwwZIqNGjTLXe/bsaYYXAbjzYUq/9LAvNKH/f1rFKAAAAJCJQSouLk7Kly9vhgo1adLE7Lv33nslJCREGjVqZL71puQykDX4+vqaMGX/5YZ9ZT8AAABkUpCqWrWqxMbGyuXLl+Wee+4x+3QNmw0bNpiQpVX7tmzZQusDWYS/v7+p2meFqYSEBGnTpo1ERkbSOAAAAJkVpLS0slbpW7NmjVSpUkXuu+8+MxdD50WtW7dO8uXLJ9WrV6f1gSykdevW5gsPK0xpr3GDBg0IUwAAAJkVpHRYn1btu3jxouTKlcsM8bPWjcqdO7cps+zp6UnrA1lMYGCgDB8+3HZbe5BbtGhhq+wHAACAf2VIxQdd8PPXX381PU9FixaVZ555Rvbt2ye///67mY9RqlQpWh7Iot5++205ePCg+QJExcTESJ06dWTlypUOa08BAADkZLkHZcCiMTo/Sk+6dBs/frzMmDFD8uTJI88995xDqeXMNHv2bGnevDlHHEiDZ599Vg4dOiSbNm0yt8+cOSMrVqyQgIAAW+8yAAAAQSqdPfLII9KjRw+pWbOmmWeh86IiIiLM+jRbt26VwoULS8WKFc2wP4IUkDU9//zzDmHq6NGjsmjRImnXrp3kzZuXBgIAAASpDHni3LlN9b6XX35ZOnbsaIb4acGJHTt2yHfffSddunQRDw8PghSQxcOUfvkRFRVlC1N79uwxPVaEKQAAkJO5ZfQv0JOu0aNHy9ixYyUpKSnDfk9GPjeQk2lZdJ3baNGhuvpFSGJiIo0DAAByrAwpNnHhwgVzsjVhwgQzr8KeFqBo1qyZGd6XHrTHS8us65pVLVu2lM8++8z0hgFIH9pzrEP6Hn/8cVvP1NSpU03lzVGjRtFAAACAIJVetITyjz/+6LCvVq1a0qFDBxN8ihUrlm6/q3HjxqbHS0ut65ysp556iiF8QDrT0KRhqn79+rJ3716zT6v66f4hQ4bQQAAAgCCVHq5evWouNTBpcNIApUEqI+jEd0ulSpXkzz//dBqkGIoE3DqtuKlFY55++mlTHl0NHTpU7rrrLunevTsNBAAAsk9Ick89JmVIkKpbt668+OKLZghfZk1I/+2338yk+LCwMKePWbBgAZ8K4DbpOlO9e/eWhIQEc7tXr17y119/mYAFAACQHTRt2vTOBKmQkBBzqVX65s+fbwpOFC9e3Ay9CwoKkgIFCqTr71u/fr20adPGDCesVq3abTUIgNRVrlzZ/P9khSkdXuvn5yetW7emcQAAQI7gnlFP/MYbb8hXX311w35dS+rXX3+Ve++9N11+z+bNm03Pl5ZU5xtxIHP4+/vLxIkT5ZVXXjFDZnVr3769lC5dWmrXrk0DAQCAbC9Dyp//9NNPDiHKvore/v375fXXX0+X36MFJl566SUT2urUqSOXLl2SK1eucFSBTKC9T+PGjbONIdbeKS1GoQtwAwAAZHcZ0iMVHh5uLjUwvfbaa2YNmmPHjsnq1atN4YmlS5fK8ePHpUSJErf1e3bv3m2GDQ4cONBs6p133pERI0ZwZIFMoBU6NUDpulJKe6a0kubatWvN8D8AAACC1E3QtWbKlStnFuG1lClTxnyDrWFKyyZrALrdIPXAAw+wEC9whwUHB8uuXbvMsF0VFxdneohXrlxJmAIAANlWhgztK1q0qJw8edL0Ql3v/Pnz5jK9C04AuHN0IWyryIyKjY01PVMxMddonTsAACAASURBVDE0DgAAyJYypEeqRo0apudJ145q2LChPPbYY/L333/LihUrZM2aNaYkepUqVWh9IJuFqejoaJk3b565rdc1TGn1Ti8vLxoIAABkKxnSI9W3b1/x8PCQo0ePyuTJk6Vr164yfPhwE6LUe++9R48UkM1o0Ynp06dLo0aNbPu2bdtmwlR8fDwNBAAACFKpKVu2rFn89vr5Efny5ZPQ0FATpABkP/nz55e5c+eaNaUskZGRZp03LUQBAACQXWTYOlK6lox+G71v3z6zFStWzAzn0xMtrfKVJ08eWh/Ijn9U3N1l1qxZ0qBBA/M3QOlwPw1TU6ZMMX8DAAAAXF2G9EhpKeT777/frB9VqVIlM7RH50kVKVJEhg4dai61dDmA7Mnb21sWLVpkFui1zJgxwyzaCwAAQJC6jg7dOXv2rBw+fFj++usvc91+27x5sxn2o06cOEHrA9k8TOkQX/tCE9OmTZN3332XxgEAAC4vXYf26XCeF1980XZbe56S4+npKY8++iitD2Rz1atXNz1T9evXN+tLqQ8//FAKFSok/fv3p4EAAIDLStceKfthPM7ocL9OnToxRwrIIXQZBP2SxX5u1IABA2Tq1Kk0DgAAcFnp2iOlxSRGjhwpkyZNkp07d8qIESMc7i9cuLA8//zzUrJkSVoeyEHq1atnCk3YV+/T+VI67M++XDoAAECODFI6ZO+tt94yC/LqHKkOHTrQwgCMgIAA0yvVokULE6Z00+s69E+rfAIAALiS3IOuSe8nvXjxolkz6uDBg043HQbo5uaWaW909uzZ0rx5c444cAdpFU9dCkGLUCgNUzrsz9/fX0qVKkUDAQAAl5Eh60gNHDjQlDpOydGjRxniB+RAISEhcuzYMbMUgtIiFLrm1LJly8x8KgAAAFfgRhMAyGxDhgyRoKAg220NU7reXHR0NI0DAABcQob0SL3//vvmW2d7Fy5ckO7du5sTpcmTJ8vdd99N6wM52Lhx48zQPi1Oo7SXWsukr1271qxBBQAAkJVlSI+UVu+rW7euw6aVuVauXGnKn3/wwQfi7u5O6wOEKWnSpInttn7R0rRpU0lISKBxAABAzgtSzhQtWtT0RG3btk127dpF6wM5nH6hMn36dIcS6JGRkaaaX3x8PA0EAACy7nlMRjxpjx49bFW5LElJSaYkulb0U+fPn6f1AZiS6BqmdFifhigVERFh1pkKDw+n9xoAAGRJGdIjdejQIdm9e7fDtmfPHluI8vPzkwcffJDWB2B4eHiY9aQqVqxo26eVPzt16mRbwBcAACAryZCveuvUqSN58+a9Yb+uLdWwYUOHOREAoHRB77lz55qeKS08obQQhfZI6VwqAACAbB+ktDqfM1qR680335RPPvnEnDgBgKVy5crmb8QjjzwisbGxZt/48eOlXLly0r9/fxoIAABk7yB1PT0h+vbbb2XChAmyY8cOs2/YsGG0PoAb+Pj4mGF+2jOl60upAQMGmJLo9mtPAQAAZMsgdfXqVXMypOFp9uzZcunSJdt9bm5uZgOA5NSqVcsUoNBFeq05UjpfysvLS5o3b04DAQCA7BektDLfxIkT5ZtvvjHX7ZUpU8ZU4urQoYMUL16c1gfglL+/v6na98orr9jWlWrTpo0sW7bMFKwBAADIFkFqyZIl8vHHH5teKO2NsmjRCV2E98KFC7J//35KGQNIs4CAABOiNEwpva69VPp3xtfXlwYCAAB3TLqNr9MJ4QsXLrSFqKpVq8rIkSNNKfS6deuafRqoAOBmtGvXToYPH267rfOmGjRoYBb2BgAAcPkgZU/nMCxdulTeeustM6cBAG5H3759ZciQIQ5hSnumoqOjaRwAAHBH5B50TXo8UYECBcxJzd9//y1RUVHyxRdfyJYtW6Rw4cKmnLEO6wsNDZVcuXLdkTeqBS+YpA64rv/85z9y7tw5WbNmjbl95swZ8/9169atzYK+AAAALhmkKlWqJB07dpSXXnpJ8ufPL7t27ZKNGzfK999/b0KU0nkOxYoVI0gBuCXPPPOMGS68adMmc1t7ptavXy/PP/+8FCxYkAYCAACuF6QsWo1PT3Z69OghNWvWNN8aa5BKSkqSUaNGycqVK00BiipVqmRqCXSCFJA9PPvss7J582bZvXu3ua3VQTds2GB6pihmAwAAXDZI2Z44d25TcEInimu5c09PTxOo9ARo5syZ0rVr10wdjkOQArIH/QKmZcuWsmLFCtsSCzqsWHum2rZtyxp1AADAtYOUvaJFi5rKfd27d5fatWubxXmbNWtm5lURpADcLO150jClyy4cPnzY7NMvanSOZpMmTQhTAAAgw2Xq2Yae3GjZ4mnTpsldd91F6wO4ZdrLPXfuXPHx8bHtmzRpkrz77rs0DgAAyF5BCgDSk7e3tyxbtswhTH3yyScyYMAAGgcAABCkAMAZDVGLFi0yPVSWoUOHyueff07jAAAAghQAOFOxYkXTM2VfwKZnz54yfvx4GgcAABCkAMCZWrVqyaxZs8w6dpZOnTqZeVMAAAAEKQBwwt/fX6ZMmeKwnlSXLl0kMjKSxgEAAAQpAHAmICBAwsLCbLcTEhJMtVDCFAAAIEgBQAqCgoJkyJAhtttxcXGEKQAAQJACgNT0799fQkNDHcJUq1atJDY2lsYBAAAEKQBwZtCgQRIcHGy7HR0dbXqmCFMAAIAgBQAp0PlSgYGBtttbtmwhTAEAAIIUAKRm3Lhx0qhRI4cw1aJFC0lMTKRxAAAAQQoAkqPl0KdPny6+vr62fatWrZJXXnmFMAUAAAhSAOCMh4eHLFq0yCzca5k2bZpZtJcwBQAACFIA4ISnp6fMnTtXKlasaNs3adIkeffdd2kcAABAkAIAZ0qXLm16pvTS8sknn8iYMWNoHAAAQJACAGd8fHxMz5SXl5dtX5cuXWT8+PE0DgAAIEgBgDM6V0oLUOTPn9+2T+dLzZgxg8YBAAAEKQBwpl69eqZnyj5MaSW/iIgIGgcAABCkAMAZf39/s86UlkhXCQkJ0qpVK4mMjKRxAAAAQQoAnGnXrp2EhYXZwlR8fLw0aNBAoqKiaBwAAECQAgBngoKCJDQ01HY7Li5OGjduLNHR0TQOAAAgSAGAM/3795fg4GDbbQ1R9evXl5iYGBoHAAAQpADAGR3iFxgY6BCmtGdKh/sBAAAQpADACS0+0aRJE9vtbdu2SYsWLQhTAACAIAUAzmjRCV1jSiv6WRYvXmzCVGJiIg0EAAAIUgCQHF1bSsOUr6+vQ5hq3749jQMAAAhSAOCMp6enWbDXx8fHtm/q1KkyYMAAGgcAAIIUAMAZb29vWbBggUOYGjp0qAwaNIjGAQCAIAUAcKZy5cqmZ8rLy8u2b/DgwTJmzBgaBwAAghQAwJnq1aubMKVzpyxdunSRGTNm0DgAABCkAADO+Pn5mTClVf0srVq1kp9//pnGAQCAIAUAcEZLous6U/Zhqk2bNrJq1SoaBwAAghQAwJnAwEAZNWqU7XZCQoI0bdpUtmzZQuMAAECQAgA4ExwcLEOGDLHdjouLM2EqOjqaxgEAgCAFAHCmf//+JlBZYmJipHHjxoQpAAAIUgCAlISFhTmEqaioKBOmYmNjaRwAAAhSAICUwlTz5s0dwpQO89O5UwAAgCAFAHAiPDxc6tWrZ7u9bt06whQAAAQpAEBKdKHeWbNmia+vr23f4sWLpWfPnjQOAAAEKQCAM56enmbB3lq1atn2jRkzRgYMGEDjAABAkAIAOOPt7W3ClF5ahg4dSpgCAIAgBQBISenSpWXlypXi5eXlEKY++eQTGgcAAIIUAMCZihUrmp4pnTtl6d27t/z88880DgAABCkAgDN+fn6mAIV9mGrTpo3MmzePxgEAgCAFAHCmUaNGMm7cOHF3dze3tRx6q1atJCIigsYBAIAgBQBwpl27djJq1CjbbQ1TusbUtm3baBwAAAhSAABngoODJTQ01HY7MTHRhKno6GgaBwAAgtSdlZSUxBEFkGUNGjRIQkJCbLc1RNWpU4cwBQAAQSrzbdy4Udq3by/ly5eXVatWcUQBZGk6xC8wMNB2OyYmxoSp2NhYGgcAAIJU5rl8+bIZHnPq1CmOJgCXoMUntAiFfZjSan46dwoAALgGd1d/A1peWOn8g9ScPHmSIw4gS/jmm29Mb/rChQvN7cWLF5twFR4eLvny5aOBAAC4g4oVK5b9g9TN+PPPP/lUAMgyevXqJceOHZMtW7aY2ytWrDA97B999JHkzp2bBgIA4A6pW7cuQepmGwQAMtOyZcukQYMGEhkZaW7rvE/tldLhfwAAIOui/DkA3EGenp6yYMECqVixom3f+PHjZcCAATQOAAAEKQCAM15eXqZnysfHx7Zv6NChJkydOHFCjh09JlevXqWhAADIQnIP0oVNXNjYsWOlWbNm5mRjzpw5smbNGmnduvUNj5s9e7Y0b96cIw4gSypSpIj4+/vL9OnT5fz583LfffeJTzkf2bBhg5lDtWzpMrnnnnvkbq+7aSwAALIAl58j1blzZ7MBgKurXr26GeanXwY93/R5cXd3NwuNX7hwwdz/3XffSUi3EClevDiNBQDAHcbQPgDIQnx9fSW4c7Dkdruxat+lS5dk1UoWHgcAgCAFALiBzofK5Zbrhv3aO/Xbyt9sFf4AAABBCgDwP0WLFnV63969e+WRRx4xJdPnzZsniYmJNBgAAHeAO00AAFmLDu87dPiQXLp4yWG/Du3buXOnub548WKzVa5cWd58800JDAyU/Pnz03gAAGQSeqQAIIt52PdhecT3EcmTJ4/ky5fPXOp2+fJlOXTokMNjo6KipEuXLlKlShX58ssvJS4ujgYEACATuHz587Si/DkAV3L//feb3iZdY0pLodetW1fatm0rQUFBUqBAAfnjjz8kISHB9ngNUFrxT5eEOH36tFngVxf7BQAABCmCFIAcpXDhwlKmTBmzWaHIw8NDnnrqKQkJCZESJUrIvn375OTJk7af0XC1atUqGT16tBw4cEC8vb2ldOnSNCYAAAQpghQA5M2bV/z8/KRr165StWpVOXjwoBw+fNh2v1b+04V8J0yYICtWrBAfHx+zAQCA9EGxCQBw5T/i7u5mAV/dtPjEiBEjzKW95cuXm02HCvbp00fatWtnfg4AANw6eqQAIJuoUKGCvPrqq+Zv3cWLF2Xbtm2mZ8oSGxtr/haGh4fL+fPnpXr16lT6AwCAIEWQAgCl86L0750WpyhUqJAJVPaFKXRO1ZIlS0xhCt2vhSmKFClCwwEAQJAiSAFAsWLFxN/fX4KDg03PkxamOHPmjO1+DVE6f2rUqFGmMIX2UOnPAAAAghRBCkCOpyGqXr160r17dzP8b/v27Q6V/qzCFGFhYbJ27VpT5Y/CFAAApIzZxgCQU/7gu7tLYGCgKTZhFabQIhSWxMREiYiIMJsGr86dO0tAQACFKQAASAY9UgCQw7i5uZl5URqqNDBpYYqoqCiHwhTR0dEyc+ZMU5hCS63r4ylMAQAAQQoAcI0O4dNeJy1McfbsWROotGfKokMA58+fbytMUatWLQIVAAAEKQCA0iIT+jcyJCTEBKWtW7c6VPqzClN88cUXpmgFhSkAAAQpghQA4H+swhRa6U97q3bt2uVQmEJ7q6zCFDt37hQvLy8KUwAACFIEKQCAFah8fX2la9euUrVqVfnnn3/MvCmLzqfS9akmT55seqp07SoNVDr/CgCAnIBSTAAA5/9IuLtL69atzaYV/rTSn1b8s59Hpft104IU/fr1M1UBqfQHAMju6JECAKSJ9jhpSLIKU2iPlH2lPx0CqH9rJ06caBb+pTAFAIAgRZACAPyPVZiiQ4cOUqRIkRsKU2iIsgpTHDt2TCpVqkRhCgAAQYogBQBQGqKswhSenp5y8ODBGwpT/P7776YwxZ49e6RChQpmLhUAAAQpghQA5Hg6fK927dqmMIWGJa30Fxsba7tfh//98ccfZi2q1atXS4kSJcx8KgAAXBmzgQEA6fMPiru7BAYGmk2LT4wcOVLmzZvn8BgtVKGbzp/q3LmzmXPl4eFB4wEAXA49UgCAdKeFKbQohf7dPXfunOzYscOhMMXRo0dl/vz5pjCF0p4sAhUAgCBFkAIAXKNzolq2bGkKU+TLl0+ioqLk/Pnztvvj4+Nl0aJFZtjfiRMnTE8VgQoAQJAiSAEA5N/CFP7+/tK9e3cTlLZv325ClOXSpUuybt06U+nvwIEDpkeLwhQAAIIUQQoAIP/Oo9LCFCEhIabgxL59++T48eO2+3X435YtW2yFKXTIX6lSpcTNzY3GAwBkrX/TaAIAQGbTSn9WYQotPjF69Gj5+eefHR5jFabw9fWVXr16SUBAgAliAABkBfRIAQDuKO11at26tTRp0kTOnj0re/fuNWtQWQ4fPiwzZ86UKVOmmGGB+ngNYgAAEKQIUgCQ4+kQPu110l6qpKQkU5giISHBdn9cXJzMnTvXDPs7duyYVK9e3cy9AgCAIEWQAoAcT8NRo0aNJDg4WLy8vGTz5s0Olf40XGlhilGjRpnCFBqoihUrRsMBAAhSBCkAgA7fe+KJJ0ylPw1LWukvNjbWdr9VmEID1fr166V06dKm2h8AAJmBWbsAgCwfqHQOlW4REREyYsQIWb58ucNjdL9u9erVkz59+phS6xSmAAAQpAAAuEaH/OkWGRkpI0eOlBkzZjgUptCApZuWVu/Xr58JXxSmAABkBIb2AQBcjlWY4tVXX5UCBQqYIX66qK/l5MmT5u++llXXOVW1atUiUAEACFIEKQCA8vT0NMP43nrrLXNdi09oiLJoiFqxYoWp9Hfw4EGpXLkyhSkAAAQpghQAQOl8KC1M0bVrV6latars2rVLjh8/7hCodDhgWFiYCVve3t6mOAUAAAQpghQA5Hhubm6mwp8GKi08cfHiRbMelVb4U1alvwkTJpieKq3yR6U/AMCtoNgEACBb0iCl25AhQ2TYsGEybdo0hwV+rcIUOtxPK/21a9eOSn8AgDSjRwoAkK3pnCj9+x8SEmIKTmzdutUhUOnaVPpvRHh4uFn4V3u0KEwBACBIEaQAAPLvelTaQxUcHGyG8+k8KvvCFHp9yZIlpjCFBi0toV6kSBEaDgBAkCJIAQA0UPn6+pp5VBUqVJBjx45JTEyM7X6r0t+oUaNMYQod+ufl5UXDAQAIUgAAaGEKXV8qKCjI9FRpefTo6Gjb/VZhCl2LisIUAIDrMasWAJDjWYUptMLfiBEjZOrUqZKYmGi73ypM4efnJ507d6YwBQCAHikAACw6hE//rWjbtq0UKlRItm3b5lCYQocAWoUp8ubNa+ZRUZgCAAhSBCkAAOTfSn/+/v6mMIWnp6cZ9nd9YYr58+fbClPoEEECFQAQpAhSAADIv4UpateubStMoZX+tFy6xSpM8cUXX8i+fftM6XQNYQAAghRBCgCQ41mFKXQtquQKU+h8Ki1MERYWJjt37jRDBClMAQDZGzNlAQC4CVZhinXr1pmhffaFKfRy2rRpZtPHaGGKgIAAClMAQDZEjxQAALegdOnStsIUly9flr179zoUptAeq5kzZ5rCFLqwr65HRaACAIIUQQoAAPm3MEWTJk1MYQqdU7V161aHQKWFKfTfIF2PisIUAECQIkgBAGBHw5EO5+vRo4cpi67FJ44fP2673ypMocMBdY6V9lBRmAIACFIEKQAArtHhe9rrpJX+tOLfkSNHZP/+/Q6BKjIy0hSmOHDggHh7e5thggAAF/t7TxMAAJAxdC0q3XRh32HDhpkiFBYtTDFp0iSzaU9WaGiouQQAuAZ6pAAAyGAlSpQw1fv036GLFy9KVFSUrdKf0sIUkydPlh9++EE8PDzMelRach0AQJAiSAEAcjwdxqf/Fmlhinz58smOHTvk/Pnztvt1sV/990or/el+DVQUpgAAghRBCgCAawoWLChPPfWUdO/e3cyP0uIT9oUptNLfkiVLTGGK06dPm8V9KUwBAAQpghQAAPJvYQpfX19TmEIv//zzzxsq/a1atcpWmEIr/Xl5edFwAJAV/obTBAAA3Hm6FpVu8+bNk5EjR8ry5ctt91GYAgAIUgAAIA2BSkuk6yK+WunPfoFfDVi6+fn5SefOnaVdu3amZwsAkLkY2gcAQBZUqlQp8+9WUFCQ5MmTx1T6sy9MERMTYytMkTdvXrMIMIUpAIAgRZACAOAaLYeua1FZhSm2bt0qZ86csd2vhSnmz59vClNoz5UuBkygAgCCFEEKAABxLEyhZdT37NljQpRFQ9SKFSvkiy++kH379pnS6VT6AwCCFEEKAID/BapHH33U9FBp79OhQ4fkr7/+st2vhSm2bNkio0aNko0bN5pS6zrsjwV+ASCd/x7TBAAAuCb9glA3LUwxYMAAiYiIcLhfKwDqpr1Tffr0kYCAAIb9AUA6oUcKAAAXp4UptHpfYGCg5MqVy/RIac+URdemmjVrlkyYMMH0aGlPFpX+AIAgRZACAOAaT09PadSokQQHB5shfTpXyr4wRXx8vCxcuNAUpjh16pRZ4LdIkSI0HAAQpAhSAABoiNIFe3UeVYUKFWT79u0OhSm0jPqqVavMPKq///5bypYtawpYAAAIUgQpAECOpwUmdBifVvp74oknTGGK6Oho2/1Xr16VTZs2mR4qLUyhQwR9fHxoOABIAwZIAwCQ3f+xd3c3Q/50W758uQlOM2bMcJhHZRWm0OAVGhoqTZo0YR4VAKSAHikAAHIQ7XHS6n1t27aVs2fPSlRUlEOgOnr0qPzwww8yffp0s5/CFABAkCJIAQDwP7pYr/67GBISYkqib9261Szqa4mNjbUVptA5VRqoKJ0OAAQpAABwjYYjLUyhlf60t2rXrl03FKZYsWKFjB49Wk6cOGEW99UQBgAEKYIUAAAEqmuBytfX1xSm0Ep/x44dk5iYGNv9ly5dknXr1klYWJgcOHDAhC4q/QEgSBGkAACA/P9Kf0FBQaanSgOVVvrTCn9KL3XBXx3yt3r1arMOla5HBQA5DbNHAQBAsjRI6bZ3714ZNmyYTJ061aEwxeLFi82mQapPnz7Srl07ClMAyDHokQIAACmyClN06NDB9EAlV5hC/52dMmWK2V+lShVZtXKVzJ071yz8G30wWkqXLi0FChSgMeESTp8+LTt37pR9+/ZJwoUEuavYXZIrVy4aBg742ggAAKSJhiH9/rVHjx4yZswYmTBhgumtsugQwH79+snePXuluFdxSbr2n9LiFbuidklItxApXrw4DYksbf/+/TLxm4mSO3duuXrlqrjldpO7775bgjoF8WUAsmeQSkpK4psCAAAygaenp/Tt21fefvttM9xvxIgRZj0q9dBDD0mRokVsIUrpvKqLFy/K8OHD5dSpU1n+/WnhjZIlS3Kg72D736lCJleuXJF9e/eZz+zly5f/3Xnt4vjx4/LjDz/Ka4GvcYCQfYLU7t27pU2bNnLw4EGpW7eufPvtt1KoUCGOLAAAGX0S4e4ugYGBZlu+fLkMHjxYvO72krx58ib7+FzX/ps0aRINhyzr/vvvl0YNG92wZpqGKh3mpwFLC7IAyuU/CbruhY7Z1m8K8ubNKyNHjuSoAgCQybQoxbJly+TJJ5+kMeCyChcuLO55ku9n0JFP586do5Fg49I9UjqhddOmTfLLL7+Ybwc0VIWGhsrAgQOTfbyO3QYAABmnwr0VJPafWEm8nOiwX4f66bCpgICAND2PVgfUBYD1Z3IaHQap7z2nupPv/+Q/J+VK4hVxz33jKbJOI9HCKv/88w//o+cAulZetg5Sa9euNeO0re5XfcO6WOCFCxeSnQzoCuOyAQBwZVqQYueOnXL27FlbqXT9Jj+Pex557rnnzDf+QFalYSliQYTEn4s3hSYsOuqparWqEhcXRyMRpLJHkNLApBVVLNorpX+07de4sPfggw/yqQAAIIPVqFFDli5ZKjt27JBLly5JqVKlpPGzjU3lMyCr0/L94d+Hy4EDB8y5pW4NGzYUv8f9aBxknyBVu3Zt072q3f4aqA4dOmSqBfFtFwAAd/Dkwt1dnmn4jNkAV6Ojmjp07GAKS+iX9hQxgzMuXWxCFwWsVKmSzJ8/39wODw83k10BAACA2zpJdnMjRCFFLl/+XNeu0PLnWnJVi0/8+uuvHFUAAAAABKmU1K9f36whpcP6ypcvz6K8AAAAAAhSaZEvXz6pUKECRxMAAABApmBpZgAAAAAgSAEAAAAAQQoAAAAACFIAAAAAQJACAAAAAIIUAAAAAIAgBQAAAAAEKQAAAAAgSAEAAAAAQQoAAAAACFIAAAAAAIIUAAAAANws95zyRi9cuCDLly/niAMAAABIkY+Pj9kIUtcMHTpUVq1axacCAAAAQIo8PT1TfUyOCVIVK1Y0GwAAAADcLuZIAQAAAABBCgAAAAAIUgAAAABAkAIAAAAAghQAAAAAEKQAAAAAAM640wTICWJiYiRv3rxSokQJGgMu4/z587J582azlkWlSpUkT548NApcQlJSkhw4cEAOHjwoXl5eUrlyZT6/AAhSgKuIiIiQH3/8UVasWCH79++XqVOnyssvv0zDIMubP3++DB482ISoxMREs69cuXIyceJEqV+/Pg2ELG3x4sXSrFkz80WARYPU119/LXXq1KGB4FK+/PJL6datm/Ts2VM+/fRTGgQOGNqHbGvs2LGydu1aKV68OI0Bl7J9+3apUKGC+TJArw8bNkz+/vtvefHFF+X06dM0ELI0Dw8P6dChg8yePVu2bdsmH3zwgURFRUmvXr1oHLjc3+LevXub69rLClyPHilkW+Hh4ZI/f36ZPHmyrF+/ngaBy3jnnXccbletWlWWLVtmvunfsGGD+Pv700jIsvz8/MxmqVatmnz//fcSGRlpeqkKFixIIyHLu3jxorRt29YMTdXpAUBy6JFCtqUhCsgu7r33XnN5eiEJ7QAACvdJREFU9epVGgMuqWTJkoQouIy+ffuaHlWdFsD5BJyhRwoAsjj9ZnThwoWmYErt2rVpELgEDf1abOKjjz6SHTt2yJQpU2gUuAT9e/vFF19Iv379pG7dujQICFIA4Kq6dOki0dHR0qdPH77Rh0vQwiidOnWSK1eumNtfffWVGSYFZHWxsbESGBhohqeGhobSICBIAYCr0uEl1kmpTtoHXIHO45s2bZopkqJDo0JCQuSvv/6S4cOH0zjI0jp27Gjm8n333Xfi7s5pMghSAOCS3n77bRk5cqTpifrwww9pELiMMmXKmE11797dlO3Xz3D79u3NmmhAVrRy5UqZM2eOFClSRFq3bm3bn5CQYAqmrFmzxixPoQUoAIIUAGRR2vukIerNN98kRMGl5c6dW5577jlzkrp06VKCFLKsokWLSosWLRz26RxVpWX977nnHvN5BghSAJBFbdy4UQYMGCAPP/ywfPbZZzQIXJ5O3lclSpSgMZBl1ahRQ3766SeHfadOnZJixYrJ888/z99jEKSQc+i3nzo+X7vi1erVqyVXrlxSrlw5efLJJ2kgZFk6wVkrnuXJk8cM77MXFBQkVapUoZGQZemJqK4ZpcP5PD09zZAoXQdNQxQV0AAQpAAXoN8czZo1y3Y7LCzMbK1atSJIIUs7c+aMuVy3bp3Z7OnJKUEKWZlVVMK+sIQuyjtu3Di5++67aSC4FP0C1v4ScPh8JF1DMwAAgPQSHx8v+/btM6WkfXx8pHz58uLm5kbDAMhW6JECAADpSifm16xZk4YAkK3x9RAAAAAAEKQAAAAAgCAFAAAAAAQpAAAAACBIAQAAAABBCgAAAABAkAIAAAAAghQAAAAAEKQAAAAAgCAFAAAAAAQpAAAAAABBCgAAAAAIUgAAAABAkAIAAAAAghQAAAAAEKQAAAAAICdxpwkAAGlx6dIlefrpp2X79u3St29feeedd7Ll+/zjjz+kR48e5vpnn30mNWvW5OADAAhSAJCTtWvXTr777jspWbKk7NixQ4oVK2a7T29Xq1ZNihYtKnFxcTf8rAanVatWSbdu3bJtiFKnTp2SZcuWmesnT55Ml/ZOzoMPPiibNm3iQwkALoqhfQCQgyQlJZnLY8eOSffu3ZO9z7q0pyFLQ1SvXr3kv//9Lw15k+2t7rvvPoetbNmy6fZ79Nj06dNH2rdvT6MDQCahRwoAcijtKXnppZekadOmqT62atWqEhkZSaPdoiJFisju3bsz7Pnnzp0rH330kRQsWFAmTpxIgwMAQQoAkJGCg4OlTp064unpmez9Xbp0kd9//10efvhh+frrr82+RYsWmTlSatasWaZnpX///rJgwQLzuLZt28r7778v69evl0cffVRGjBgh9957r7z55psSEREhFSpUkLfeektat25t+z0zZ840QWDbtm1maGH9+vXlyy+/lLvuusvcbz1/uXLlzPylgQMHytq1a+X8+fOSO3duWbx4sQwdOtT8fEJCggl+QUFB0qlTJ8mVK1eKbaC/56uvvpL9+/dLrVq15Nlnn032cam9xls1ffp0mTNnjhnmp2FLn09fu/Yw6e+xrFy5UoYMGWJ+f2xsrJQvX14aNmwoDzzwgC08aXvoMdAhmt9++63Zl5a2Sa19AQAEKQDANaVLl5aYmBg5fPiwCTXffPNNso/TE3s9wffw8LDt03lD1tyeCxcumMsDBw6Yffqc06ZNk7Nnz5r9y5cvlw4dOki+fPlsP/PPP/+YeVYvvviiuLm5maGCGrJUlSpVTKD5/vvvJTo6WlavXu3w/Lt27ZIVK1Y4zF0aN26cvP766+Z65cqVTRDRELBhwwbTi2YFwOR8+umnZrii0kB45swZCQ0NveFxaXmNt0oDz7x586RGjRry+OOPy5o1a2T48OFmnpoGPKVBqWPHjmaoYKFChUwY0mOj71Nfz5UrV2zPp2Hp4sWLN9U2KbUvAIAgBQD4n65du8qvv/5qgo6epOsQPw1Xt+v48ePSsmVL0yOlAWXhwoWmyt/9999vAof2SGmvivaobNy40fRO9evXz/zsq6++KpMnTzaFHp566ikTKPTk/qGHHrI9/7lz50xvi/aYaC+aBp/evXub+/Rx69atkzx58pgelwkTJpggoUHOz8/vhteqvS0ffPCBuV6pUiXZvHmzGRo3ePBgGTRokO1xGvxu5jUmR1/3Cy+8YLutYcjqMXrvvfdk7NixUqpUKXNbX68eEw1XGqQ0UGkvkYaoe+65x/T06WViYqIcOXJEypQpYwKdNbRP21tp0YybbZvr25feKABwjmITAJAT//i7uZleKD2hVzrMS0PJ7dIiCtpToyfj9kPkdNjYE088YXqhLPr7NITEx8eb24ULF5YffvhB/vp/7d29LmxRGIDhXShoVH47FyDRSBQaCQqhkbgHBY0LUKpUCtcgEREKOq6BikQUaCQqLYlz8q5krazZ1swYM6p5n2RyZGbvmb2X5GQ+3896fk7H3N7eNrz/yMhICM5WV1er+fn5EPy8v7+H19bW1kKggPX19XROnMBXR8BBkISVlZUQhGBhYaHhuE6vsYSM0enpaXqcn5+n18hC8Xu4uLgIwU28pvgvAWf83WxsbIQgCgMDAyGIauY3a1NfX0lSc2akJKlP0WNDFmNra6t6eXlJ2YtuTE5OhjI+DA0Npeenpqa+PQcyKdHh4WF45Mi45BjXnvdzUWIX5Vkh+oQiytZKnp6eisfXdXqNJQRK9/f3DYFsRHkd5ZVkg0oeHx/Tz/Sz/dRv1qa+vpIkAylJUgHDJBiicH193bLXJ+/BoWSsV/IR4JSvbW5uNrw+NjbW8vxYDod8Kl4efOTH5PKgLs8w5ffai2sEJXKl0smbm5tqe3u7+vz8DD1QPCi5zEsL8/MY/JGXCNbl49a7WRtJUnuW9klSH2NqG/0ylKyVxNK/u7u7MMSA/pw4sa8XmJIXM1iXl5chaGAoQnzUM1il8ylxw9XVVXo+L1mbnZ0tnsskwYhSu9fX19C7Vd9suNtrbIUeK4Io0Js1NzeXSvrogfr6+mq4x5OTk2LmKmaRGP4RM2jdrI0kqT0zUpLU5yi729/fD6PQ6+itYY8iprjRP8OX+Hwkd7fGx8fD6O3d3d2QNRkdHa0WFxerj4+PMFWOjNne3l7T88moMNSCEev09jA0g4mB9GSBfifuoYQgiFI5xoozxY5SR7JRMfjo1TW2srS0lH6mL4lglcl54P13dnaqg4ODdI+U683MzITPpyyPQRRkqdgLjKEVoN+LQRiUIP52bSRJ7ZmRkqQ+EvcNqu+tRLna8vLyt9coI+PLNqVpfLFnIh9f7Ju9X35uaf+m0utMxGNq3cTERAgkGLpABoUsC8FNq+sGQQzBAgHe8fFxCBQGBwdDYHh2dtZyPZicF/uH+Gz2ZMpHwXdyjZ2sd8S0QDJgXDtDKxhbfnR0lEruyBbGe6Sfjc+jNI++KsoxuU9MT0+HTCHBLr1YTBbsZG3aXackqfB//L+8oFqSpAIGKrCXVLMSwF55e3tLm83GIKET9DqRVWJj2XygQzvsp8XxBEp/fY0llOSxxoyDB/fw8PAQAqrh4eGGY9mri9HtfH6cxBcR7JLR4n1iWWa3ayNJMpCSJEmSpJ7wT1KSJEmSZCAlSZIkSQZSkiRJkmQgJUmSJEkGUpIkSZJkICVJkiRJMpCSJEmSJAMpSZIkSTKQkiRJkiQDKUmSJEkykJIkSZIkGUhJkiRJkoGUJEmSJP2x/2/fg8sNK5KdAAAAAElFTkSuQmCC"></div>
+<div>
+<style>
+*{
+border-collapse:collapse;
+}
+.Default .title{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:bold;
+padding-left:6pt;
+vertical-align:middle;
+font-size:11pt;
+padding-bottom:6pt;
+font-family:sans-serif;
+text-align:center;
+padding-right:8pt;
+}
+.Default .layers{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:3pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .cornerLabels{
+background-color:#ffffff;
+padding-top:3pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:1pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .columnLabels{
+background-color:#ffffff;
+padding-top:2pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:center;
+padding-right:8pt;
+}
+.Default .rowLabels{
+background-color:#e0e0e0;
+padding-top:3pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .o, .Default .e{
+background-color:#ffffff;
+padding-top:3pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:right;
+padding-right:8pt;
+}
+.Default .o{
+background-color:null;
+color:null;
+}
+.Default .e{
+background-color:#ffffff;
+color:#010205;
+}
+.Default .caption{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:1pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .footnotes{
+background-color:#ffffff;
+padding-top:2pt;
+color:#010205;
+font-weight:normal;
+padding-left:18pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:3pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:18pt;
+}
+.Default .titleLayerSeparator{
+border-top:1px none #152935;
+}
+.Default .innerFrameBd{
+border-top:1px none #152935;
+border-right:1px none #152935;
+border-left:1px none #152935;
+border-bottom:1px solid #152935;
+}
+.Default .dataAreaLeft{
+border-left:1px none #152935;
+}
+.Default .dataAreaTop{
+border-top:1px solid #152935;
+}
+.Default .hCR{
+border-top:1px solid #aeaeae;
+}
+.Default .hDR{
+border-top:1px none #aeaeae;
+}
+.Default .vCR{
+border-left:1px none #aeaeae;
+}
+.Default .vDR{
+border-left:1px none #aeaeae;
+}
+.Default .hCC{
+border-bottom:1px none #aeaeae;
+}
+.Default .hDC{
+border-bottom:1px none #aeaeae;
+}
+.Default .vCC{
+border-right:1px solid #e0e0e0;
+}
+.Default .vDC{
+border-right:1px none #aeaeae;
+}
+</style>
+</div>
+<div class="itemBody">
+<table summary="Matriz factorial, tabla, 2 niveles de cabeceras de columna y 1 niveles de cabeceras de fila, tabla con 2 columnas y 9 filas" style="width:158px" class="Default PivotTable" aria-label="Matriz factorial" role="complementary" data-lookName="Default" data-rowLabelWidth="1" data-colLabelHeight="2" data-NumRows="4" data-NumCols="1" data-rowLabels="Corner" data-decimal-char="." data-col-labels="Factor 1" data-row-labels="Matematicas;C Naturales;Francés;Latín" data-layer-dimension="" data-column-dimension="Factor;" data-row-dimension="Variables;" data-maxColWidth="72">
+<caption class="title" style="width:158px" title="a. 1 factores extraídos. 7 iteraciones necesarias.">Matriz factorial<sup>a</sup><span class="details">Matriz factorial, tabla, 2 niveles de cabeceras de columna y 1 niveles de cabeceras de fila, tabla con 2 columnas y 9 filas</span></caption>
+<tbody class="PivotBody defaultLayer innerFrameBd">
+<tr>
+<td class="cornerLabels" rowspan="2">&nbsp;</td>
+<td class="columnLabels dataAreaLeft hCC vCC role1">Factor</td>
+</tr>
+<tr>
+<td class="columnLabels dataAreaLeft vCC role3">1</td>
+</tr>
+<tr>
+<td class="rowLabels dataAreaTop role3">Matematicas</td>
+<td class=" o dataAreaTop dataAreaLeft vCC">.721</td>
+</tr>
+<tr>
+<td class="rowLabels hCR role3">C Naturales</td>
+<td class=" e dataAreaLeft hCR vCC">.937</td>
+</tr>
+<tr>
+<td class="rowLabels hCR role3">Francés</td>
+<td class=" o dataAreaLeft hCR vCC">.705</td>
+</tr>
+<tr>
+<td class="rowLabels hCR role3">Latín</td>
+<td class=" e dataAreaLeft hCR vCC">.936</td>
+</tr>
+</tbody><tfoot style="display:table-footer-group">
+<tr>
+<td class="caption" colspan="2">Método de extracción: factorización de eje principal.</td>
+</tr>
+<tr>
+<td class="footnotes" colspan="2">a. 1 factores extraídos. 7 iteraciones necesarias.</td>
+</tr>
+<tr>
+<td  style="width:91px;padding:0px;border-spacing:0px"></td>
+<td  style="width:67px;padding:0px;border-spacing:0px"></td>
+</tr>
+</tfoot>
+</table>
+</div>
+<div>
+<style>
+*{
+border-collapse:collapse;
+}
+.Default .title{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:bold;
+padding-left:6pt;
+vertical-align:middle;
+font-size:11pt;
+padding-bottom:6pt;
+font-family:sans-serif;
+text-align:center;
+padding-right:8pt;
+}
+.Default .layers{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:3pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .cornerLabels{
+background-color:#ffffff;
+padding-top:3pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:1pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .columnLabels{
+background-color:#ffffff;
+padding-top:2pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:bottom;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:center;
+padding-right:8pt;
+}
+.Default .rowLabels{
+background-color:#e0e0e0;
+padding-top:3pt;
+color:#264a60;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .o, .Default .e{
+background-color:#ffffff;
+padding-top:3pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:2pt;
+font-family:sans-serif;
+text-align:right;
+padding-right:8pt;
+}
+.Default .o{
+background-color:null;
+color:null;
+}
+.Default .e{
+background-color:#ffffff;
+color:#010205;
+}
+.Default .caption{
+background-color:#ffffff;
+padding-top:1pt;
+color:#010205;
+font-weight:normal;
+padding-left:6pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:1pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:8pt;
+}
+.Default .footnotes{
+background-color:#ffffff;
+padding-top:2pt;
+color:#010205;
+font-weight:normal;
+padding-left:18pt;
+vertical-align:top;
+font-size:9pt;
+padding-bottom:3pt;
+font-family:sans-serif;
+text-align:left;
+padding-right:18pt;
+}
+.Default .titleLayerSeparator{
+border-top:1px none #152935;
+}
+.Default .innerFrameBd{
+border-top:1px none #152935;
+border-right:1px none #152935;
+border-left:1px none #152935;
+border-bottom:1px solid #152935;
+}
+.Default .dataAreaLeft{
+border-left:1px none #152935;
+}
+.Default .dataAreaTop{
+border-top:1px solid #152935;
+}
+.Default .hCR{
+border-top:1px solid #aeaeae;
+}
+.Default .hDR{
+border-top:1px none #aeaeae;
+}
+.Default .vCR{
+border-left:1px none #aeaeae;
+}
+.Default .vDR{
+border-left:1px none #aeaeae;
+}
+.Default .hCC{
+border-bottom:1px none #aeaeae;
+}
+.Default .hDC{
+border-bottom:1px none #aeaeae;
+}
+.Default .vCC{
+border-right:1px solid #e0e0e0;
+}
+.Default .vDC{
+border-right:1px none #aeaeae;
+}
+</style>
+</div>
+<div class="itemBody">
+<table summary="Correlaciones reproducidas, tabla, 1 niveles de cabeceras de columna y 2 niveles de cabeceras de fila, tabla con 6 columnas y 13 filas" style="width:561px" class="Default PivotTable" aria-label="Correlaciones reproducidas" role="complementary" data-lookName="Default" data-rowLabelWidth="2" data-colLabelHeight="1" data-NumRows="8" data-NumCols="4" data-rowLabels="Corner" data-decimal-char="." data-col-labels="Matematicas;C Naturales;Francés;Latín" data-row-labels="Correlación reproducida Matematicas; C Naturales; Francés; Latín;Residuo Matematicas; C Naturales; Francés; Latín" data-layer-dimension="" data-column-dimension="Variables;" data-row-dimension="Estadísticos;Variables;" data-maxColWidth="72">
+<caption class="title" style="width:561px">Correlaciones reproducidas<span class="details">Correlaciones reproducidas, tabla, 1 niveles de cabeceras de columna y 2 niveles de cabeceras de fila, tabla con 6 columnas y 13 filas</span></caption>
+<tbody class="PivotBody defaultLayer innerFrameBd">
+<tr>
+<td class="cornerLabels" colspan="2">&nbsp;</td>
+<td class="columnLabels dataAreaLeft vCC role3">Matematicas</td>
+<td class="columnLabels vCC role3">C Naturales</td>
+<td class="columnLabels vCC role3">Francés</td>
+<td class="columnLabels vCC role3">Latín</td>
+</tr>
+<tr>
+<td class="rowLabels dataAreaTop role3" rowspan="4">Correlación reproducida</td>
+<td class="rowLabels dataAreaTop vCR role3">Matematicas</td>
+<td class=" e dataAreaTop dataAreaLeft vCC" title="a. Comunalidades reproducidas">.519<sup>a</sup></td>
+<td class=" e dataAreaTop vCC">.675</td>
+<td class=" e dataAreaTop vCC">.508</td>
+<td class=" e dataAreaTop vCC">.674</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">C Naturales</td>
+<td class=" o dataAreaLeft hCR vCC">.675</td>
+<td class=" o hCR vCC" title="a. Comunalidades reproducidas">.877<sup>a</sup></td>
+<td class=" o hCR vCC">.660</td>
+<td class=" o hCR vCC">.876</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Francés</td>
+<td class=" e dataAreaLeft hCR vCC">.508</td>
+<td class=" e hCR vCC">.660</td>
+<td class=" e hCR vCC" title="a. Comunalidades reproducidas">.497<sup>a</sup></td>
+<td class=" e hCR vCC">.660</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Latín</td>
+<td class=" o dataAreaLeft hCR vCC">.674</td>
+<td class=" o hCR vCC">.876</td>
+<td class=" o hCR vCC">.660</td>
+<td class=" o hCR vCC" title="a. Comunalidades reproducidas">.875<sup>a</sup></td>
+</tr>
+<tr>
+<td class="rowLabels hCR role3" rowspan="4" title="b. Los residuos se calculan entre las correlaciones observadas y reproducidas. Existen 6 (100.0%) residuos no redundantes con valores absolutos mayores que 0,05.">Residuo<sup>b</sup></td>
+<td class="rowLabels hCR vCR role3">Matematicas</td>
+<td class=" e dataAreaLeft hCR vCC">&nbsp;</td>
+<td class=" e hCR vCC">.268</td>
+<td class=" e hCR vCC">-.206</td>
+<td class=" e hCR vCC">-.114</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">C Naturales</td>
+<td class=" o dataAreaLeft hCR vCC">.268</td>
+<td class=" o hCR vCC">&nbsp;</td>
+<td class=" o hCR vCC">-.116</td>
+<td class=" o hCR vCC">-.118</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Francés</td>
+<td class=" e dataAreaLeft hCR vCC">-.206</td>
+<td class=" e hCR vCC">-.116</td>
+<td class=" e hCR vCC">&nbsp;</td>
+<td class=" e hCR vCC">.275</td>
+</tr>
+<tr>
+<td class="rowLabels hCR vCR role3">Latín</td>
+<td class=" o dataAreaLeft hCR vCC">-.114</td>
+<td class=" o hCR vCC">-.118</td>
+<td class=" o hCR vCC">.275</td>
+<td class=" o hCR vCC">&nbsp;</td>
+</tr>
+</tbody><tfoot style="display:table-footer-group">
+<tr>
+<td class="caption" colspan="6">Método de extracción: factorización de eje principal.</td>
+</tr>
+<tr>
+<td class="footnotes" colspan="6">a. Comunalidades reproducidas</td>
+</tr>
+<tr>
+<td class="footnotes" colspan="6">b. Los residuos se calculan entre las correlaciones observadas y reproducidas. Existen 6 (100.0%) residuos no redundantes con valores absolutos mayores que 0,05.</td>
+</tr>
+<tr>
+<td  style="width:159px;padding:0px;border-spacing:0px"></td>
+<td  style="width:91px;padding:0px;border-spacing:0px"></td>
+<td  style="width:91px;padding:0px;border-spacing:0px"></td>
+<td  style="width:86px;padding:0px;border-spacing:0px"></td>
+<td  style="width:67px;padding:0px;border-spacing:0px"></td>
+<td  style="width:67px;padding:0px;border-spacing:0px"></td>
+</tr>
+</tfoot>
+</table>
+</div></body></html>
