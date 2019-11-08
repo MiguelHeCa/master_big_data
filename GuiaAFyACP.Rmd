@@ -1,0 +1,47 @@
+---
+title: "Guía para AF y ACP"
+author: "Miguel Hernández"
+date: "11/8/2019"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+    df_print: kable
+mainfont: "Quicksand-Medium"
+fontsize: 11pt
+geometry: margin=1in
+lang: es
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+```
+
+# Introducción
+
+Antes de realizar un análisis, lo importante es tener clara la formulación del problema. En este caso trabajaremos con investigar con detectar las materias de matemáticas y ciencias naturales pertenecen a un grupo distinto que materias de francés y latín.
+
+Contamos con las notas de las materias de 8 alumnos, las cuales se presentan de la siguiente manera:
+
+```{r, include=FALSE}
+library(flextable)
+CL = foreign::read.spss("data/Ciencias-Letras TOY EJEMPLO.sav", to.data.frame = T)
+CL = as.data.frame(apply(CL, 2, as.integer))
+```
+
+```{r, echo=FALSE}
+CL
+```
+
+La investigación seguirá la siguiente estructura:
+
+* Análisis de matriz de correlación
+* Extracción de factores
+* Determinación del número de factores
+* Rotación de factores
+* Interpretación de factores
+* Validación del modelo
+* Cálculo de puntuaciones factoriales
+* Selección de variables representativas
+* Análisis posterior
+
