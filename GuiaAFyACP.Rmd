@@ -1,7 +1,7 @@
 ---
 title: "Guía para ACP y AF"
 author: "Miguel Hernández"
-date: "11/8/2019"
+date: "11/11/2019"
 output: 
   pdf_document:
     latex_engine: xelatex
@@ -36,7 +36,213 @@ En el cuadro \ref{tab:cl_tab} se muestran las notas de las materias de 8 alumnos
 CL_tab
 ```
 
-# Proceso en R
+# Acordeón
+
+## Terminología
+
+**Matriz de correlaciones**. Matriz cuadrada que muestra el grado de relación entre variables, llamados saturaciones. Sus valores van de -1 a 1. El signo indica la dirección.
+
+**Matriz de covarianzas**. Matriz cuadrada que muestra la covarianza entre variables. Sus unidades dependen de las variables. El signo indica la dirección.
+
+**Determinante**. Escalar de una matriz cuadrada. Entre más cercano a 0, mejor.
+
+**Prueba de Bartlett**. Prueba de hipótesis nula de esfericidad. Buscamos que no sea una esfera.
+
+**KMO**. Prueba esfericidad mediante métodos matriciales. Entre más alto, mejor.
+
+**Valores propios** ($\lambda_j$). También conocidos como *eigenvalues*, autovalores o valores característicos, son los escalares de la matriz de correlaciones, la cual explica también la varianza de la variable latente.
+
+**Vectores propios**. Las componentes principales.
+
+**Cargas**. Proporción de la varianza absorbida por cada componente. Es el producto matricial de los vectores propios con la raíz cuadrada de los valores propios.
+
+**Varianzas**($var(X_i)$). En el ACP y AF, los valores propios. Es la suma de las comunalidades y las unicidades $var(X_i) = h^2_i + d^2_i$.
+
+**Comunalidad** ($h2_i$). La suma de las contribuciones de todos los factores. Entre más se acerque a 1, mejor.
+
+**Unicidad** ($d^2_i$). La contribución del factor único. $U2$ en algunos libros. A menor tamaño, mejor.
+
+**Matriz de correlaciones reproducida**. Reproduce la matriz original al realizar el producto de la matriz de cargas por sus transpuesta. El resultado es $R = FF' + U2$.
+
+**Residuales**. La diferencia entre las correlaciones observadas y las correlaciones reproducidas. A menor tamaño, mejor.
+
+**Rotación**. Ajuste de los ejes factoriales para mejorar la interpretabilidad. Aumenta y disminuye saturaciones hasta encontrar la solución óptima.
+
+**Varimax**. Transformación ortogonal en la que se busca obtener la solución que verifique que la suma de la varianza de los cuadrados de las saturaciones de los factores sea máxima.
+
+**Anderson-Rubin**. Puntuación factorial en donde se obtienen puntuaciones de factores que están incorrelacionados y que tienen varianza 1.
+
+## Carga de datos
+```{r}
+CL = foreign::read.spss("data/Ciencias-Letras TOY EJEMPLO.sav",
+                        to.data.frame = T)
+names(CL) = c("Matemáticas", names(CL)[2:4])
+```
+
+## Adecuación del modelo
+
+Para ver si el modelo es adecuado se usan tres aproximaciones:
+
+```{r}
+# Correlaciones
+CL_cor = Hmisc::rcorr(as.matrix(CL))
+CL_cor
+
+# Determinante de la matriz de correlaciones
+det(cor(CL))
+```
+
+
+## Análisis de Componentes principales
+
+Si no se sabe *a priori* el número de factores que se busca, se corre un modelo con todos los factores posibles.
+
+```{r}
+acp = psych::principal(CL, nfactors = ncol(CL), rotate = "none")
+
+# Cargas
+unclass(acp$loadings)
+
+# Proporción de la varianza
+acp$Vaccounted
+```
+
+
+```{r screeplot0, fig.cap="\\label{fig:screeplot0}Gráfico de sedimentos"}
+# Gráfico de sedimentos o de codos
+psych::scree(CL)
+```
+
+El modelo y el gráfico \ref{fig:screeplot0} sugieren 1 o 2 factores. Elegimos dos para efectos del ejemplo.
+
+```{r}
+acp = psych::principal(CL, nfactors = 2, rotate = "none")
+
+# Cargas
+unclass(acp$loadings)
+
+# Proporción de la varianza
+acp$Vaccounted
+
+# Autovalores
+acp$values
+
+# Comunalidades
+acp$communality
+
+# Unicidades
+acp$uniquenesses
+
+# Matriz de correlaciones reproducida
+psych::factor.model(acp$loadings)
+
+# Residuales de la matriz de correlaciones reproducida
+acp$residual
+```
+
+```{r}
+psych::plot.psych(acp, xlim = c(-1, 1), ylim = c(-1, 1))
+```
+
+Con rotación Varimax
+
+```{r}
+acp_var = psych::principal(CL, nfactors = 2, rotate = "varimax", method = "Anderson")
+
+# Cargas
+unclass(acp_var$loadings)
+
+# Proporción de la varianza
+acp_var$Vaccounted
+
+# Autovalores
+acp_var$values
+
+# Comunalidades
+acp_var$communality
+
+# Unicidades
+acp_var$uniquenesses
+
+# Matriz de correlaciones reproducida
+psych::factor.model(acp_var$loadings)
+
+# Residuales de la matriz de correlaciones reproducida
+acp_var$residual
+```
+
+
+```{r}
+psych::plot.psych(acp_var, xlim = c(-1, 1), ylim = c(-1, 1))
+```
+
+## Análisis factorial
+
+La gráfica \ref{fig:screeplot0} sugiere 1 solo factor, pero mantengamos dos factores.
+
+```{r}
+AF = psych::fa(CL, 2, rotate = "none", scores = "Anderson")
+
+# Cargas
+AF$loadings
+
+# Comunalidades
+AF$communality
+
+# Unicidades
+AF$uniquenesses
+
+# Valores propios de la matriz original
+AF$e.values
+
+# Proporcion de la varianza
+AF$e.values / 4
+
+# Suma acumulada de la proporción de la varianza
+cumsum(AF$e.values / 4)
+
+# Valores propios de la extracción
+AF$values
+
+# Proporcion de la varianza después de la extracción
+AF$Vaccounted
+
+# Matriz de correlaciones reproducida
+psych::factor.model(AF$loadings)
+
+# residuales de correlación
+AF
+```
+
+```{r}
+psych::plot.psych(AF, xlim = c(-1, 1), ylim = c(-1, 1))
+```
+
+Ahora se aplica la rotación varimax para capturar las unicidades de los factores.
+
+```{r}
+AF_rot = psych::fa(CL, 2, rotate = "varimax", scores = "Anderson")
+
+AF_rot$loadings
+
+# Comunaliddades
+AF_rot$communality
+
+# Varianza
+AF_rot$Vaccounted
+
+# Matriz de correlaciones reproducida
+psych::factor.model(AF_rot$loadings)
+
+# residuales de correlación rotada
+AF_rot
+``` 
+
+```{r}
+psych::plot.psych(AF_rot, xlim = c(-1, 1), ylim = c(-1, 1))
+```
+
+# Proceso detallado en R
 
 Antes de realizar cualquier operación, hay que asegurarse que se tengan instalados los siguientes programas:
 
@@ -270,9 +476,10 @@ comunalidades = rowSums(cargas^2)
 comunalidades
 ```
 
-Recordemos que las unicidades son $var(X_i) = h^2_i + d^2_i$. Suponiendo que las variables son reducidas
+Recordemos que las unicidades son $var(X_i) = h^2_i + d^2_i$. Suponiendo que las variables son reducidas:
 
 ```{r}
+# unicidades
 unicidades = diag(mat_cor) - comunalidades
 unicidades
 ```
@@ -281,6 +488,24 @@ Adicionalmente, podemos comprobar que las sumas de las saturaciones al cuadrado 
 
 ```{r}
 colSums(cargas^2)
+```
+
+También podemos calcular la matriz de correlaciones reproducida a partir de las cargas. Esto se hace para comprobar qué tan bueno es el modelo respecto a la matriz de correlaciones original.
+
+```{r}
+# Matriz de identidad
+I = diag(1, nrow = ncol(cargas))
+# Matriz de correlaciones reproducida
+mat_cor_rep = cargas %*% I %*% t(cargas)
+mat_cor_rep
+```
+
+De la matriz de correlaciones reproducida se pueden obtener los residuales, que si son cercanos a 0 significa que el modelo es adecuado.
+
+```{r}
+# Residuales
+residuales = mat_cor - mat_cor_rep
+residuales
 ```
 
 Regresando a las cargas, en la gráfica \ref{fig:acp_plot} vemos que existe similitud entre la materias que esperaríamos de ciencias y de letras, respectivamente. No obstante, los ejes no muestran alguna información diferenciada. Veamos si rotando la estructura sucede lo mismo. 
@@ -511,6 +736,12 @@ summary(valores_acp)
 
 # Comunalidades
 rowSums(cargas_prcomp^2)
+
+# Matriz de correlaciones reproducida
+cargas_prcomp %*% I %*% t(cargas_prcomp)
+
+# Residuales
+cor(CL) - cargas_prcomp %*% I %*% t(cargas_prcomp)
 ```
 La rotación también se hace con `varimax()` usando `cargas_prcomp`.
 
@@ -544,7 +775,7 @@ acp_psych_rot = psych::principal(CL, nfactors = 2, rotate = "varimax")
 acp_psych_rot$loadings
 
 # residuales de correlación
-residuals(acp_psych_rot)
+acp_psych_rot
 ```
 
 
@@ -591,8 +822,11 @@ AF$values
 # Proporcion de la varianza después de la extracción
 AF$Vaccounted
 
+# Matriz de correlaciones reproducida
+psych::factor.model(AF$loadings)
+
 # residuales de correlación
-residuals(AF)
+AF
 ```
 
 En suma, la solución no es interpretable. A pesar de ello, el modelo con dos factores comunes y las correspondientes unicidades es bueno (mejor que el de componentes principales) ya que los residuos son todavía más pequeños.
@@ -607,11 +841,14 @@ AF_rot$loadings
 # Comunaliddades
 AF_rot$communality
 
-#
+# Varianza
 AF_rot$Vaccounted
 
+# Matriz de correlaciones reproducida
+psych::factor.model(AF_rot$loadings)
+
 # residuales de correlación rotada
-residuals(AF_rot)
+AF_rot
 ```
 
 El modelo mejora la distribución del % de la varianza explicada entre los factores. Notar que en este caso el % de varianza no es idéntico al inicial, ni en la solución no rotada ni en la rotada. La estimación inicial de las comunalidades son los coeficientes de correlación múltiple. Tanto en la solución no rotada como en la rotada, cambian las saturaciones y por tanto las contribuciones de los factores comunes a las variables y las contribuciones de las variables a los dos primeros ejes, valores sobre los cuales se recalcula la absorción de inercia.
@@ -625,7 +862,7 @@ prop_var_af = scales::percent(AF_rot$Vaccounted[2,], accuracy = 0.1)
 ```
 
 
-```{r af_plot, include=FALSE, fig.cap="\\label{fig:af_plot}Gráfico de factor con rotación varimax"}
+```{r af_plot, echo=FALSE, fig.cap="\\label{fig:af_plot}Gráfico de factor con rotación varimax"}
 ggplot(
   data.frame(
     Materias = rownames(AF_rot$loadings),
