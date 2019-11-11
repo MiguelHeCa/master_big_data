@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019) (preloaded format=xelatex 2019.5.8)  8 NOV 2019 19:18
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019) (preloaded format=xelatex 2019.5.8)  11 NOV 2019 04:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -7,8 +7,8 @@ entering extended mode
 LaTeX2e <2018-12-01>
 (/usr/local/texlive/2019/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2018/09/03 v1.4i Standard LaTeX document class
-(/usr/local/texlive/2019/texmf-dist/tex/latex/base/size11.clo
-File: size11.clo 2018/09/03 v1.4i Standard LaTeX file (size option)
+(/usr/local/texlive/2019/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2018/09/03 v1.4i Standard LaTeX file (size option)
 )
 \c@part=\count80
 \c@section=\count81
@@ -345,42 +345,7 @@ File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
 \c@eu@=\count269
 \c@eu@i=\count270
 \c@mkern=\count271
-)
-
-Package fontspec Info: Quicksand-Medium scale = 0.8568602789213269.
-
-
-Package fontspec Info: Could not resolve font "Quicksand-Medium/BI" (it
-(fontspec)             probably doesn't exist).
-
-
-Package fontspec Info: Could not resolve font "Quicksand-Medium/B" (it
-(fontspec)             probably doesn't exist).
-
-
-Package fontspec Info: Could not resolve font "Quicksand-Medium/I" (it
-(fontspec)             probably doesn't exist).
-
-
-Package fontspec Info: Quicksand-Medium scale = 0.8568602789213269.
-
-
-Package fontspec Info: Font family 'Quicksand-Medium(0)' created for font
-(fontspec)             'Quicksand-Medium' with options
-(fontspec)             [Ligatures=TeX,Scale=MatchLowercase,Ligatures=TeX].
-(fontspec)              
-(fontspec)              This font family consists of the following NFSS
-(fontspec)             series/shapes:
-(fontspec)              
-(fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <->s*[0.8568602789213269]"Quicksand-Medium/OT:script=lat
-n;language=DFLT;mapping=tex-text;"
-(fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
-
-LaTeX Info: Redefining \rmfamily on input line 17.
-LaTeX Font Info:    Font shape `TU/Quicksand-Medium(0)/m/n' will be
-(Font)              scaled to size 9.38258pt on input line 17.
-(/usr/local/texlive/2019/texmf-dist/tex/latex/upquote/upquote.sty
+) (/usr/local/texlive/2019/texmf-dist/tex/latex/upquote/upquote.sty
 Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
 tim
 (/usr/local/texlive/2019/texmf-dist/tex/latex/base/textcomp.sty
@@ -602,12 +567,12 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip52
 )
-Package hyperref Info: Option `unicode' set `true' on input line 31.
+Package hyperref Info: Option `unicode' set `true' on input line 30.
 (/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/se-ascii-print.def
 File: se-ascii-print.def 2016/05/16 v1.11 stringenc: Printable ASCII characters
 
 )
-Package hyperref Info: Option `breaklinks' set `true' on input line 31.
+Package hyperref Info: Option `breaklinks' set `true' on input line 30.
 (/usr/local/texlive/2019/texmf-dist/tex/latex/polyglossia/polyglossia.sty
 Package: polyglossia 2019/04/04 v1.44 Alternative to Babel for XeLaTeX and LuaL
 aTeX
@@ -643,6 +608,42 @@ Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
 \fb@frh=\dimen161
 \FrameRule=\dimen162
 \FrameSep=\dimen163
+) (/usr/local/texlive/2019/texmf-dist/tex/latex/tools/longtable.sty
+Package: longtable 2014/10/28 v4.11 Multi-page Table package (DPC)+ FMi change
+\LTleft=\skip54
+\LTright=\skip55
+\LTpre=\skip56
+\LTpost=\skip57
+\LTchunksize=\count292
+\LTcapwidth=\dimen164
+\LT@head=\box50
+\LT@firsthead=\box51
+\LT@foot=\box52
+\LT@lastfoot=\box53
+\LT@cols=\count293
+\LT@rows=\count294
+\c@LT@tables=\count295
+\c@LT@chunks=\count296
+\LT@p@ftn=\toks24
+) (/usr/local/texlive/2019/texmf-dist/tex/latex/booktabs/booktabs.sty
+Package: booktabs 2016/04/27 v1.618033 publication quality tables
+\heavyrulewidth=\dimen165
+\lightrulewidth=\dimen166
+\cmidrulewidth=\dimen167
+\belowrulesep=\dimen168
+\belowbottomsep=\dimen169
+\aboverulesep=\dimen170
+\abovetopsep=\dimen171
+\cmidrulesep=\dimen172
+\cmidrulekern=\dimen173
+\defaultaddspace=\dimen174
+\@cmidla=\count297
+\@cmidlb=\count298
+\@aboverulesep=\dimen175
+\@belowrulesep=\dimen176
+\@thisruleclass=\count299
+\@lastruleclass=\count300
+\@thisrulewidth=\dimen177
 ) (/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2017/06/01 v1.1a Enhanced LaTeX Graphics (DPC,SPQR)
 (/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/graphics.sty
@@ -654,8 +655,8 @@ File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: xetex.def on input line 99.
 )
-\Gin@req@height=\dimen164
-\Gin@req@width=\dimen165
+\Gin@req@height=\dimen178
+\Gin@req@width=\dimen179
 ) (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/grffile.sty
 Package: grffile 2017/06/30 v1.18 Extended file name support for graphics (HO)
 Package grffile Info: Option `multidot' is set to `true'.
@@ -666,200 +667,48 @@ Package grffile Info: \Gin@ii of package `graphicx' fixed on input line 494.
 Package: parskip 2019-01-16 v2.0c non-zero parskip adjustments
 ) (/usr/local/texlive/2019/texmf-dist/tex/latex/titling/titling.sty
 Package: titling 2009/09/04 v2.1d maketitle typesetting
-\thanksmarkwidth=\skip54
-\thanksmargin=\skip55
-\droptitle=\skip56
-) (/usr/local/texlive/2019/texmf-dist/tex/latex/booktabs/booktabs.sty
-Package: booktabs 2016/04/27 v1.618033 publication quality tables
-\heavyrulewidth=\dimen166
-\lightrulewidth=\dimen167
-\cmidrulewidth=\dimen168
-\belowrulesep=\dimen169
-\belowbottomsep=\dimen170
-\aboverulesep=\dimen171
-\abovetopsep=\dimen172
-\cmidrulesep=\dimen173
-\cmidrulekern=\dimen174
-\defaultaddspace=\dimen175
-\@cmidla=\count292
-\@cmidlb=\count293
-\@aboverulesep=\dimen176
-\@belowrulesep=\dimen177
-\@thisruleclass=\count294
-\@lastruleclass=\count295
-\@thisrulewidth=\dimen178
-) (/usr/local/texlive/2019/texmf-dist/tex/latex/tools/longtable.sty
-Package: longtable 2014/10/28 v4.11 Multi-page Table package (DPC)+ FMi change
-\LTleft=\skip57
-\LTright=\skip58
-\LTpre=\skip59
-\LTpost=\skip60
-\LTchunksize=\count296
-\LTcapwidth=\dimen179
-\LT@head=\box50
-\LT@firsthead=\box51
-\LT@foot=\box52
-\LT@lastfoot=\box53
-\LT@cols=\count297
-\LT@rows=\count298
-\c@LT@tables=\count299
-\c@LT@chunks=\count300
-\LT@p@ftn=\toks24
-) (/usr/local/texlive/2019/texmf-dist/tex/latex/tools/array.sty
-Package: array 2018/12/30 v2.4k Tabular extension package (FMi)
-\col@sep=\dimen180
-\ar@mcellbox=\box54
-\extrarowheight=\dimen181
-\NC@list=\toks25
-\extratabsurround=\skip61
-\backup@length=\skip62
-\ar@cellbox=\box55
-) (/usr/local/texlive/2019/texmf-dist/tex/latex/multirow/multirow.sty
-Package: multirow 2019/01/01 v2.4 Span multiple rows of a table
-\multirow@colwidth=\skip63
-\multirow@cntb=\count301
-\multirow@dima=\skip64
-\bigstrutjot=\dimen182
-) (/usr/local/texlive/2019/texmf-dist/tex/latex/wrapfig/wrapfig.sty
-\wrapoverhang=\dimen183
-\WF@size=\dimen184
-\c@WF@wrappedlines=\count302
-\WF@box=\box56
-\WF@everypar=\toks26
-Package: wrapfig 2003/01/31  v 3.6
-) (/usr/local/texlive/2019/texmf-dist/tex/latex/float/float.sty
-Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count303
-\float@exts=\toks27
-\float@box=\box57
-\@float@everytoks=\toks28
-\@floatcapt=\box58
-) (/usr/local/texlive/2019/texmf-dist/tex/latex/colortbl/colortbl.sty
-Package: colortbl 2018/12/12 v1.0d Color table columns (DPC)
-\everycr=\toks29
-\minrowclearance=\skip65
-) (/usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/pdflscape.sty
-Package: pdflscape 2016/05/14 v0.11 Display of landscape pages in PDF (HO)
-(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics/lscape.sty
-Package: lscape 2000/10/22 v3.01 Landscape Pages (DPC)
-)
-Package pdflscape Info: Auto-detected driver: dvipdfm (xetex) on input line 99.
-
-) (/usr/local/texlive/2019/texmf-dist/tex/latex/tabu/tabu.sty
-Package: tabu 2019/01/11 v2.9 - flexible LaTeX tabulars (FC+tabu-fixed)
-(/usr/local/texlive/2019/texmf-dist/tex/latex/varwidth/varwidth.sty
-Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
-\@vwid@box=\box59
-\sift@deathcycles=\count304
-\@vwid@loff=\dimen185
-\@vwid@roff=\dimen186
-)
-\c@taburow=\count305
-\tabu@nbcols=\count306
-\tabu@cnt=\count307
-\tabu@Xcol=\count308
-\tabu@alloc=\count309
-\tabu@nested=\count310
-\tabu@target=\dimen187
-\tabu@spreadtarget=\dimen188
-\tabu@naturalX=\dimen189
-\tabucolX=\dimen190
-\tabu@Xsum=\dimen191
-\extrarowdepth=\dimen192
-\abovetabulinesep=\dimen193
-\belowtabulinesep=\dimen194
-\tabustrutrule=\dimen195
-\tabu@thebody=\toks30
-\tabu@footnotes=\toks31
-\tabu@box=\box60
-\tabu@arstrutbox=\box61
-\tabu@hleads=\box62
-\tabu@vleads=\box63
-\tabu@cellskip=\skip66
-)
-(/usr/local/texlive/2019/texmf-dist/tex/latex/threeparttable/threeparttable.sty
-Package: threeparttable 2003/06/13  v 3.0
-\@tempboxb=\box64
-)
-(/usr/local/texlive/2019/texmf-dist/tex/latex/threeparttablex/threeparttablex.s
-ty
-Package: threeparttablex 2013/07/23 v0.3 by daleif
-(/usr/local/texlive/2019/texmf-dist/tex/latex/environ/environ.sty
-Package: environ 2014/05/04 v0.3 A new way to define environments
-(/usr/local/texlive/2019/texmf-dist/tex/latex/trimspaces/trimspaces.sty
-Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
-))
-\TPTL@width=\skip67
-) (/usr/local/texlive/2019/texmf-dist/tex/generic/ulem/ulem.sty
-\UL@box=\box65
-\UL@hyphenbox=\box66
-\UL@skip=\skip68
-\UL@hook=\toks32
-\UL@height=\dimen196
-\UL@pe=\count311
-\UL@pixel=\dimen197
-\ULC@box=\box67
-Package: ulem 2012/05/18
-\ULdepth=\dimen198
-) (/usr/local/texlive/2019/texmf-dist/tex/latex/makecell/makecell.sty
-Package: makecell 2009/08/03 V0.1e Managing of Tab Column Heads and Cells
-\rotheadsize=\dimen199
-\c@nlinenum=\count312
-\TeXr@lab=\toks33
-) (/usr/local/texlive/2019/texmf-dist/tex/latex/xcolor/xcolor.sty
-Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
-(/usr/local/texlive/2019/texmf-dist/tex/latex/graphics-cfg/color.cfg
-File: color.cfg 2016/01/02 v1.6 sample color configuration
-)
-Package xcolor Info: Driver file: xetex.def on input line 225.
-LaTeX Info: Redefining \color on input line 709.
-Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1348.
-Package xcolor Info: Model `RGB' extended on input line 1364.
-Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1366.
-Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1367.
-Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
-Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
-Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
-Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
-)
-No file GuiaAFyACP.aux.
+\thanksmarkwidth=\skip58
+\thanksmargin=\skip59
+\droptitle=\skip60
+) (./GuiaAFyACP.aux)
 \openout1 = `GuiaAFyACP.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 149.
-LaTeX Font Info:    ... okay on input line 149.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 149.
-LaTeX Font Info:    ... okay on input line 149.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 149.
-LaTeX Font Info:    ... okay on input line 149.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 149.
-LaTeX Font Info:    ... okay on input line 149.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 149.
-LaTeX Font Info:    ... okay on input line 149.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 149.
-LaTeX Font Info:    ... okay on input line 149.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 149.
-LaTeX Font Info:    ... okay on input line 149.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 149.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 149.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 135.
+LaTeX Font Info:    ... okay on input line 135.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 135.
+LaTeX Font Info:    ... okay on input line 135.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 135.
+LaTeX Font Info:    ... okay on input line 135.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 135.
+LaTeX Font Info:    ... okay on input line 135.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 135.
+LaTeX Font Info:    ... okay on input line 135.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 135.
+LaTeX Font Info:    ... okay on input line 135.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 135.
+LaTeX Font Info:    ... okay on input line 135.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 135.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 135.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 149.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 149.
-LaTeX Font Info:    ... okay on input line 149.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 149.
-LaTeX Font Info:    ... okay on input line 149.
-LaTeX Info: Redefining \microtypecontext on input line 149.
+LaTeX Font Info:    ... okay on input line 135.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 135.
+LaTeX Font Info:    ... okay on input line 135.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 135.
+LaTeX Font Info:    ... okay on input line 135.
+LaTeX Info: Redefining \microtypecontext on input line 135.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of spacing.
 Package microtype Info: No adjustment of kerning.
-Package microtype Info: Loading generic protrusion settings for font family
-(microtype)             `Quicksand-Medium' (encoding: TU).
-(microtype)             For optimal results, create family-specific settings.
-(microtype)             See the microtype manual for details.
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-LatinModernRoman.cfg
+File: mt-LatinModernRoman.cfg 2013/03/13 v1.0 microtype config. file: Latin Mod
+ern Roman (RS)
+)
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
 *geometry* verbose mode - [ preamble ] result:
@@ -879,12 +728,12 @@ Package microtype Info: Loading generic protrusion settings for font family
 * \topmargin=-37.0pt
 * \headheight=12.0pt
 * \headsep=25.0pt
-* \topskip=11.0pt
+* \topskip=10.0pt
 * \footskip=30.0pt
-* \marginparwidth=59.0pt
-* \marginparsep=10.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
 * \columnsep=10.0pt
-* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
 * \hoffset=0.0pt
 * \voffset=0.0pt
 * \mag=1000
@@ -894,192 +743,118 @@ Package microtype Info: Loading generic protrusion settings for font family
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-\AtBeginShipoutBox=\box68
-Package hyperref Info: Link coloring OFF on input line 149.
+\AtBeginShipoutBox=\box54
+Package hyperref Info: Link coloring OFF on input line 135.
 (/usr/local/texlive/2019/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 (/usr/local/texlive/2019/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count313
+\c@section@level=\count301
 )
-LaTeX Info: Redefining \ref on input line 149.
-LaTeX Info: Redefining \pageref on input line 149.
-LaTeX Info: Redefining \nameref on input line 149.
+LaTeX Info: Redefining \ref on input line 135.
+LaTeX Info: Redefining \pageref on input line 135.
+LaTeX Info: Redefining \nameref on input line 135.
+(./GuiaAFyACP.out) (./GuiaAFyACP.out)
 \@outlinefile=\write4
 \openout4 = `GuiaAFyACP.out'.
 
+LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 179.
 
-Package hyperref Warning: Rerun to get /PageLabels entry.
+Overfull \hbox (2.74498pt too wide) in paragraph at lines 213--213
+[]\TU/lmtt/m/n/10 ##  - attr(*, "variable.labels")= Named chr  "Matematicas" "C
+ Naturales" "Francés" "Latín"[] 
+ []
 
-LaTeX Font Info:    Font shape `TU/Quicksand-Medium(0)/m/n' will be
-(Font)              scaled to size 17.77122pt on input line 150.
-LaTeX Font Info:    Font shape `TU/Quicksand-Medium(0)/m/n' will be
-(Font)              scaled to size 10.28229pt on input line 150.
+[1
 
-LaTeX Font Warning: Font shape `TU/Quicksand-Medium(0)/m/it' undefined
-(Font)              using `TU/Quicksand-Medium(0)/m/n' instead on input line 15
-0.
-
-LaTeX Font Info:    Font shape `TU/Quicksand-Medium(0)/m/it' will be
-(Font)              scaled to size 10.28229pt on input line 150.
-LaTeX Font Info:    Font shape `TU/Quicksand-Medium(0)/m/n' will be
-(Font)              scaled to size 12.33873pt on input line 153.
-
-LaTeX Font Warning: Font shape `TU/Quicksand-Medium(0)/bx/n' undefined
-(Font)              using `TU/Quicksand-Medium(0)/m/n' instead on input line 15
-3.
-
-LaTeX Font Info:    Font shape `TU/Quicksand-Medium(0)/bx/n' will be
-(Font)              scaled to size 9.38258pt on input line 160.
-
-LaTeX Warning: Reference `tab:CL_tab' on page 1 undefined on input line 160.
-
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 167.
+]
+File: GuiaAFyACP_files/figure-latex/corplot-1.pdf Graphic file (type pdf)
+<use GuiaAFyACP_files/figure-latex/corplot-1.pdf>
+[2] [3]
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 318.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-(/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-LatinModernRoman.cfg
-File: mt-LatinModernRoman.cfg 2013/03/13 v1.0 microtype config. file: Latin Mod
-ern Roman (RS)
-)
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 167.
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `lmr' (encoding: OT1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 318.
 
 (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 167
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 318
 .
 (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 167
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 318
 .
 (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 167.
+(Font)              <10> on input line 318.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 167.
+(Font)              <7> on input line 318.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 167.
-LaTeX Font Info:    Try loading font information for U+msa on input line 167.
+(Font)              <5> on input line 318.
+LaTeX Font Info:    Try loading font information for U+msa on input line 318.
 (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) (/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 167.
+LaTeX Font Info:    Try loading font information for U+msb on input line 318.
 (/usr/local/texlive/2019/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (/usr/local/texlive/2019/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
-)
-LaTeX Font Info:    Font shape `TU/Quicksand-Medium(0)/bx/n' will be
-(Font)              scaled to size 12.33873pt on input line 209.
-LaTeX Font Info:    Font shape `TU/Quicksand-Medium(0)/bx/n' will be
-(Font)              scaled to size 10.28229pt on input line 212.
+) [4] [5]
+File: GuiaAFyACP_files/figure-latex/screeplot-1.pdf Graphic file (type pdf)
+<use GuiaAFyACP_files/figure-latex/screeplot-1.pdf>
+[6] [7] [8]
+File: GuiaAFyACP_files/figure-latex/acp_plot-1.pdf Graphic file (type pdf)
+<use GuiaAFyACP_files/figure-latex/acp_plot-1.pdf>
+[9] [10] [11]
+File: GuiaAFyACP_files/figure-latex/acp_rot_plot-1.pdf Graphic file (type pdf)
+<use GuiaAFyACP_files/figure-latex/acp_rot_plot-1.pdf>
+[12]
+File: GuiaAFyACP_files/figure-latex/acp_spss-1.pdf Graphic file (type pdf)
+<use GuiaAFyACP_files/figure-latex/acp_spss-1.pdf>
+[13]
+File: GuiaAFyACP_files/figure-latex/acp_rot_spss-1.pdf Graphic file (type pdf)
+<use GuiaAFyACP_files/figure-latex/acp_rot_spss-1.pdf>
+[14] [15] [16] [17] [18]
 
-Package xcolor Warning: Incompatible color definition on input line 216.
-
-LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 218.
-
-Package xcolor Warning: Incompatible color definition on input line 220.
-
-
-Package xcolor Warning: Incompatible color definition on input line 220.
-
-
-Package xcolor Warning: Incompatible color definition on input line 224.
-
-[1
-
-]
-
-Package xcolor Warning: Incompatible color definition on input line 229.
+LaTeX Warning: Reference `fig:af_plot' on page 19 undefined on input line 1435.
 
 
-Package xcolor Warning: Incompatible color definition on input line 229.
+[19]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1451.
+[20]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1451.
+(./GuiaAFyACP.aux)
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 1451.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1451.
 
+Package rerunfilecheck Info: File `GuiaAFyACP.out' has not changed.
+(rerunfilecheck)             Checksum: 9EF0E6278519C6D8DD49E42A78B3E4D7.
 
-Package xcolor Warning: Incompatible color definition on input line 241.
+LaTeX Warning: There were undefined references.
 
-
-Package xcolor Warning: Incompatible color definition on input line 246.
-
-
-Package xcolor Warning: Incompatible color definition on input line 246.
-
-
-Package xcolor Warning: Incompatible color definition on input line 252.
-
-
-Package xcolor Warning: Incompatible color definition on input line 256.
-
-
-Package xcolor Warning: Incompatible color definition on input line 256.
-
-
-Package xcolor Warning: Incompatible color definition on input line 265.
-
-
-Package xcolor Warning: Incompatible color definition on input line 270.
-
-
-Package xcolor Warning: Incompatible color definition on input line 270.
-
-
-Package xcolor Warning: Incompatible color definition on input line 290.
-
-
-Package xcolor Warning: Incompatible color definition on input line 294.
-
-
-Package xcolor Warning: Incompatible color definition on input line 294.
-
-File: GuiaAFyACP_files/figure-latex/unnamed-chunk-6-1.pdf Graphic file (type pd
-f)
-<use GuiaAFyACP_files/figure-latex/unnamed-chunk-6-1.pdf>
-[2]
-
-Package xcolor Warning: Incompatible color definition on input line 304.
-
-
-Package xcolor Warning: Incompatible color definition on input line 308.
-
-
-Package xcolor Warning: Incompatible color definition on input line 308.
-
-
-Package xcolor Warning: Incompatible color definition on input line 340.
-
-[3]
-
-Package xcolor Warning: Incompatible color definition on input line 344.
-
-
-Package xcolor Warning: Incompatible color definition on input line 344.
-
-
-! Package amsmath Error: Erroneous nesting of equation structures;
-(amsmath)                trying to recover with `aligned'.
-
-See the amsmath package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.380 \end{align*}
-                   
+ ) 
 Here is how much of TeX's memory you used:
- 26008 strings out of 492916
- 478690 string characters out of 6133346
- 618984 words of memory out of 5000000
- 29777 multiletter control sequences out of 15000+600000
- 553992 words of font info for 58 fonts, out of 8000000 for 9000
+ 24351 strings out of 492916
+ 457105 string characters out of 6133346
+ 593298 words of memory out of 5000000
+ 28160 multiletter control sequences out of 15000+600000
+ 553870 words of font info for 56 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 46i,11n,116p,807b,446s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 46i,9n,68p,807b,446s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on GuiaAFyACP.pdf (3 pages).
+Output written on GuiaAFyACP.pdf (20 pages).
