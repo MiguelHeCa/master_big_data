@@ -1,0 +1,33 @@
+---
+title: "Clusters"
+author: "Miguel Hernández"
+date: "19/11/2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introducción
+
+## Clasificación jerárquicos
+
+No conocemos los clusters
+
+```{r}
+proteinas = foreign::read.spss("data/PaisesProteinas.sav", to.data.frame = TRUE)
+```
+
+
+## K-medias
+
+Conocemos *a priori* el número de clusters
+
+## Clasificación bi-etápica
+
+Nota. basado en el método de silueta.
+
+Propia de SPSS
+
+
