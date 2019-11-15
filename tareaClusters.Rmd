@@ -1,7 +1,10 @@
 ---
 title: "Clusters"
-author: "Miguel Hernández"
-date: "19/11/2019"
+author: 
+  - "Briseyda Amancaya"
+  - "María Anciones Polo"
+  - "Laura Gil García"
+  - "José Miguel Hernández Cabrera"
 output: pdf_document
 ---
 
@@ -18,8 +21,68 @@ knitr::opts_chunk$set(echo = TRUE)
 `cluster::`
 `factoextra`
 
+## Descripción de datos
 
-## Distancias
+
+```{r}
+paises = foreign::read.spss("data/PaisesProteinas.sav", to.data.frame = TRUE)
+
+summary(paises)
+```
+
+
+```{r}
+# Selección de variables
+var.paises = paises[, 2:ncol(paises)]
+
+# Estandarización
+p.esc = scale(var.paises)
+rownames(p.esc) = paises[, 1]
+head(p.esc)
+```
+
+### Detección de atípicos
+
+```{r}
+boxplot(p.esc)
+```
+
+El boxplot detecta dos países con alto consumo de carne roja y 1 de pescado, así como 2 de bajo consumo de huevo. Para saber cuáles, utilizamos el método Tukey para detectar los atípicos:
+
+```{r}
+detec_atip = function(x) {
+  resultado = list()
+  
+  # Rangos inter
+  ran.int = function(x) quantile(x, c(0.25, 0.75))
+  
+  # Detección
+  inferior = function(x) ran.int(x)[1] - (1.5 * IQR(x))
+  superior = function(x) ran.int(x)[2] + (1.5 * IQR(x))
+  
+  # Escribir resultados
+  resultado$ext.inferior = subset(x, x < inferior(x))
+  resultado$ext.superior = subset(x, x > superior(x))
+  
+  return(resultado)
+}
+
+unlist(apply(p.esc, 2, detec_atip))
+```
+
+### Colinealidad
+
+```{r}
+corrplot::corrplot(cor(p.esc))
+```
+
+Cereales esta inversamente correlacionada con todas.
+
+Frutos Secos, Huevos, Leche y cereales son las más correlacionaddas
+
+Probablemente sea necesaria una reducción de dimensiones.
+
+### Distancias
 
 Distancia euclidia
 $$d_{euc}(x, y) = \sqrt{\displaystyle \sum_{i = 1}^n(x_i - y_i)^2}$$
@@ -27,23 +90,217 @@ $$d_{euc}(x, y) = \sqrt{\displaystyle \sum_{i = 1}^n(x_i - y_i)^2}$$
 Distancia de Manhattan:
 $$d_{man}(x, y) = \displaystyle \sum_{i = 1}^n |(x_i - y_i)|$$
 
-## Clasificación jerárquicos
+Utilizamos la distancia euclidia
+
+```{r}
+d.euc = dist(p.esc, method = "euclidean")
+```
+
+## Clasificación jerárquica
+
+### Descripción
 
 No conocemos los clusters
 
+### Métodos de aglomeración
+
+Ward
+
+Vecinos más próximos
+
+Vecinos más lejanos
+
+Grupo promedio o UPGMA
+
+McQuitty WPGMA
+
+
 ```{r}
-proteinas = foreign::read.spss("data/PaisesProteinas.sav", to.data.frame = TRUE)
+metodos = c("ward.D2",  # Ward
+            "single",   # Vecinos más próximos
+            "complete", # Vecinos más lejanos
+            "average",  # Grupo promedio o UPGMA
+            "mcquitty") # McQuitty WPGMA
+names(metodos) = metodos
+
+met.agl = lapply(metodos, function(x) hclust(d.euc, method = x))
+```
+
+Coeficiente de aglomeración, para saber cuál método se ajusta mejor
+
+```{r}
+coe_agl = sapply(met.agl, cluster::coef.hclust)
+coe_agl = round(coe_agl, digits = 2)
+coe_agl
+```
+
+El método de Ward es el mejor.
+
+### Visualización con dendrogramas
+
+```{r}
+library(ggplot2)
+library(factoextra)
+
+ttl.met = c(
+  "Método de Ward",
+  "Vecino más próximo",
+  "Vecino más Lejano",
+  "Grupo promedio",
+  "Método de McQuitty"
+)
+
+coe.met = c(paste("Coef. aglo.:", coe_agl), "", "")
+
+dendros = function(x, ttl, stl) {
+  graf = fviz_dend(
+    x,
+    horiz = T,
+    main = ttl,
+    sub = stl,
+    xlab = "",
+    ylab = "Altura",
+    cex = 0.6
+  )
+  return(graf)
+}
+
+
+lapply(1:5, function(x) {
+  dendros(met.agl[[x]], ttl = ttl.met[x], stl = coe.met[x])
+})
+```
+
+### Método por disimilitud
+
+Disimilitud
+
+```{r}
+library(cluster)
+
+met.dis = diana(d.euc)
+
+# Coeficiente de disimilitud
+met.dis$dc
+```
+
+### Número óptimo de clusters
+
+```{r}
+g1 = fviz_nbclust(p.esc, FUN = hcut, method = "wss", k.max = 10) +
+  ggtitle("A. Método codo")
+g2 = fviz_nbclust(p.esc, FUN = hcut, method = "silhouette", k.max = 10) +
+  ggtitle("B. Método silueta")
+g3 = fviz_nbclust(p.esc, FUN = hcut, method = "gap_stat", k.max = 10) +
+  ggtitle("C. Método gap")
+gridExtra::grid.arrange(g1, g2, g3, nrow = 1)
+```
+
+Coeficientes para método codo
+
+```{r}
+g1$data
+```
+
+### Visualización de grupos
+
+Usamos 3 grupos, con distancia euclídea y algoritmo de Ward.
+
+```{r}
+fviz_dend(
+  met.agl$ward.D2,
+  horiz = TRUE,
+  k = 3,
+  rect = TRUE,
+  rect_fill = TRUE,
+  k_colors = "lancet",
+  cex = 0.6,
+  ylab = "Altura"
+) +
+  theme(title = element_blank())
 ```
 
 
 ## K-medias
 
+### Descripción
+
 Conocemos *a priori* el número de clusters
 
-## Clasificación bi-etápica
+### Obtención de k-medias
 
-Nota. basado en el método de silueta.
+```{r}
+k.medias = kmeans(p.esc, centers = 3, nstart = 25)
 
-Propia de SPSS
+k.medias$centers
+
+k.medias$size
+```
+
+### Exploración de clusters
+
+```{r}
+# Promedio de k-medias con respecto a los datos
+pmd.p.km = aggregate(p.esc, by = list(Cluster = k.medias$cluster), mean)
+
+pmd.p.km
+```
+
+Análisis de la varianza de clusters respecto a las variables.
+```{r}
+paises.km = data.frame(p.esc, Cluster = k.medias$cluster)
+
+sapply(colnames(paises.km)[1:9], function(x) {
+  summary(
+    aov(formula(paste0("Cluster~",x)), data = paises.km)
+  )
+})
+```
+
+### Visualización de K-medias
+
+
+
+```{r}
+fviz_cluster(k.medias,
+             data = p.esc,
+             palette = "lancet",
+             ellipse.type = "euclid",
+             star.plot = T,
+             repel = T,
+             ggtheme = theme_light()) +
+  theme(legend.position = "none",
+        plot.title = element_blank())
+```
+
+## Método PAM
+
+Partición Alrededor de Medioides
+
+Usamos `cluster::pam()`
+
+### Descripción
+
+En lugar de usar k-means, usa mediodes.
+
+```{r}
+met.pam = pam(p.esc, k = 3)
+
+met.pam$medoids
+```
+
+
+### Visualización de mediodes
+
+```{r}
+
+fviz_cluster(met.pam,
+             palette = "lancet",
+             ellipse.type = "t",
+             repel = T,
+             ggtheme = theme_light()) +
+  theme(legend.position = "none",
+        plot.title = element_blank())
+```
 
 
