@@ -10,6 +10,12 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+paquetes = c("cluster", "factoextra", "ggplot2")
+
+por_instal = paquetes[!paquetes %in% installed.packages()[, 1]]
+
+if(length(por_instal) > 0) install.packages(por_instal)
 ```
 
 ## Introducción
