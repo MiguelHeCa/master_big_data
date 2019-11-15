@@ -11,6 +11,22 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introducción
 
+## Paquetes
+
+`stats::hclust()``
+`stats:dist()`
+`cluster::`
+`factoextra`
+
+
+## Distancias
+
+Distancia euclidia
+$$d_{euc}(x, y) = \sqrt{\displaystyle \sum_{i = 1}^n(x_i - y_i)^2}$$
+
+Distancia de Manhattan:
+$$d_{man}(x, y) = \displaystyle \sum_{i = 1}^n |(x_i - y_i)|$$
+
 ## Clasificación jerárquicos
 
 No conocemos los clusters
