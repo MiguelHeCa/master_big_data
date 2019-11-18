@@ -22,51 +22,66 @@ if(length(por_instal) > 0) install.packages(por_instal)
 En este documento realizaremos un análisis de conglomerados o cluster.
 ## Paquetes
 
-`stats::hclust()`
-`stats:dist()`
-`cluster::`
-`factoextra`
+Los paquetes utilizados para realizar este análisis de clúster son `stats` y `cluster`. Además, utilizaremos las funciones `stats::hclust()`, `stats:dist()` y `cluster::diana()` para el análisis y los paquetes `factoextra` y `ggplot2` para la visualización de los grupos formados.
 
 ## Descripción de datos
 
+En primer lugar, importamos los datos teniendo en cuenta que hay que adaptar el directorio donde se encuentran los datos, en cuyo caso se encuentran en la carpeta `data/`.
 
 ```{r}
 paises = foreign::read.spss("data/PaisesProteinas.sav", to.data.frame = TRUE)
+```
 
+Posteriormente, podemos hacer una descriptiva básica de las distintas variables que componen la base de datos mediante la función `summary()`. 
+
+```{r}
 summary(paises)
 ```
 
+Seleccionamos la variable de `paises` para empezar el análisis. Como los métodos cluster son muy sensibles al hecho de que las variables no estén todas medidas en las mismas unidades, es necesario escalar las variables numéricas para que todas las variables tengan la misma importancia en el análisis. 
+
+La escala hace que todas las variables tengan media `0` y varianza `1`. Esto se realiza para evitar que el algoritmo de agrupamiento dependa de una unidad variable arbitraria.
 
 ```{r}
-# Selección de variables
+# Selección de variables numéricas
 var.paises = paises[, 2:ncol(paises)]
 
-# Estandarización
+# Crear matriz de estandarización
 p.esc = scale(var.paises)
+
+# Nombrar las filas con los nombres de los países
 rownames(p.esc) = paises[, 1]
+
+# Ver las primeras 6 observaciones
 head(p.esc)
 ```
 
 ### Detección de atípicos
 
+La siguiente fase consiste en detectar si existen observaciones aberrantes o atípicas que puedan influir en el modelo.
+
 ```{r}
 boxplot(p.esc)
 ```
 
-El boxplot detecta dos países con alto consumo de carne roja y 1 de pescado, así como 2 de bajo consumo de huevo. Para saber cuáles, utilizamos el método Tukey para detectar los atípicos:
+El boxplot detecta dos países con alto consumo de carne roja y uno de pescado, así como dos de bajo consumo de huevo. Para saber cuáles, utilizamos el método Tukey para detectar los atípicos, el cual consiste en:
+
+$$[Q_1 - k(Q_3 - Q_1), Q_3 + k(Q_3 - Q_1)]$$
+
+Para detectar de cuáles países se tratan creamos la función `detec_atip()`:
 
 ```{r}
 detec_atip = function(x) {
   resultado = list()
   
-  # Rangos inter
+  # Rangos de los Q1 y Q3
   ran.int = function(x) quantile(x, c(0.25, 0.75))
   
-  # Detección
+  # Detección usando el método de Tukey
   inferior = function(x) ran.int(x)[1] - (1.5 * IQR(x))
   superior = function(x) ran.int(x)[2] + (1.5 * IQR(x))
   
-  # Escribir resultados
+  # Escribir resultados en la lista creada
   resultado$ext.inferior = subset(x, x < inferior(x))
   resultado$ext.superior = subset(x, x > superior(x))
   
@@ -76,21 +91,30 @@ detec_atip = function(x) {
 unlist(apply(p.esc, 2, detec_atip))
 ```
 
+La función nos dice que `Francia` y el `Reino Unido` tienen un consumo alto atípico de carne roja. En el mismo sentido, `Portugal` consuma más pescado de lo normal. Por otra parte, `Portugal` y `Albania` consumen mucho menos huevo que el resto de los 23 países considerados.
+
+Generalmente, se recomienda hacer el análisis considerando a los atípicos y sin ellos o realizar un tratamiento de atípicos. No obstante, también es necesario notar que los datos en realidad pueden corresponder a una realidad que va más allá de lo que pueda explicar el modelo.
+
+Para efectos del ejercicio, dejamos esas observaciones sin modificaciones.
+
 ### Colinealidad
+
+Para tener una correcta interpretación de los grupos formados, debemos asegurarnos que no haya colinealidad. En caso contrario, se puede optar por eliminarla o utilizar distancias que amortigüen la colinealidad.
 
 ```{r}
 corrplot::corrplot(cor(p.esc))
 ```
 
-Cereales esta inversamente correlacionada con todas.
+Podemos observar que `Cereales` y `FrutosSecos` están inversamente correlacionados con todas las demás variables. A su vez, `Huevos`  y `Leche` tienen una relación lineal positiva con con `CarneRoja` y `CarneBlanca`.
 
-Frutos Secos, Huevos, Leche y cereales son las más correlacionaddas
-
-Probablemente sea necesaria una reducción de dimensiones.
+Dado que el modelo de clusters requiere que no exista colinealidad, probablemente sea necesaria una reducción de dimensiones o eliminar las variables con alta correlación. No obstante, para efectos del ejercicio, procederemos con los datos completos para mostrar cómo se comportan los objetos.
 
 ### Distancias
 
-Distancia euclidia
+Hay diferentes tipos de distancias con sus propiedades particulares pero las más habituales son las siguientes: 
+
+Distancia euclidia: es la medida de similaridad más utilizada frecuentemente. Se trata de la distancia más corta entre dos puntos. 
+
 $$d_{euc}(x, y) = \sqrt{\displaystyle \sum_{i = 1}^n(x_i - y_i)^2}$$
 
 Distancia de Manhattan:
@@ -106,33 +130,34 @@ d.euc = dist(p.esc, method = "euclidean")
 
 ### Descripción
 
-No conocemos los clusters
+El análisis de cluster jerárquico se utiliza tanto para variables cuantitativas como para variables cualitativas. También se emplea si no se conoce el número de cluster o cuando el número de objetos no es muy grande. 
+
+Puede subdividirse en **aglomerativos** (fases sucesivas de fusiones de los $n$ individuos) y en **divisivos** (particionan los $n$ individuos).
 
 ### Métodos de aglomeración
 
-Ward
+Hay diferentes métodos jerárquicos aglomerativos para el análisis de cluster:
 
-Vecinos más próximos
+Ward: no calcula distancias entre cluster pero forma un cluster que maximiza la homogeneidad intra cluster.
 
-Vecinos más lejanos
+Método del vecino más próximo: la distancia entre grupos se caracteriza por la del par de individuos que está más cercano (un individuo de cada grupo).
 
-Grupo promedio o UPGMA
+Método del vecino más lejano: la distancia entre grupos es la mayor distancia entre pares de individuos (uno de cada grupo).
 
-McQuitty WPGMA
+Grupo promedio o UPGMA: la distancia se calcula como la media entre todos los pares de individuos de cada grupo. 
 
 
 ```{r}
 metodos = c("ward.D2",  # Ward
             "single",   # Vecinos más próximos
             "complete", # Vecinos más lejanos
-            "average",  # Grupo promedio o UPGMA
-            "mcquitty") # McQuitty WPGMA
+            "average")  # Grupo promedio o UPGMA
 names(metodos) = metodos
 
 met.agl = lapply(metodos, function(x) hclust(d.euc, method = x))
 ```
 
-Coeficiente de aglomeración, para saber cuál método se ajusta mejor
+Utilizamos el **coeficiente de aglomeración**, para saber cuál método se ajusta mejor:
 
 ```{r}
 coe_agl = sapply(met.agl, cluster::coef.hclust)
@@ -140,9 +165,11 @@ coe_agl = round(coe_agl, digits = 2)
 coe_agl
 ```
 
-El método de Ward es el mejor.
+Podemos observar que de todos los métodos, el de Ward se ajusta más adecuadamente.
 
 ### Visualización con dendrogramas
+
+Los resultados del método jerárquico se representa gráficamente mediante un dendrograma, donde se indican las fusiones o divisiones producidas en las fases sucesivas del análisis.  
 
 ```{r}
 library(ggplot2)
@@ -152,8 +179,7 @@ ttl.met = c(
   "Método de Ward",
   "Vecino más próximo",
   "Vecino más Lejano",
-  "Grupo promedio",
-  "Método de McQuitty"
+  "Grupo promedio"
 )
 
 coe.met = c(paste("Coef. aglo.:", coe_agl), "", "")
@@ -172,7 +198,7 @@ dendros = function(x, ttl, stl) {
 }
 
 
-lapply(1:5, function(x) {
+lapply(1:4, function(x) {
   dendros(met.agl[[x]], ttl = ttl.met[x], stl = coe.met[x])
 })
 ```
