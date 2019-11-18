@@ -92,14 +92,14 @@ dendros = function(x, ttl, stl) {
 }
 
 
-for(i in 1:5) {
-  plot(met.agl[[i]],
-       main = ttl.met[i],
-       sub = coe.met[i],
-       xlab = "Clusters",
-       ylab = "Altura"
-  )
-}
+# for(i in 1:5) {
+#   plot(met.agl[[i]],
+#        main = ttl.met[i],
+#        sub = coe.met[i],
+#        xlab = "Clusters",
+#        ylab = "Altura"
+#   )
+# }
 
 lapply(1:5, function(x) {
   dendros(met.agl[[x]], ttl = ttl.met[x], stl = coe.met[x])
@@ -168,6 +168,12 @@ fviz_dend(
 ) +
   theme(title = element_blank())
 
+
+# > Variables que más influyen --------------------------------------------
+
+grupos = cutree(met.agl$ward.D2, k = 3)
+
+aggregate(p.esc, by = list(Cluster = grupos), mean)
 
 # K-means -----------------------------------------------------------------
 

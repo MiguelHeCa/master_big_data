@@ -19,10 +19,10 @@ if(length(por_instal) > 0) install.packages(por_instal)
 ```
 
 ## Introducción
-
+En este documento realizaremos un análisis de conglomerados o cluster.
 ## Paquetes
 
-`stats::hclust()``
+`stats::hclust()`
 `stats:dist()`
 `cluster::`
 `factoextra`
@@ -224,6 +224,23 @@ fviz_dend(
   ylab = "Altura"
 ) +
   theme(title = element_blank())
+```
+
+### Variables que más influyen
+
+```{r}
+grupos = cutree(met.agl$ward.D2, k = 3)
+
+aggregate(p.esc, by = list(Cluster = grupos), mean)
+```
+
+ANOVA de los grupos por cada variable
+
+```{r}
+paises_clust = data.frame(p.esc, grupos)
+ANOVA = aov(grupos ~ ., data = paises_clust)
+
+summary(ANOVA)
 ```
 
 
