@@ -1,12 +1,14 @@
 ---
 title: "Clusters"
-author: 
-  - "Briseyda Amancaya"
-  - "María Anciones Polo"
-  - "Laura Gil García"
-  - "José Miguel Hernández Cabrera"
-output: pdf_document
+author:
+- Briseyda Amancaya
+- María Anciones Polo
+- Laura Gil García
+- José Miguel Hernández Cabrera
 lang: es
+output:
+  pdf_document: default
+  word_document: default
 bibliography: ref/refm3.bib
 ---
 
@@ -22,7 +24,7 @@ if(length(por_instal) > 0) install.packages(por_instal)
 
 ## Introducción
 
-En este documento realizaremos un análisis de conglomerados o cluster.
+En este documento realizaremos un análisis de conglomerados o cluster aplicado a datos de conformación de diversas dietas de países europeos, utilizando los métodos de clasificación jerárquica, K-medias y PAM.
 
 ## Paquetes
 
@@ -64,7 +66,7 @@ head(p.esc)
 
 La siguiente fase consiste en detectar si existen observaciones aberrantes o atípicas que puedan influir en el modelo.
 
-```{r}
+```{r, fig.align="center"}
 boxplot(p.esc)
 ```
 
@@ -91,7 +93,6 @@ detec_atip = function(x) {
   
   return(resultado)
 }
-
 unlist(apply(p.esc, 2, detec_atip))
 ```
 
@@ -105,7 +106,7 @@ Para efectos del ejercicio, dejamos esas observaciones sin modificaciones.
 
 Para tener una correcta interpretación de los grupos formados, debemos asegurarnos que no haya colinealidad. En caso contrario, se puede optar por eliminarla o utilizar distancias que amortigüen la colinealidad.
 
-```{r}
+```{r, fig.align="center"}
 corrplot::corrplot(cor(p.esc))
 ```
 
@@ -117,14 +118,15 @@ Dado que el modelo de clusters requiere que no exista colinealidad, probablement
 
 Hay diferentes tipos de distancias con sus propiedades particulares pero las más habituales son las siguientes: 
 
-Distancia euclidia: es la medida de similaridad más utilizada frecuentemente. Se trata de la distancia más corta entre dos puntos. 
+Distancia euclídea: es la medida de similaridad más utilizada frecuentemente. Se trata de la distancia más corta entre dos puntos. 
 
 $$d_{euc}(x, y) = \sqrt{\displaystyle \sum_{i = 1}^n(x_i - y_i)^2}$$
 
-Distancia de Manhattan:
+Distancia de Manhattan: define la distancia entre dos puntos $x$ e $y$ como el sumatorio de las diferencias absolutas entre cada dimensión. Esta medida se ve menos afectada por atípicos (es más robusta) que la distancia euclídea debido a que no eleva al cuadrado las diferencias.
+
 $$d_{man}(x, y) = \displaystyle \sum_{i = 1}^n |(x_i - y_i)|$$
 
-Utilizamos la distancia euclidia
+En este ejercicio utilizamos la distancia euclídea mediante la función `dist()`.
 
 ```{r}
 d.euc = dist(p.esc, method = "euclidean")
@@ -175,7 +177,7 @@ Podemos observar que de todos los métodos, el de Ward se ajusta más adecuadame
 
 Los resultados del método jerárquico se representa gráficamente mediante un dendrograma, donde se indican las fusiones o divisiones producidas en las fases sucesivas del análisis.  
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 library(ggplot2)
 library(factoextra)
 
@@ -209,11 +211,11 @@ lapply(1:4, function(x) {
 
 ### Método por disimilitud
 
-La mayoría de las funciones de clasificaciones jerárquicas se enfocan en el método de aglomeración ofreciendo diversos métodos, por lo que el método de disimilitud es autocontenido.
+Las medidas de disimilitud miden la distancia entre dos objetos de forma que, cuanto mayor sea su valor, más diferentes son los objetos y menor la probabilidad de que los métodos de clasificación los pongan en el mismo grupo.
 
 El algoritmo construye los grupos a partir de uno solo que englobe a todas las $n$ observaciones. Luego, se realizan diversas etapas en las que los conglomerados son divididos hasta que contenga una sola observación, seleccionando aquellos que tengan el diámetro más grande (la disimilitud). 
 
-Para dividir el cluster seleccionado en cada etapa, el algoritmo busca la observación con la disimilud promedio más grande del grupo. Esta observación inicia el modo "grupo de fragmentación", en donde el algoritmo reasignará las observaciones que están más cercanas a este grupo que al conglomerado inicial. De tal forma que al final de ese paso se han formado dos nuevos clusters.
+Para dividir el cluster seleccionado en cada etapa, el algoritmo busca la observación con la disimilitud promedio más grande del grupo. Esta observación inicia el modo "grupo fragmentario", en donde el algoritmo reasignará las observaciones que están más cercanas a este grupo que al conglomerado inicial. De tal forma que al final de ese paso se han formado dos nuevos clusters.
 
 Para calcularlo en R, usamos la función `cluster::diana()` para iniciar la clasificación jerárquica por disimilitud. Cabe señalar que además del vector, la función también brinda el coeficiente de disimilitud, análogo al de aglomeración.
 
@@ -230,7 +232,9 @@ Podemos ver que el coeficiente de disimilitud es similar al método del vecino m
 
 ### Número óptimo de clusters
 
-Existen técnicas para decidir cuántos grupos es recomendable utilizar. Tres de ellas son el método de sedimentos (o de codo), de silueta [@ROUSSEEUW1987] y del estadístico *gap* [@Tibshirani_etal2001]. Para obtenerlos, utilizamos la función `factoextra::fviz_nbclust()`.
+Uno de los problemas que nos encontramos a la hora de aplicar alguno de los métodos de Clustering (K-means) es la elección del número de Clusters. 
+
+Aunque no exista un criterio objetivo para la selección del número de Clusters, existen técnicas para decidir cuántos cluster es recomendable utilizar. Tres de ellas son el método de sedimentos (o de codo), de silueta [@ROUSSEEUW1987] y del estadístico *gap* [@Tibshirani_etal2001]. Para obtenerlos, utilizamos la función `factoextra::fviz_nbclust()`.
 
 ```{r}
 g1 = fviz_nbclust(p.esc, FUN = hcut, method = "wss", k.max = 10) +
@@ -248,7 +252,7 @@ En adelante utilizaremos 3 grupos.
 
 ### Visualización de grupos
 
-Usamos 3 grupos, con distancia euclídea y algoritmo de Ward.
+Como ya hemos decidido, con la ayuda de diferentes criterios, prefijar en 3 el número de cluster, procedemos a visualizar con distancia euclídea y algoritmo de Ward los diferentes grupos.
 
 ```{r}
 fviz_dend(
@@ -259,6 +263,7 @@ fviz_dend(
   rect_fill = TRUE,
   k_colors = "lancet",
   cex = 0.6,
+  main = "Dendrograma con 3 grupos definidos",
   ylab = "Altura"
 )
 ```
@@ -267,7 +272,7 @@ Observamos que en un grupo se encuentran los países asociados a la dieta medite
 
 ### Variables que más influyen
 
-Vistos los grupos, veamos qué influye más en la conformación de cada uno.
+Derivado del dendrograma, usamos la función `cutree` para extraer los países de cada cluster. Posteriormente utilizaremos la función `aggregate` para calcular la tabla de pesos. Así podremos interpretar la importancia que tiene cada variable en los diferentes grupos de países.
 
 ```{r}
 grupos = cutree(met.agl$ward.D2, k = 3)
@@ -280,12 +285,10 @@ En el cluster 1 están los balcánicos, el cluster 3 los mediterráneos y el res
 ```{r}
 influencia = aggregate(p.esc, by = list(Cluster = grupos), mean)
 
-sort(influencia[1, 2:10], decreasing = T)
-sort(influencia[2, 2:10], decreasing = T)
-sort(influencia[3, 2:10], decreasing = T)
+lapply(1:3, function(x) sort(influencia[x, 2:10], decreasing = T))
 ```
  
-Vemos que los balcanes se caracterizan por consumir más cereales y frutos secos; los meditarráneos consumen más frutos y vegetales, frutos secos, pescado y cereales; el resto tiene una dieta rica en carnes, huevos, lácteos y féculas.
+Vemos que los balcanes se caracterizan por consumir más cereales y frutos secos; los mediterráneos consumen más frutos y vegetales, frutos secos, pescado y cereales; el resto tiene una dieta rica en proteínas.
  
 Veamos ahora el ANOVA de los grupos por cada variable
 
@@ -296,23 +299,23 @@ ANOVA = aov(grupos ~ ., data = paises_clust)
 summary(ANOVA)
 ```
 
-Aunque vemos que las variables `Huevos`, `Pescado`, `FrutosSecos` y `FrutosyVegetales` son las que más influyem en el modelo, es necesario aclarar que la interpretación no es confiable debido a que no se cumplen todos los supuestos para realizar correctamente el ANOVA ni el cluster.
+Aunque observamos que las variables `Huevos`, `Pescado`, `FrutosSecos` y `FrutosyVegetales` son las que más influyen en el modelo, es necesario aclarar que, en este caso, las pruebas F sólo se deben utilizar con una finalidad descriptiva. Los niveles críticos no son corregidos, por lo que no pueden interpretarse como contrastes de hipótesis de igualdad entre los centros de los conglomerados.
 
 ## K-medias
 
 ### Descripción
 
-*El Algoritmo de K-medias* pertenece a los cluster *NO JERARQUICOS*. Esto implica un conocimiento *a priori* del número de cluster, mediante el cual asignación de cada observación al cluster más cercano y una parada del método si no se produce reasignación o si la reasignación satisface la regla de parada.
+El algoritmo de **K-medias** pertenece a los cluster **no jerárquicos**. Esto implica un conocimiento *a priori* del número de cluster, mediante el cual asignación de cada observación al cluster más cercano y una parada del método si no se produce reasignación o si la reasignación satisface la regla de parada.
 
-El objetivo del algoritmo de K-medias es separar las observaciones en k-cluster, de manera que cada dato pertenezca únicamente a un grupo y se maximice la homogeneidad dentro de cada uno de ellos.
+El objetivo de este algoritmo es separar las observaciones en k-cluster, de manera que cada dato pertenezca únicamente a un grupo y se maximice la homogeneidad dentro de cada uno de ellos.
 
-### Obtención de k-medias
+### Obtención de K-medias
 
-La función kmeans recibe tres parametros: p.esc (nuestros datos ya estandarizados),centers (número de grupos a formar), nstart (número de casos, en este caso paises).
+La función `kmeans()` recibe tres parámetros: `p.esc` (nuestros datos ya estandarizados), `centers` (número de grupos a formar), `nstart` (número de casos, en este caso países).
 
 Con la posterior sentencia se obtiene el peso que tiene cada una de nuestras variables en cada uno de los 3 grupos.
 
-Y para finalizar, vemos el tamaño que tiene cada uno de los 3 grupos: el grupo 1 lo conforman 4 paises, el grupo 2 se compone de 6 paises y el grupo 3 de 15 paises.
+Y para finalizar, vemos el tamaño que tiene cada uno de los 3 grupos: el grupo 1 lo conforman 4 países, el grupo 2 se compone de 6 países y el grupo 3 de 15 países.
 
 ```{r}
 k.medias = kmeans(p.esc, centers = 3, nstart = 25)
@@ -324,14 +327,17 @@ k.medias$size
 
 ### Exploración de clusters
 
+Primero agregamos una columna con el numero de cluster correspondiente a cada fila.
+
 ```{r}
-# Promedio de k-medias con respecto a los datos
+# Promedio de K-medias con respecto a los datos
 pmd.p.km = aggregate(p.esc, by = list(Cluster = k.medias$cluster), mean)
 
 pmd.p.km
 ```
 
-Análisis de la varianza de clusters respecto a las variables.
+A continuación, realizamos un Análisis de la Varianza de Clusters respecto a las variables.
+
 ```{r}
 paises.km = data.frame(p.esc, Cluster = k.medias$cluster)
 
@@ -341,6 +347,8 @@ sapply(colnames(paises.km)[1:9], function(x) {
   )
 })
 ```
+
+Vemos cómo `FrutosSecos` tiene mucho más peso que el resto de los alimentos. Recordemos que esta tabla nos aporta solamente descripción informativa en este análisis.
 
 ### Visualización de K-medias
 
@@ -355,6 +363,10 @@ fviz_cluster(k.medias,
   theme(legend.position = "none",
         plot.title = element_blank())
 ```
+
+Finalmente, el gráfico de centralidades refleja las distancias euclídeas entre cada caso o su centro, de cada uno de cluster. También refleja las diferencias que reportan los países con base en las variables del estudio. Estos datos se obtienen de la tabla de pesos, calculada anteriormente.
+
+Como hemos visto anteriormente con el dendrograma, el primer grupo lo componen los *Países Mediterráneos*, el segundo los *Balcánicos* y el tercero lo conforman el *resto* de países de nuestro estudio (Centro Europa).
 
 ## Método de PAM
 
