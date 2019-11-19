@@ -1,14 +1,14 @@
 ---
 title: "Clusters"
 author:
-- Briseyda Amancaya
+- Amancaya Briseyda Conde Nina
 - María Anciones Polo
 - Laura Gil García
 - José Miguel Hernández Cabrera
 lang: es
 output:
-  pdf_document: default
   word_document: default
+  pdf_document: default
 bibliography: ref/refm3.bib
 ---
 
