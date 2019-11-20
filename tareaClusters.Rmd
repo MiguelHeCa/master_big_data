@@ -7,8 +7,8 @@ author:
 - José Miguel Hernández Cabrera
 lang: es
 output:
-  word_document: default
   pdf_document: default
+  word_document: default
 bibliography: ref/refm3.bib
 ---
 
@@ -234,7 +234,7 @@ Podemos ver que el coeficiente de disimilitud es similar al método del vecino m
 
 Uno de los problemas que nos encontramos a la hora de aplicar alguno de los métodos de Clustering (K-means) es la elección del número de Clusters. 
 
-Aunque no exista un criterio objetivo para la selección del número de Clusters, existen técnicas para decidir cuántos cluster es recomendable utilizar. Tres de ellas son el método de sedimentos (o de codo), de silueta [@ROUSSEEUW1987] y del estadístico *gap* [@Tibshirani_etal2001]. Para obtenerlos, utilizamos la función `factoextra::fviz_nbclust()`.
+Aunque no exista un criterio objetivo para la selección del número de Clusters, existen técnicas para decidir cuántos cluster es recomendable utilizar. Tres de ellas son el método de sedimentos (o de codo), de silueta [@ROUSSEEUW1987] y del estadístico *gap* [@Tibshiranietal2001]. Para obtenerlos, utilizamos la función `factoextra::fviz_nbclust()`.
 
 ```{r}
 g1 = fviz_nbclust(p.esc, FUN = hcut, method = "wss", k.max = 10) +
