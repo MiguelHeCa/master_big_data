@@ -108,7 +108,7 @@ acp$Vaccounted
 ```
 
 
-```{r screeplot0, fig.cap="\\label{fig:screeplot0}Gráfico de sedimentos"}
+```{r screeplot0, fig.cap="Gráfico de sedimentos"}
 # Gráfico de sedimentos o de codos
 psych::scree(CL)
 ```
