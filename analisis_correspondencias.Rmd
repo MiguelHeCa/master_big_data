@@ -1,0 +1,280 @@
+---
+title: "ANALISIS DE CORRESPONDENCIAS"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Paquetes
+Hay muchos paquetes que permiten realizar un Análisis de Correspondencias, por ejemplo:
+
+* CA() [FactoMineR package]
+* ca() [ca package],
+* dudi.coa() [ade4 package],
+* corresp() [MASS package],
+* epCA() [ExPosition package]
+* CA [MultBiploR]
+
+Utilizaremos *FactoMiner* para el análisis y *factoextra* para la visualización mediante *ggplot2*. Asegúres se de que tiene instalados los tre paquetes antes de comenzar. 
+
+## Los datos
+
+Partimos de una tabla de freccuencias ${\bf{F}} = ({f_{ij}})$ con $I$ filas y $J$ columnas correspondeintes alas categorías de dos variables nominales (u ordinales). BENZECRI (1973) propone el AFC como una técnica multivariante para representar las filas y las columnas de una tabla de contingencia como puntos de un espacio vectorial de baja dimensión (un plano, por ejemplo) en el cual se pueden interpretar las posiciones de los puntos. GIFI (1990) establece que el Análisis de Correspondencias es una técnica multivariante para estudiar relaciones de dependencia entre variables categóricas, a partir de una tabla de contingencia.
+
+```{r}
+library("FactoMineR")
+library("factoextra")
+```
+
+Los datos que utilizaremos son los siguientes
+
+```{r}
+data(housetasks)
+housetasks
+```
+
+Las 13 filas de la tabla son distintas tareas domésticas.
+
+Las columnas especifican quién realiza las tareas: solo por la mujer, alternativamente, solo por el marido o conjuntamente.
+
+## Dibujo directo de la tabla y test chi-cuadrado
+
+Como la tabla es pequeña, es fácil interpretar alguna las frecuencias directamente. 
+Haremos una representación gráfica en la que las frecuencias están relacionadas con el tamaño de los puntos.
+
+```{r}
+library("gplots")
+dt <- as.table(as.matrix(housetasks))
+balloonplot(t(dt), main ="housetasks", xlab ="", ylab="",
+            label = FALSE, show.margins = FALSE)
+```
+
+Para contrastar la hipótesis de que no hay asociación entre las tareas y quién las lleva a cabo, utilizamos el test chi- cuagrado.
+
+```{r}
+chisq <- chisq.test(housetasks)
+chisq
+```
+
+Encontramos una asociación significativa entre ambas variables. Podemos entender el Análisis de Correspondencias como la búsqueda de las causas de la significación. Si no tenemos una relación significativa, las diferencias que encontremos pueden deberse al azar.
+
+## Código para calcular en Análisis de Correspondencias
+El comando del paquete *FactoMiner* para llevar a cabo el Análisis de Correspondencias es *CA* que tiene la siguiente sintaxis simplificada
+```{r, eval=FALSE}
+CA(X, ncp = 5, graph = TRUE)
+```
+donde
+
+* X : un marco de datos conteniendo la tabla de contingencia
+* ncp : número de dimensiones a retener en los resultados.
+* graph : un valor lógico. Si es TRUE a se muestra el gráfico.
+
+Para nuestra tabla de datos
+```{r}
+library("FactoMineR")
+res.ca <- CA(housetasks, graph = FALSE)
+```
+El objeto con los resultados contiene múltiples listas y matrices como las que hemos visto en teoría
+```{r}
+print(res.ca)
+```
+
+## Visualización e Interpretación de los resultados.
+
+Usaremos las siguientes funciones [en *factoextra*] para yudar a la visualización e interpretación del Análisis de Correspondencias:
+
+* <p style="color:red">get_eigenvalue(res.ca)</p>: Extrae los autovalores/varianzas de cada dimensión o eje
+* <p style="color:red">fviz_eig(res.ca)</p>: Visualiza los valores propios
+* <p style="color:red">get_ca_row(res.ca), get_ca_col(res.ca)</p>: Extrae los resultados de filas y columnas.
+* <p style="color:red">fviz_ca_row(res.ca), fviz_ca_col(res.ca)(res.ca)</p>: Visualiza los resultados de filas y columnas.
+* <p style="color:red">fviz_ca_biplot(res.ca)</p>: realiza la representación conjunta de las fias y las columnas
+fviz_ca_biplot(res.ca): Make a biplot of rows and columns.
+In the next sections, we’ll illustrate each of these functions.
+
+## Valores propios/Varianzas
+Los valores propios aparecen en la abla siguiente
+```{r}
+library("factoextra")
+eig.val <- get_eigenvalue(res.ca)
+eig.val
+```
+Los dos primeros ejes recogen el 88.6% de la inercia, lo que puede considerarse suficiente para explicar la estructura de los datos. Podemos representarlos en un gráfico con la siguiente instrucción.
+
+```{r}
+fviz_screeplot(res.ca, addlabels = TRUE, ylim = c(0, 50))
+```
+
+Una posible regla para saber cuantos ejes tomar es quedarse con aquellos que tengan valores por encima de la media.
+Nuestros datos contienen 13 filas y 4 columnas.
+Si los datos fueran aleatorios, el valor esperado del autovalor para cada eje sería 1/(nrow(housetasks)-1) = 1/12 = 8.33% en términos de las filas.
+
+De la misma manera, la media debería recoger el 1/(ncol(housetasks)-1) = 1/3 = 33.33% en términos de las 4 columnas.
+Cualquier eje que contribuya más del máximo de ambas cantidades, debería ser considerado importante. Representamos el valor en la figura siguiente.
+
+```{r}
+fviz_screeplot(res.ca) +
+ geom_hline(yintercept=33.33, linetype=2, color="red")
+```
+Los dos primeros complen el criterio establecido.
+
+## Biplot
+
+La función *fviz_ca_biplot()* [factoextra package] puede usarse para la representación simultánea de las filas y las columnas de la tabla.
+
+```{r}
+# repel= TRUE to avoid text overlapping (slow if many point)
+fviz_ca_biplot(res.ca, repel = TRUE)
+```
+
+Se trata de una representación simétrica que muestra el patrón global de comportamiento de los datos. 
+
+La distancia entre dos puntos fila o dos puntos columna nos da una medida de su similitud (o disimilitud). Los puntos fila con un perfil similar aparecerán cercanos en el gráfico. Lo mismo ocurre con dos puntos columna.
+
+En el gráfico podemos ver que:
+
+* Las tareas como la cena, el desayuno, la lavandería son realizadas más a menudo por la mujer.
+* Conducir o las tareas de reparación son realizadas con mayor frecuencia por el marido.
+* El resto de las tareas, especialmente la planificación de las vacaciones, se realizan conjuntamente.
+* No queda muy claro cuales son las tareas que se realizan alternativamente
+
+Para la interpretación tenemos que tener en cuenta algunas consideraciones:
+
+* El gráfico simétrico representa a las filas y a las columnas en un espacio común. En este caso, solamente la distancia entre filas o entre columnas puede ser realmente interpretada.
+* La distancia entre una fila y una columna no es interpretable directamente. Solamente podemos realizar consideraciones generales. La interpretación es baricéntrica, que es un poco más complicada que las distancias.
+
+El paso siguiente es determinar filas y que columnas contribuyen más a las dimensiones.
+
+## Coordenadas de los puntos fila
+
+Mostramos las coordenadadas de las filas:
+```{r}
+row <- get_ca_row(res.ca)
+row
+head(row$coord)
+```
+De la misma manera podemos obtener las contribuciones (del elemento al factor), los cosenos al cuadrado (o contribuciones del factor al elemnto) o la inercia recogida por cada uno de los puntos
+
+La función *fviz_ca_row()* [en *factoextra*] nos permite visualizar solamente las coordenadas de las filas:
+```{r}
+fviz_ca_row(res.ca, repel = TRUE)
+```
+
+Es posible cambiar el color y la forma de los puntos usando los argumentos *col.row* y *shape.row* como sigue:
+
+```{r}
+fviz_ca_row(res.ca, col.row="steelblue", shape.row = 15)
+```
+Los gráficos anteriores muestran las relaciones entre los puntos fila:
+
+* Filas con perfiles similares aparecen cercanas.
+* Filas negativamente correlacionadas apuntarán en direcciones opuestas.
+* La distancia al origen de los puntos fila está relacionada con su calidad de represntación en el mapa factorial, es decir, puntos cercanos al origen están mal representados mientras que puntos alejados están bien representados.
+
+## Calidad de representación de las filas
+
+El resultado del análisis muestra que, la tabla de contingencia se ha representado satisfactoriamente en el espacio de baja dimensión mediante el uso del análisis de correspondencias. Las dos primeras dimensiones consiguen explicar el 88.6% de la inercia (o variación) total contenida en los datos.
+
+Sin embargo, no todos los puntos están igualmente representados en las dos dimensiones.
+
+La calidad de representación se denomina también cos^2^, ya que se puede calcular como el coseno al cuadrado del ángulo que forman el vector que representa a la fila en el espacio en dimensión completa y el plano de la representación. También puede entenderse como el grado de asociación entre la fila y el plano.
+
+```{r}
+row$cos2
+```
+Se pueden interpretar como correlaciones al cuadrado, es decir, cuanto más próximas estén a 1 major es la calidad de representación. En el gráfico siguiente vamos acolocar una escala de colores que depende de la calidad de representación.
+
+```{r}
+# Color by cos2 values: quality on the factor map
+fviz_ca_row(res.ca, col.row = "cos2",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), 
+             repel = TRUE)
+```
+
+Podemos visualizar los cosenos al cuadrado de los tres ejes
+```{r}
+library("corrplot")
+corrplot(row$cos2, is.corr=FALSE)
+```
+
+También los podemos visualizar con la siguiente instrucción.
+```{r}
+# Cos2 of rows on Dim.1 and Dim.2
+fviz_cos2(res.ca, choice = "row", axes = 1:2)
+```
+
+
+## Contribución de las filas
+La contribución de las filas (en %) a la definición de las diemensiones puede 
+```{r}
+row$contrib
+```
+
+Las filas con los valores más altos son las que más contribuyen a la definición de las dimensiones.
+Podemos visualizarlas
+```{r}
+library("corrplot")
+corrplot(row$contrib, is.corr=FALSE)  
+```
+
+O también como
+
+```{r}
+# Contributions of rows to dimension 1
+fviz_contrib(res.ca, choice = "row", axes = 1, top = 10)
+# Contributions of rows to dimension 2
+fviz_contrib(res.ca, choice = "row", axes = 2, top = 10)
+```
+
+Puede verse que:
+
+* Las filas *Repairs*, *Laundry*, *Main_meal* y *Driving* son las más importantes para la definición de la primera dimensión.
+* Las filas *Holidays* y *Repairs* son las que más contribuyen a la dimensión 2.
+
+Podemos resaltar estos puntos en el diagrama de dispersión como sigue:
+
+```{r}
+fviz_ca_row(res.ca, col.row = "contrib",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), 
+             repel = TRUE)
+```
+
+## Información para las columnas
+
+Se deja como ejercicio al lector
+
+## Biplots
+
+Además de los biplots simétricos existen otras alternativas con propiedades diferentes.
+
+Para poder interpretar directamente la elación entre los puntos fila y columna es necesario representar unos en el espacio de los otros y no mediante la representación simétrica que fue la propuesta por los autores originales. Explicaremos más estos conceptos cuando hablemos con más detalle de los métodos biplot.
+
+Podemos representar las columnas en el espacio de las filas, es la opción *rowprincipal* que representaremos a continuación.
+```{r}
+fviz_ca_biplot(res.ca, 
+               map ="rowprincipal", arrow = c(TRUE, TRUE),
+               repel = TRUE)
+```
+
+Podemos representar las filas en el espacio de las columnas, es la opción *columnprincipal* que representaremos a continuación.
+
+```{r}
+fviz_ca_biplot(res.ca, 
+               map ="columnprincipal", arrow = c(TRUE, TRUE),
+               repel = TRUE)
+```
+
+Incluso un biplot simétrico pero que no conserva ni la métrica de las filas ni la de las columnas
+
+```{r}
+fviz_ca_biplot(res.ca, 
+               map ="symbiplot", arrow = c(TRUE, TRUE),
+               repel = TRUE)
+```
+
+
+ 

@@ -1,0 +1,898 @@
+---
+title: "Guía para ACP y AF"
+author: "Miguel Hernández"
+date: "11/11/2019"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+geometry: margin=1in
+lang: es
+bibliography: ref/refm3.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.pos = "H", message = FALSE, warning = FALSE)
+```
+
+# Introducción
+
+Antes de realizar un análisis, lo importante es tener clara la formulación del problema. En este caso trabajaremos con investigar con detectar las materias de matemáticas y ciencias naturales pertenecen a un grupo distinto que materias de francés y latín.
+
+```{r, include=FALSE}
+CL = foreign::read.spss("data/Ciencias-Letras TOY EJEMPLO.sav", to.data.frame = T)
+CL_mat = as.data.frame(apply(CL, 2, as.integer))
+nom_CL = c("Matemáticas", "Naturales", "Francés", "Latín")
+names(CL_mat) = nom_CL
+```
+
+```{r, include=FALSE}
+# CL_tab = knitr::kable(CL_mat, format = "latex", caption = "Calificaciones de materias")
+CL_tab = knitr::kable(CL_mat, format = "pandoc", caption = "Calificaciones de materias\\label{tab:cl_tab}")
+```
+
+En el cuadro \ref{tab:cl_tab} se muestran las notas de las materias de 8 alumnos de la siguiente manera:
+
+```{r, echo=FALSE}
+CL_tab
+```
+
+# Acordeón
+
+## Terminología
+
+**Matriz de correlaciones**. Matriz cuadrada que muestra el grado de relación entre variables, llamados saturaciones. Sus valores van de -1 a 1. El signo indica la dirección.
+
+**Matriz de covarianzas**. Matriz cuadrada que muestra la covarianza entre variables. Sus unidades dependen de las variables. El signo indica la dirección.
+
+**Determinante**. Escalar de una matriz cuadrada. Entre más cercano a 0, mejor.
+
+**Prueba de Bartlett**. Prueba de hipótesis nula de esfericidad. Buscamos que no sea una esfera.
+
+**KMO**. Prueba esfericidad mediante métodos matriciales. Entre más alto, mejor.
+
+**Valores propios** ($\lambda_j$). También conocidos como *eigenvalues*, autovalores o valores característicos, son los escalares de la matriz de correlaciones, la cual explica también la varianza de la variable latente.
+
+**Vectores propios**. Las componentes principales.
+
+**Cargas**. Proporción de la varianza absorbida por cada componente. Es el producto matricial de los vectores propios con la raíz cuadrada de los valores propios.
+
+**Varianzas**($var(X_i)$). En el ACP y AF, los valores propios. Es la suma de las comunalidades y las unicidades $var(X_i) = h^2_i + d^2_i$.
+
+**Comunalidad** ($h2_i$). La suma de las contribuciones de todos los factores. Entre más se acerque a 1, mejor.
+
+**Unicidad** ($d^2_i$). La contribución del factor único. $U2$ en algunos libros. A menor tamaño, mejor.
+
+**Matriz de correlaciones reproducida**. Reproduce la matriz original al realizar el producto de la matriz de cargas por sus transpuesta. El resultado es $R = FF' + U2$.
+
+**Residuales**. La diferencia entre las correlaciones observadas y las correlaciones reproducidas. A menor tamaño, mejor.
+
+**Rotación**. Ajuste de los ejes factoriales para mejorar la interpretabilidad. Aumenta y disminuye saturaciones hasta encontrar la solución óptima.
+
+**Varimax**. Transformación ortogonal en la que se busca obtener la solución que verifique que la suma de la varianza de los cuadrados de las saturaciones de los factores sea máxima.
+
+**Anderson-Rubin**. Puntuación factorial en donde se obtienen puntuaciones de factores que están incorrelacionados y que tienen varianza 1.
+
+## Carga de datos
+```{r}
+CL = foreign::read.spss("data/Ciencias-Letras TOY EJEMPLO.sav",
+                        to.data.frame = T)
+names(CL) = c("Matemáticas", names(CL)[2:4])
+```
+
+## Adecuación del modelo
+
+Para ver si el modelo es adecuado se usan tres aproximaciones:
+
+```{r}
+# Correlaciones
+CL_cor = Hmisc::rcorr(as.matrix(CL))
+CL_cor
+
+# Determinante de la matriz de correlaciones
+det(cor(CL))
+```
+
+
+## Análisis de Componentes principales
+
+Si no se sabe *a priori* el número de factores que se busca, se corre un modelo con todos los factores posibles.
+
+```{r}
+acp = psych::principal(CL, nfactors = ncol(CL), rotate = "none")
+
+# Cargas
+unclass(acp$loadings)
+
+# Proporción de la varianza
+acp$Vaccounted
+```
+
+
+```{r screeplot0, fig.cap="Gráfico de sedimentos"}
+# Gráfico de sedimentos o de codos
+psych::scree(CL)
+```
+
+El modelo y el gráfico \ref{fig:screeplot0} sugieren 1 o 2 factores. Elegimos dos para efectos del ejemplo.
+
+```{r}
+acp = psych::principal(CL, nfactors = 2, rotate = "none")
+
+# Cargas
+unclass(acp$loadings)
+
+# Proporción de la varianza
+acp$Vaccounted
+
+# Autovalores
+acp$values
+
+# Comunalidades
+acp$communality
+
+# Unicidades
+acp$uniquenesses
+
+# Matriz de correlaciones reproducida
+psych::factor.model(acp$loadings)
+
+# Residuales de la matriz de correlaciones reproducida
+acp$residual
+```
+
+```{r}
+psych::plot.psych(acp, xlim = c(-1, 1), ylim = c(-1, 1))
+```
+
+Con rotación Varimax
+
+```{r}
+acp_var = psych::principal(CL, nfactors = 2, rotate = "varimax", method = "Anderson")
+
+# Cargas
+unclass(acp_var$loadings)
+
+# Proporción de la varianza
+acp_var$Vaccounted
+
+# Autovalores
+acp_var$values
+
+# Comunalidades
+acp_var$communality
+
+# Unicidades
+acp_var$uniquenesses
+
+# Matriz de correlaciones reproducida
+psych::factor.model(acp_var$loadings)
+
+# Residuales de la matriz de correlaciones reproducida
+acp_var$residual
+```
+
+
+```{r}
+psych::plot.psych(acp_var, xlim = c(-1, 1), ylim = c(-1, 1))
+```
+
+## Análisis factorial
+
+La gráfica \ref{fig:screeplot0} sugiere 1 solo factor, pero mantengamos dos factores.
+
+```{r}
+AF = psych::fa(CL, 2, rotate = "none", scores = "Anderson")
+
+# Cargas
+AF$loadings
+
+# Comunalidades
+AF$communality
+
+# Unicidades
+AF$uniquenesses
+
+# Valores propios de la matriz original
+AF$e.values
+
+# Proporcion de la varianza
+AF$e.values / 4
+
+# Suma acumulada de la proporción de la varianza
+cumsum(AF$e.values / 4)
+
+# Valores propios de la extracción
+AF$values
+
+# Proporcion de la varianza después de la extracción
+AF$Vaccounted
+
+# Matriz de correlaciones reproducida
+psych::factor.model(AF$loadings)
+
+# residuales de correlación
+AF
+```
+
+```{r}
+psych::plot.psych(AF, xlim = c(-1, 1), ylim = c(-1, 1))
+```
+
+Ahora se aplica la rotación varimax para capturar las unicidades de los factores.
+
+```{r}
+AF_rot = psych::fa(CL, 2, rotate = "varimax", scores = "Anderson")
+
+AF_rot$loadings
+
+# Comunaliddades
+AF_rot$communality
+
+# Varianza
+AF_rot$Vaccounted
+
+# Matriz de correlaciones reproducida
+psych::factor.model(AF_rot$loadings)
+
+# residuales de correlación rotada
+AF_rot
+``` 
+
+```{r}
+psych::plot.psych(AF_rot, xlim = c(-1, 1), ylim = c(-1, 1))
+```
+
+# Proceso detallado en R
+
+Antes de realizar cualquier operación, hay que asegurarse que se tengan instalados los siguientes programas:
+
+```{r}
+# Nombre de los paquetes que se utilizarán
+paquetes = c("psych", "ggplot2", "ggcorrplot")
+
+# Se crea un objeto con los nombres de los paquetes que no están instalados
+nuevos_paquetes = paquetes[!paquetes %in% installed.packages()[,1]]
+
+# Instala aquellos que no están instalados.
+# Si no hay ninguno por instalar, no hace nada.
+if(length(nuevos_paquetes)) install.packages(nuevos_paquetes)
+```
+
+## Exploración de datos
+
+Importamos datos que vienen en formato SPSS y los depositamos en el objeto `CL`.
+
+```{r}
+CL = foreign::read.spss("data/Ciencias-Letras TOY EJEMPLO.sav", to.data.frame = T)
+names(CL) = c("Matemáticas", names(CL)[2:4])
+str(CL)
+```
+
+El objeto `CL` es una `data.frame` con 8 observaciones y 4 variables, sin ningún valor faltante. Luego, calculamos la media y la desviación estándar de cada variable.
+
+```{r}
+# Media
+summary(CL)
+
+# Desviación estándar
+apply(CL, 2, sd)
+```
+
+## Relación entre variables
+
+La primera aproximación es ver si existen relaciones entre las variables que esperamos que pertenezcan a sus grupos. En este caso, `r nom_CL[1]` y `r nom_CL[2]` están correlacionados; análogamente `r nom_CL[3]` y `r nom_CL[4]`. El paquete `Hmisc` ofrece la función `rcorr()` para ver una matriz de correlaciones con sus significancias estadísticas. Para ello, se necesita convertir `CL` a datos de clase `matrix`.
+
+```{r}
+CL_cor = Hmisc::rcorr(as.matrix(CL))
+cor_mat = CL_cor$r # Matriz de correlaciones
+sig_mat = CL_cor$P # Matriz de p-valores de la correlación
+```
+
+También se puede ver gráficamente mediante el paquete `ggcorrplot`, en donde se pone la matriz de correlaciones `cor_mat`, como se muestra en la gráfica \ref{fig:corplot}.
+
+```{r corplot, message=FALSE, warning=FALSE, fig.cap="\\label{fig:corplot}Matriz de correlaciones de materias"}
+library(ggcorrplot)
+p.mat = cor_pmat(CL) # Otra forma de calcular la matriz de p-valores
+ggcorrplot(
+  cor_mat,
+  hc.order = TRUE,
+  type = "lower",
+  lab = TRUE,
+  colors = c("#ee5200", "white", "#009cee"),
+  p.mat = p.mat, # Habilitar ver las correlaciones no significativas
+  pch = 0, # Los p-valores no significativos se muestran como cuadros
+  pch.cex = 12
+)
+```
+
+
+Otra forma de verlo es ver si en general las variables están relacionadas mediante el determinante aplicando la función `det()` a la matriz de correlaciones ubicada en `cor_mat`. Si el determinante se acerca a 0, significa que hay relación entre las variables y podemos seguir explorando si el análisis de factores es adecuado. 
+
+```{r}
+det(cor_mat)
+```
+
+El determinante se acerca a cero y podemos continuar.
+
+## Prueba de esfericidad
+
+Queremos descartar si los datos tienen una forma esférica. Es decir, una esfericidad complete se presenta mediante la matriz:
+
+$$
+\begin{pmatrix}
+  1 & 0 & 0 & 0 \\
+  0 & 1 & 0 & 0 \\
+  \vdots  & \vdots  & \ddots & \vdots  \\
+  0 & 0 & \cdots & 1 
+ \end{pmatrix}
+$$
+
+Entonces, para descartar que los datos se comportan de esa forma, utilizamos la prueba de esfericidad de Bartlett, en donde la $H_0$ es que los datos presentan esfericidad completa. Es decir, mide el grado en que la matriz se desvía de la matriz de identidad $\mathbf{R}$. Para ello usamos la función `cortest.bartlett()` del paquete `psych`. Los argumentos que requiere esta función son la matriz de correlaciones `cor_mat` y el número de observaciones, que lo podemos calcular con `nrow()`.
+
+```{r}
+psych::cortest.bartlett(cor_mat, nrow(CL))
+```
+
+Dado que el p-valor es $< 0.05$, podemos decir que tenemos evidencia suficiente para rechazar que los datos tienen esfericidad completa y, por lo tanto, son aptos para el análisis factorial.
+
+También se puede evaluar la esfericidad directamente sobre la matriz mediante la prueba Kaiser-Mayer-Olkin, la cual mide el cuadrado de los elementos de la "imagen" de la matriz comparada con los cuadrados de las correlaciones originales. La imagen consiste en la matriz de covarianzas o correlaciones con el signo opuesto.
+
+En nuestro caso, utilizamos la función `KMO()` del paquete `psych` directamente sobre los datos o sobre la matriz de correlaciones. Esta prueba muestra la Medida de Adecuación del Muestreo (`MSA`. por sus siglas en inglés). @Kaiser1974 describió la interpretación de la `MSA` de la siguiente manera:
+
+\begin{align*}
+\mathrm{KMO} &\geq 0.9 \Rightarrow \mathrm{Estupendo} \\
+\mathrm{KMO} &\geq 0.8 \Rightarrow \mathrm{Meritorio} \\
+\mathrm{KMO} &\geq 0.7 \Rightarrow \mathrm{Intermedio} \\
+\mathrm{KMO} &\geq 0.6 \Rightarrow \mathrm{Mediocre} \\
+\mathrm{KMO} &\geq 0.5 \Rightarrow \mathrm{Miserable} \\
+\mathrm{KMO} &< 0.5 \Rightarrow \mathrm{Inaceptable}
+\end{align*}
+
+Aunque otros usuarios la sugieren de esta forma:
+
+\begin{align*}
+\mathrm{KMO} &\geq 0.75 \Rightarrow \mathrm{Bien} \\
+\mathrm{KMO} &\geq 0.5 \Rightarrow \mathrm{Aceptable} \\
+\mathrm{KMO} &< 0.5 \Rightarrow \mathrm{Inaceptable}
+\end{align*}
+
+Veamos el resultado.
+
+```{r}
+kmo = psych::KMO(CL)
+kmo
+```
+
+Podemos observar que la MSA es *mediocre* para Kaiser y *aceptable* para la mayoría de los usuarios. Digamos que mientras no sea inaceptable, podemos seguir con el análisis.
+
+Además, recordemos que la *imagen* se refiere a la matriz de correlaciones (o covarianzas) con el signo opuesto, es decir, una anti-imagen.
+
+```{r}
+# Anti-imagen de correlaciones
+kmo$Image
+
+# Anti-imagen de covarianzas
+kmo$ImCov
+```
+
+Notar que la diagonal de la matriz de covarianzas anti-imagen está la estimación de las **unicidades** (la contribución el factor único) de cada variable. Si el modelo factorial elegido es adecuado, los elementos de la diagonal de la matriz de correlaciones anti-imagen deben tener un valor próximo a 1 y el resto de los elementos deben ser pequeños para que las variables compartan factores comunes.
+
+Esto es relevante porque recordemos que el modelo factorial $X_p = a_{ij}F_j + ... +  a_{pq}F_q + d_pU_p$ está compuesto por *saturaciones* $a_{ij}$ de la variable $X_i$ en el factor $F_j$. En el caso de que las variables y los factores estén estandarizados, podemos calcular las **unicidades** $d_i^2$ dado que 
+
+$$var(X_i) = a^2_{i1} + ... +a^2_{iq}+d^2_i$$
+
+Para ver nuestro caso directamente, se hace de la siguiente forma:
+
+```{r}
+diag(kmo$ImCov)
+```
+
+## Componentes Principales
+
+Para calcular las componentes principales, existen diversos métodos. Aquí se mostrarán tres: manualmente, con `stats::prcomp()` y con `psych::principal()`.
+
+### Manual
+
+Para extraer las saturaciones (a mayor saturación, mayor importancia en la interpretación del eje) y lo que se deriva de ellas, usamos la matriz de correlaciones (o de covarianzas) para conocer los ejes factoriales.
+
+```{r}
+# Matriz de correlaciones
+mat_cor = cor(CL, use = "pairwise")
+
+# En caso de covarianzas, estandarizamos
+mat_cov = cov(CL, use = "pairwise")
+dvest = sqrt(diag(mat_cov))
+mat_cov = mat_cov / (dvest %o% dvest)
+
+# Comprobamos que ya son idénticas
+identical(round(mat_cor, 3), round(mat_cov, 3))
+```
+
+Luego, obtenemos los valores y vectores propios con la matriz de correlaciones (o de covarianzas) mediante la función `eigen()`. De ella salen
+```{r}
+autov = eigen(mat_cor)
+
+# Valores propios o autovectores
+autovalores = autov$values
+autovalores
+
+# Vectores propios
+autovectores = autov$vectors
+autovectores
+```
+
+Con `autovalores` son la variabilidad de las variables latentes. Generalmente se adopta la regla de Kaiser es quedarse con valores propios que sean $> 1$. Por lo que estrictamente hablando tendríamos que quedarnos con 1 factor. Como el caso es ver si es cierta una clasificación entre materias de ciencias y letras, nos quedaremos con 2 factores, aprovechando que `r autovalores[2]` es cercano a 1. La forma visual para ver esto es a través del `screeplot` o gráfico de sedimentación. Existen múltiples formas de hacerlo (`psych::scree`, `stats::screeplot`), pero en la gráfica \ref{fig:screeplot} se construye con `ggplot2` para mostrar lo que se hace de fondo.
+
+```{r screeplot, fig.cap="\\label{fig:screeplot}Gráfico de sedimentación"}
+ggplot(data.frame(factores = 1:length(autovalores), eig = autovalores),
+       aes(x = factores, y = eig)) +
+  geom_point(shape = 1) +
+  geom_line() +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  theme_light() +
+  labs(
+    x = "factores",
+    y = "Autovalor"
+  )
+```
+
+Además, como los autovalores son la varianza del modelo, podemos calcular su distribución:
+```{r}
+# Proporción de la varianza
+prop_varianza = autovalores / length(autovalores)
+scales::percent(prop_varianza)
+
+# Varianza acumulada
+varianza_acum = cumsum(prop_varianza)
+scales::percent(varianza_acum)
+```
+
+Vemos que los dos primeros factores explican el `r scales::percent(varianza_acum)[2]` de la varianza, por lo tanto mantendremos solamente 2 factores. Los seleccionamos de los valores y vectores propios.
+
+```{r}
+autoval = autovalores[1:2]
+autovec = autovectores[, 1:2]
+```
+
+
+Para obtener las componentes principales, se asocia el valor propio en orden decreciente con un vector propio. Así, la primera componente será el vector propio con el más alto valor propio. A esto también se le llaman combinaciones lineales y reciben el nombre *cargas* o *loadings* en inglés. Se pueden ver como el peso o la importancia que tiene cada variable en cada una de las componentes.
+
+Al momento de calcular las componentes principales, se busca que las combinaciones lineales sean ortogonales para asegurarse que no estén correlacionadas. En otras palabras, que el producto escalar entre dos componentes sea cero, o geométricamente sean perpendiculares o que el ángulo entre ellas sea de 90º. Esto se hace mediante un proceso iterativo que dura hasta que se calculan todas las posibles componentes o hasta un número determinado menor que el tamaño de todas las variables. Evidentemente, el valor propio asociado al vector propio determinará el orden en que se presentan las componentes.
+
+Para obtener las cargas, multiplicamos matricialmente la matriz diagonal de la raíz cuadrada de los valores propios con la matriz de vectores propios mediante el operador `%*%`:
+
+```{r}
+cargas = autovec %*% sqrt(diag(autoval, nrow = length(autoval)))
+colnames(cargas) = c("CP1", "CP2")
+rownames(cargas) = colnames(CL)
+cargas
+```
+
+Una vez calculadas las cargas, podemos obtener las comunalidades $h^2_i$ y las unicidades $d^2_i$. Las comunalidades son la suma del cuadrado de las cargas de cada ítem, o materias en nuestro ejemplo.
+
+```{r}
+# comunidades
+comunalidades = rowSums(cargas^2)
+comunalidades
+```
+
+Recordemos que las unicidades son $var(X_i) = h^2_i + d^2_i$. Suponiendo que las variables son reducidas:
+
+```{r}
+# unicidades
+unicidades = diag(mat_cor) - comunalidades
+unicidades
+```
+
+Adicionalmente, podemos comprobar que las sumas de las saturaciones al cuadrado $a^2_i$ se comportan igual que la varianza explicada:
+
+```{r}
+colSums(cargas^2)
+```
+
+También podemos calcular la matriz de correlaciones reproducida a partir de las cargas. Esto se hace para comprobar qué tan bueno es el modelo respecto a la matriz de correlaciones original.
+
+```{r}
+# Matriz de identidad
+I = diag(1, nrow = ncol(cargas))
+# Matriz de correlaciones reproducida
+mat_cor_rep = cargas %*% I %*% t(cargas)
+mat_cor_rep
+```
+
+De la matriz de correlaciones reproducida se pueden obtener los residuales, que si son cercanos a 0 significa que el modelo es adecuado.
+
+```{r}
+# Residuales
+residuales = mat_cor - mat_cor_rep
+residuales
+```
+
+Regresando a las cargas, en la gráfica \ref{fig:acp_plot} vemos que existe similitud entre la materias que esperaríamos de ciencias y de letras, respectivamente. No obstante, los ejes no muestran alguna información diferenciada. Veamos si rotando la estructura sucede lo mismo. 
+```{r acp_plot, fig.cap="\\label{fig:acp_plot}Gráfico de componentes sin rotar"}
+ggplot(
+  data.frame(
+    Materias = rownames(cargas),
+    CP1 = cargas[, 1],
+    CP2 = cargas[, 2]
+  ),
+  aes(CP1, CP2, label = Materias)
+) +
+  geom_point(color = "blue", size = 3) +
+  geom_text(hjust = 0,
+            nudge_x = 0.03,
+            nudge_y = 0.03) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  labs(
+    x = paste0(
+      "CP1 - ",
+      scales::percent(prop_varianza, accuracy = .1)[1],
+      " de variación"
+    ),
+    y = paste0(
+      "CP2 - ",
+      scales::percent(prop_varianza, accuracy = .1)[2],
+      " de variación"
+    )
+  ) +
+  theme_bw() +
+  coord_cartesian(xlim = c(-1, 1), ylim = c(-1, 1))
+```
+
+#### Varimax
+
+Aplicamos la rotación "Varimax" de Kaiser con la función `varimax()` sobre las cargas. Lo que hace esta rotación es verificar que la suma de las simplicidades de los factores sea la máxima. La simpliciddad es la varianza de los cuadrados de las saturaciones. Esto lo hace rotando los factores para forzar que unas saturaciones se aproximen a uno y otras a cero, hasta lograr la solución óptima.
+
+```{r}
+rot_varimax = varimax(cargas)
+cargas_rot = rot_varimax$loadings
+cargas_rot
+```
+
+Podemos ver que la proporción de varianzas ha cambiado. Además, el valor propio ahora puede ser calculado de la siguiente manera:
+
+```{r}
+# Convertir la clase "loadings" a clase "matrix"
+cargas_2 = unclass(cargas_rot)
+
+# Obtener la contribución de las variables a cada uno de los factores
+colSums(cargas_2^2)
+
+# Proporción de la varianza
+prop_var_rot = colSums(cargas_2^2) / 4
+
+# Porcentaje acumulado
+cumsum(prop_var_rot)
+```
+
+También existe forma de comprobar que la rotación no alteró  las comunalidades:
+
+```{r}
+comunalid_rot = rowSums(cargas_2^2)
+identical(round(comunalidades, 3), round(comunalid_rot, 3))
+```
+
+Ahora la solución factorial es más interpretable, diferenciando entre ciencias y letras, con ambos ejes explicando un % de varianza similar.
+
+```{r acp_rot_plot, fig.cap="\\label{fig:acp_rot_plot}Gráfico de componentes con rotación Varimax"}
+ggplot(
+  data.frame(
+    Materias = rownames(cargas_2),
+    CP1 = cargas_2[, 1],
+    CP2 = cargas_2[, 2]
+  ),
+  aes(CP1, CP2, label = Materias)
+) +
+  geom_point(color = "green", size = 3) +
+  geom_text(vjust = 0,
+            nudge_x = 0.05,
+            nudge_y = 0.05) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  labs(
+    x = paste0(
+      "CP1 - ",
+      scales::percent(prop_var_rot, accuracy = .1)[1],
+      " de variación"
+    ),
+    y = paste0(
+      "CP2 - ",
+      scales::percent(prop_var_rot, accuracy = .1)[2],
+      " de variación"
+    )
+  ) +
+  theme_bw() +
+  coord_cartesian(xlim = c(-1, 1), ylim = c(-1, 1))
+```
+
+En la gráfica \ref{fig:acp_rot_plot} también podemos corroborar lo mostrado en las cargas rotadas (matriz factorial rotada).
+
+#### Diferencias con SPSS
+
+Para mostrar las matrices factoriales que muestra SPSS, hay que cambiar el signo de las cargas. Esto se logra de la forma siguiente:
+
+```{r}
+# Obtención de signos
+signos_totales = sign(colSums(cargas))
+
+# Aplicación sobre matriz factorial sin rotar
+cargas_srt = cargas %*% diag(signos_totales)
+colnames(cargas_srt) = c("CP1", "CP2")
+cargas_srt
+```
+
+Esto solo cambia la dirección de los vectores propios, pero no altera la varianza:
+
+```{r}
+# Varianza explicada o autovalores
+colSums(cargas_srt^2)
+
+# Prueba de que son idénticas
+identical(round(colSums(cargas^2), 3), round(colSums(cargas_srt^2), 3))
+```
+
+```{r, include=FALSE}
+pro_var_spss = scales::percent(colSums(cargas_srt^2) / 4, accuracy = 0.1)
+```
+
+
+En la gráfica \ref{fig:acp_spss} podemos ver este cambio de dirección.
+
+```{r acp_spss, echo=FALSE, fig.cap="\\label{fig:acp_spss}Gráfico de componentes como se muestra en SPSS"}
+ggplot(
+  data.frame(
+    Materias = rownames(cargas_srt),
+    CP1 = cargas_srt[, 1],
+    CP2 = cargas_srt[, 2]
+  ),
+  aes(CP1, CP2, label = Materias)
+) +
+  geom_point(color = "blue", size = 3) +
+  geom_text(hjust = 1,
+            nudge_x = 0.1,
+            nudge_y = 0.1) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  labs(
+    x = paste0(
+      "CP1 - ", pro_var_spss[1], " de variación"
+    ),
+    y = paste0(
+      "CP2 - ", pro_var_spss[2], " de variación"
+    )
+  ) +
+  theme_bw() +
+  coord_cartesian(xlim = c(-1, 1), ylim = c(-1, 1))
+```
+
+Análogamente, con la rotación *varimax* también se muestran de forma similar a SPSS tanto en la matriz factorial como en la gráfica \ref{fig:acp_rot_spss}.
+
+```{r}
+# matriz de componente rotado
+rot_varimax_2 = varimax(cargas_srt)
+cargas_rot_2 = rot_varimax_2$loadings
+unclass(cargas_rot_2)
+
+# Varianza explicada
+colSums(cargas_rot_2^2)
+```
+
+```{r, include=FALSE}
+pro_var_spss_rot = scales::percent(colSums(cargas_rot_2^2) / 4, accuracy = 0.1)
+```
+
+```{r acp_rot_spss, echo=FALSE, fig.cap="\\label{fig:acp_rot_spss}Gráfico de componentes rotados como se muestra en SPSS"}
+ggplot(
+  data.frame(
+    Materias = rownames(cargas_rot_2),
+    CP1 = cargas_rot_2[, 1],
+    CP2 = cargas_rot_2[, 2]
+  ),
+  aes(CP1, CP2, label = Materias)
+) +
+  geom_point(color = "green", size = 3) +
+  geom_text(hjust = 1,
+            vjust = 1,
+            nudge_x = -0.02,
+            nudge_y = -0.02) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  labs(
+    x = paste0(
+      "CP1 - ", pro_var_spss_rot[1], " de variación"
+    ),
+    y = paste0(
+      "CP2 - ", pro_var_spss_rot[2], " de variación"
+    )
+  ) +
+  theme_bw() +
+  coord_cartesian(xlim = c(-1, 1), ylim = c(-1, 1))
+```
+
+### Prcomp
+
+La función `prcomp()` devuelve los vectores propios como `rotations` y los valores propios se calculan a partir del cuadrado de `sdev`. Todo lo demás se calcula como la forma manual. Esta función tiene la centralización por defecto, así que solo habrá que escalar para obtener los mismos resultados que el procedimiento anterior.
+```{r}
+valores_acp = prcomp(CL, scale. = TRUE)
+
+# Vectores propios
+vec_prop = valores_acp$rotation
+vec_prop
+
+# Valores propios o varianza explicada
+val_prop = valores_acp$sdev^2
+val_prop
+
+# Aplicando el mismo criterio de los factores
+cargas_prcomp = vec_prop[, 1:2] %*% diag(valores_acp$sdev[1:2])
+cargas_prcomp
+
+# Signo como en SPSS
+cargas_prcomp %*% diag(c(-1, -1))
+
+# Porcentaje de varianza explicada
+summary(valores_acp)
+
+# Comunalidades
+rowSums(cargas_prcomp^2)
+
+# Matriz de correlaciones reproducida
+cargas_prcomp %*% I %*% t(cargas_prcomp)
+
+# Residuales
+cor(CL) - cargas_prcomp %*% I %*% t(cargas_prcomp)
+```
+La rotación también se hace con `varimax()` usando `cargas_prcomp`.
+
+```{r}
+varimax(cargas_prcomp)
+```
+
+### Principal
+
+El paquete `psych` ofrece la función `principal`, la cual brinda toda la información que calculamos manualmente. Incluso la matriz factorial es cambiada de signo de la misma forma que SPSS. A diferencia de `prcomp`, la función brinda las cargas con el nombre de `loadings`. Por otra parte, hay que tomar en cuenta que por defecto la función rota los componentes mediante el método *varimax*, por lo que se utiliza el argumento `rotate = "none"` para evitar alguna rotación. 
+
+Finalmente, los factores se determinan manualmente, de lo contrario los calcula para todas las variables posibles.
+```{r}
+acp_psych = psych::principal(CL, nfactors = 2, rotate = "none")
+
+# Cargas y varianza explicada
+acp_psych$loadings
+
+# Comunalidades
+acp_psych$communality
+
+# Unicidades 
+acp_psych$uniquenesses
+```
+
+Con rotación varimax se ve de la siguiente forma:
+
+```{r}
+acp_psych_rot = psych::principal(CL, nfactors = 2, rotate = "varimax")
+
+acp_psych_rot$loadings
+
+# residuales de correlación
+acp_psych_rot
+```
+
+
+## Análisis Factorial
+
+Si en el análisis de componentes principales lo principal era explicar la contribución de las componentes, en el análisis factorial es explicar los factores.
+
+Las estimaciones de las unicidades iniciales que salen de la diagonal principal de la matriz de covarianzas antimagen son las mismas que las que obtuvimos al principio.
+
+```{r}
+diag(kmo$ImCov)
+```
+
+La función `psych::fa()` ofrece la versión más completa para el análisis factorial. 
+
+```{r}
+AF = psych::fa(CL, 2, rotate = "none", scores = "Anderson")
+
+# Cargas
+AF$loadings
+
+# Comunalidades
+AF$communality
+
+# Unicidades
+AF$uniquenesses
+```
+
+Notar que los valores propios de la matriz original difieren de las sumas de la extracción de carga al cuadrado (valores propios de la solución del factor común). Esto también se refleja en el porcentaje de la varianza explicada por lo autovalores iniciales contra los extraídos.
+
+```{r}
+# Valores propios de la matriz original
+AF$e.values
+
+# Proporcion de la varianza
+AF$e.values / 4
+
+# Suma acumulada de la proporción de la varianza
+cumsum(AF$e.values / 4)
+
+# Valores propios de la extracción
+AF$values
+
+# Proporcion de la varianza después de la extracción
+AF$Vaccounted
+
+# Matriz de correlaciones reproducida
+psych::factor.model(AF$loadings)
+
+# residuales de correlación
+AF
+```
+
+En suma, la solución no es interpretable. A pesar de ello, el modelo con dos factores comunes y las correspondientes unicidades es bueno (mejor que el de componentes principales) ya que los residuos son todavía más pequeños.
+
+Ahora se aplica la rotación varimax para capturar las unicidades de los factores.
+
+```{r}
+AF_rot = psych::fa(CL, 2, rotate = "varimax", scores = "Anderson")
+
+AF_rot$loadings
+
+# Comunaliddades
+AF_rot$communality
+
+# Varianza
+AF_rot$Vaccounted
+
+# Matriz de correlaciones reproducida
+psych::factor.model(AF_rot$loadings)
+
+# residuales de correlación rotada
+AF_rot
+```
+
+El modelo mejora la distribución del % de la varianza explicada entre los factores. Notar que en este caso el % de varianza no es idéntico al inicial, ni en la solución no rotada ni en la rotada. La estimación inicial de las comunalidades son los coeficientes de correlación múltiple. Tanto en la solución no rotada como en la rotada, cambian las saturaciones y por tanto las contribuciones de los factores comunes a las variables y las contribuciones de las variables a los dos primeros ejes, valores sobre los cuales se recalcula la absorción de inercia.
+
+Por otra parte, los residuos muy bajos ponen en manifiesto que el modelo fue adecuado.
+
+Finalmente, vemos los resultados de la rotación en la gráfica \ref{fig:af_plot}.
+
+```{r, include=FALSE}
+prop_var_af = scales::percent(AF_rot$Vaccounted[2,], accuracy = 0.1)
+```
+
+
+```{r af_plot, echo=FALSE, fig.cap="\\label{fig:af_plot}Gráfico de factor con rotación varimax"}
+ggplot(
+  data.frame(
+    Materias = rownames(AF_rot$loadings),
+    F1 = AF_rot$loadings[, 1],
+    F2 = AF_rot$loadings[, 2]
+  ),
+  aes(F1, F2, label = Materias)
+) +
+  geom_point(color = "orange", size = 3) +
+  geom_text(hjust = 1,
+            nudge_x = -0.03,
+            nudge_y = -0.03) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  labs(
+    x = paste0(
+      "Factor 1 - ", prop_var_af[1], " de variación"
+    ),
+    y = paste0(
+      "Factor 2 - ", prop_var_af[2], " de variación"
+    )
+  ) +
+  theme_bw() +
+  coord_cartesian(xlim = c(-1, 1), ylim = c(-1, 1))
+```
+
+Los resultados son similares a los obtenidos con componentes principales, pero al tener en cuenta la unicidad, hemos conseguido que los dos factores comunes tengan importancia comparable al capturar cada uno la mitad de la varianza.
+
+***
+
+
+
+
