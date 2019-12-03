@@ -7,6 +7,10 @@ library(knitr)
 library(kableExtra)
 library(magrittr)
 library(psych)
+library(factoextra)
+library(ggrepel)
+library(cluster)
+library(smacof)
 
 # Primera parte -----------------------------------------------------------
 
@@ -162,16 +166,10 @@ af_dim = data.frame(
   Loc = datos1$Localizacion)
 
 ggplot(af_dim, aes(x, y)) +
-  geom_text(aes(label = pais), vjust = 0, hjust = 1, nudge_x = -0.05) +
-  geom_point(aes(col = Loc, shape = Comunista))
+  geom_point(aes(col = Loc, shape = Comunista)) +
+  geom_text_repel(aes(label = pais, color = Loc), show.legend = F)
 
 # Cluster -----------------------------------------------------------------
-
-library(FactoMineR)
-library(factoextra)
-library(cluster)
-
-
 
 prot_scl = scale(prot)
 
@@ -215,8 +213,368 @@ fviz_dend(met.prom2, k = 2, horiz = T)
 
 # MDS ---------------------------------------------------------------------
 
+prot_dis2_r = dist(prot)^2
 
+mds.r = mds(prot_dis2_r, type = "ordinal")
+
+# plot(mds.r, plot.type = "confplot")
+# plot(mds.r, plot.type = "stressplot")
+plot(mds.r, plot.type = "Shepard")
+plot(mds.r, plot.type = "resplot")
+# plot(mds.r, plot.type = "bubbleplot")
+# plot(mds.r, plot.type = "histogram")
+
+dat.r = data.frame(
+  etiq = rownames(mds.r$conf),
+  x = mds.r$conf[, 1],
+  y = mds.r$conf[, 2]
+)
+
+ggplot(dat.r, aes(x, -y)) +
+  geom_point() +
+  geom_text_repel(aes(label = etiq)) +
+  theme_base()
+
+prot_dis2_c = dist(t(prot))^2
+
+mds.c = mds(prot_dis2_c, type = "ordinal")
+
+plot(mds.c, plot.type = "confplot")
+# plot(mds.c, plot.type = "stressplot")
+plot(mds.c, plot.type = "Shepard")
+plot(mds.c, plot.type = "resplot")
+# plot(mds.c, plot.type = "bubbleplot")
+# plot(mds.c, plot.type = "histogram")
+
+plot_conf = plot(mds.c, plot.type = "Shepard")
+
+dat.c = data.frame(
+  etiq = rownames(mds.c$conf),
+  x = mds.c$conf[, 1],
+  y = mds.c$conf[, 2]
+)
+
+ggplot(dat.c, aes(x, y)) +
+  geom_point() +
+  geom_text_repel(aes(label = etiq)) +
+  theme_base()
+
+shep.df = data.frame(
+  x = as.vector(mds.c$delta),
+  y = as.vector(mds.c$confdist)
+)
+
+ggplot(shep.df, aes(x, y)) +
+  geom_point() +
+  geom_line() +
+  theme_base()
+
+resp.df = data.frame(
+  x = as.vector(mds.c$dhat),
+  y = as.vector(mds.c$confdist)
+)
+
+ggplot(resp.df, aes(x, y)) +
+  geom_point(shape = 1) +
+  geom_smooth(method = 'loess', formula = y ~ x, se = F, size = 0.2) +
+  theme_base()
 
 # AC ----------------------------------------------------------------------
+
+library("FactoMineR")
+library("factoextra")
+
+t.prot = t(prot)
+
+ac_prot = CA(t.prot, graph = FALSE)
+
+summary(ac_prot)
+
+autoval = get_eigenvalue(ac_prot)
+autoval
+
+1 / (nrow(t.prot) - 1)
+
+1 / (ncol(t.prot) - 1)
+
+fviz_screeplot(ac_prot) +
+  geom_hline(yintercept = (1 / (ncol(t.prot) - 1) * 100),
+             linetype = 2,
+             color = "red")
+
+# Filas
+
+filas = get_ca_row(ac_prot)
+filas$coord
+
+fviz_ca_row(ac_prot, col.row = "darkgreen", shape.row = 15, repel = T) + ggthemes::theme_base()
+
+filas$cos2
+
+fviz_ca_row(
+  ac_prot,
+  col.row = "cos2",
+  gradient.cols = c("red", "gold", "blue"),
+  repel = TRUE
+)
+
+filas$contrib
+
+fviz_contrib(ac_prot, choice = "row", axes = 1)
+fviz_contrib(ac_prot, choice = "row", axes = 2)
+fviz_contrib(ac_prot, choice = "row", axes = 3)
+fviz_contrib(ac_prot, choice = "row", axes = 4)
+
+fviz_ca_row(
+  ac_prot,
+  col.row = "contrib",
+  gradient.cols = c("red", "gold", "blue"),
+  repel = TRUE
+)
+
+# Columnas
+
+columnas = get_ca_col(ac_prot)
+columnas$coord
+
+fviz_ca_col(ac_prot,
+            col.col = "darkgreen",
+            shape.col = 15,
+            repel = T) + ggthemes::theme_base()
+
+columnas$cos2
+
+fviz_ca_col(
+  ac_prot,
+  col.col = "cos2",
+  gradient.cols = c("red", "gold", "blue"),
+  repel = TRUE
+)
+
+columnas$contrib
+
+fviz_contrib(ac_prot, choice = "col", axes = 1)
+fviz_contrib(ac_prot, choice = "col", axes = 2)
+fviz_contrib(ac_prot, choice = "col", axes = 3)
+fviz_contrib(ac_prot, choice = "col", axes = 4)
+
+fviz_ca_col(
+  ac_prot,
+  col.col = "contrib",
+  gradient.cols = c("red", "gold", "blue"),
+  repel = TRUE
+)
+
+fviz_ca_biplot(ac_prot,
+               map = "rowprincipal",
+               repel = TRUE)
+
+CA(t.prot)
+
+
+# > Alt sin rot -----------------------------------------------------------
+
+datos3 = foreign::read.spss("data/M3/PaisesProteinasExamenCorrespondencias.sav", to.data.frame = T)
+
+tabla = xtabs(consumo ~ PaisCat + AlimentosCat, data = datos3)
+
+tabla = as.data.frame.matrix(tabla)
+
+t.prot = t(tabla)
+
+ac_prot = CA(t.prot, graph = FALSE)
+
+summary(ac_prot)
+
+autoval = get_eigenvalue(ac_prot)
+autoval
+
+1 / (nrow(t.prot) - 1)
+
+1 / (ncol(t.prot) - 1)
+
+fviz_screeplot(ac_prot) +
+  geom_hline(yintercept = (1 / (ncol(t.prot) - 1) * 100),
+             linetype = 2,
+             color = "red")
+
+# Filas
+
+filas = get_ca_row(ac_prot)
+filas$coord
+
+coord.df.r = data.frame(x = filas$coord[, 1],
+                        y = filas$coord[, 2],
+                        etiq = rownames(filas$coord))
+
+ggplot(coord.df.r, aes(-x, y)) +
+  geom_point() +
+  geom_text_repel(aes(label = etiq)) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0)
+
+fviz_ca_row(ac_prot, col.row = "darkgreen", shape.row = 15, repel = T) + ggthemes::theme_base()
+
+filas$cos2
+
+fviz_ca_row(
+  ac_prot,
+  col.row = "cos2",
+  gradient.cols = c("red", "gold", "blue"),
+  repel = TRUE
+)
+
+filas$contrib
+
+fviz_contrib(ac_prot, choice = "row", axes = 1)
+fviz_contrib(ac_prot, choice = "row", axes = 2)
+fviz_contrib(ac_prot, choice = "row", axes = 3)
+fviz_contrib(ac_prot, choice = "row", axes = 4)
+
+fviz_ca_row(
+  ac_prot,
+  col.row = "contrib",
+  gradient.cols = c("red", "gold", "blue"),
+  repel = TRUE
+)
+
+# Columnas
+
+columnas = get_ca_col(ac_prot)
+columnas$coord
+
+coord.df.c = data.frame(x = columnas$coord[, 1],
+                        y = columnas$coord[, 2],
+                        etiq = rownames(columnas$coord))
+
+ggplot(coord.df.c, aes(-x, y)) +
+  geom_point() +
+  geom_text_repel(aes(label = etiq)) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0)
+
+fviz_ca_col(ac_prot,
+            col.col = "darkgreen",
+            shape.col = 15,
+            repel = T) + ggthemes::theme_base()
+
+columnas$cos2
+
+fviz_ca_col(
+  ac_prot,
+  col.col = "cos2",
+  gradient.cols = c("red", "gold", "blue"),
+  repel = TRUE
+)
+
+columnas$contrib
+
+fviz_contrib(ac_prot, choice = "col", axes = 1)
+fviz_contrib(ac_prot, choice = "col", axes = 2)
+fviz_contrib(ac_prot, choice = "col", axes = 3)
+fviz_contrib(ac_prot, choice = "col", axes = 4)
+
+fviz_ca_col(
+  ac_prot,
+  col.col = "contrib",
+  gradient.cols = c("red", "gold", "blue"),
+  repel = TRUE
+)
+
+fviz_ca_biplot(ac_prot,
+               map = "rowprincipal",
+               repel = TRUE)
+
+CA(t.prot)
+
+
+
+
+
+
+ac_prot = CA(prot, graph = FALSE)
+
+summary(ac_prot)
+
+autoval = get_eigenvalue(ac_prot)
+autoval
+
+1 / (nrow(prot) - 1)
+
+1 / (ncol(prot) - 1)
+
+fviz_screeplot(ac_prot) +
+  geom_hline(yintercept = (1 / (ncol(prot) - 1) * 100),
+             linetype = 2,
+             color = "red")
+
+# Filas
+
+filas = get_ca_row(ac_prot)
+filas$coord
+
+fviz_ca_row(ac_prot, col.row = "darkgreen", shape.row = 15, repel = T) + ggthemes::theme_base()
+
+filas$cos2
+
+fviz_ca_row(
+  ac_prot,
+  col.row = "cos2",
+  gradient.cols = c("red", "gold", "blue"),
+  repel = TRUE
+)
+
+filas$contrib
+
+fviz_contrib(ac_prot, choice = "row", axes = 1)
+fviz_contrib(ac_prot, choice = "row", axes = 2)
+fviz_contrib(ac_prot, choice = "row", axes = 3)
+fviz_contrib(ac_prot, choice = "row", axes = 4)
+
+fviz_ca_row(
+  ac_prot,
+  col.row = "contrib",
+  gradient.cols = c("red", "gold", "blue"),
+  repel = TRUE
+)
+
+# Columnas
+
+columnas = get_ca_col(ac_prot)
+columnas$coord
+
+fviz_ca_col(ac_prot,
+            col.col = "darkgreen",
+            shape.col = 15,
+            repel = T) + ggthemes::theme_base()
+
+columnas$cos2
+
+fviz_ca_col(
+  ac_prot,
+  col.col = "cos2",
+  gradient.cols = c("red", "gold", "blue"),
+  repel = TRUE
+)
+
+columnas$contrib
+
+fviz_contrib(ac_prot, choice = "col", axes = 1)
+fviz_contrib(ac_prot, choice = "col", axes = 2)
+fviz_contrib(ac_prot, choice = "col", axes = 3)
+fviz_contrib(ac_prot, choice = "col", axes = 4)
+
+fviz_ca_col(
+  ac_prot,
+  col.col = "contrib",
+  gradient.cols = c("red", "gold", "blue"),
+  repel = TRUE
+)
+
+fviz_ca_biplot(ac_prot,
+               map = "rowprincipal",
+               repel = TRUE)
+
+CA(prot)
 
 
