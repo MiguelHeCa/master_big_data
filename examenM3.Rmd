@@ -1,0 +1,136 @@
+---
+title: "Análisis multivariante de proteínas en países europeos"
+author: "José Miguel Hernández Cabrera"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+    number_section: true
+lang: es
+bibliography: ref/refm3.bib
+abstract: "Se utilizaron análisis de componentes principales, análisis factorial, escalamiento multidimensional y coordenadas principales"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(Hmisc)
+library(xtable)
+library(knitr)
+library(kableExtra)
+library(magrittr)
+library(psych)
+```
+
+# Introducción
+
+Aquí se inicia
+
+# Los datos
+
+Se importan los datos
+
+```{r}
+datos1 = foreign::read.spss("data/M3/PaisesProteinasExamen.sav", to.data.frame = T)
+```
+
+Correlaciones
+
+Tabla
+
+```{r}
+corstars <-
+  function(x,
+           method = c("pearson", "spearman"),
+           removeTriangle = c("upper", "lower")) {
+    #Compute correlation matrix
+    x <- as.matrix(x)
+    correlation_matrix <- rcorr(x, type = method[1])
+    R <- correlation_matrix$r # Matrix of correlation coeficients
+    p <- correlation_matrix$P # Matrix of p-value
+    
+    ## Define notions for significance levels; spacing is important.
+    mystars <-
+      ifelse(p < .001, "*** ", ifelse(p < .01, "**  ", ifelse(p < .05, "*   ", "    ")))
+    
+    ## trunctuate the correlation matrix to two decimal
+    R <- format(round(cbind(rep(-1.11, ncol(
+      x
+    )), R), 3))[,-1]
+    
+    ## build a new matrix that includes the correlations with their apropriate stars
+    Rnew <- matrix(paste(mystars, R, sep = ""), ncol = ncol(x))
+    diag(Rnew) <- paste(diag(R), " ", sep = "")
+    rownames(Rnew) <- colnames(x)
+    colnames(Rnew) <- paste(colnames(x), "", sep = "")
+    
+    ## remove upper triangle of correlation matrix
+    if (removeTriangle[1] == "upper") {
+      Rnew <- as.matrix(Rnew)
+      Rnew[upper.tri(Rnew, diag = TRUE)] <- ""
+      Rnew <- as.data.frame(Rnew)
+    }
+    
+    ## remove lower triangle of correlation matrix
+    else if (removeTriangle[1] == "lower") {
+      Rnew <- as.matrix(Rnew)
+      Rnew[lower.tri(Rnew, diag = TRUE)] <- ""
+      Rnew <- as.data.frame(Rnew)
+    }
+    
+    ## remove last column and return the correlation matrix
+    Rnew <- cbind(Rnew[1:length(Rnew) - 1])
+    
+    return(Rnew)
+  } 
+
+t_corstar = corstars(Filter(is.numeric, datos1))
+nombres_prot = c(
+  "Carne roja",
+  "Carne blanca",
+  "Huevos",
+  "Leche",
+  "Pescado",
+  "Cereales",
+  "Féculas",
+  "Frutos secos",
+  "Futos y vegetales"
+)
+colnames(t_corstar) = nombres_prot[1:8]
+rownames(t_corstar) = nombres_prot
+
+correl = rcorr(as.matrix(Filter(is.numeric, datos1)))
+
+r.mat = correl$r
+
+kable(
+  t_corstar,
+  format = "latex",
+  align = c("r", "r", "r", "r", "r", "r", "r", "r" , "r"),
+  booktabs = T
+) %>%
+  kable_styling(latex_options = "scale_down") %>% 
+  add_footnote(c("p < .001 ‘***’, p < .01 ‘**’, p < .05 ‘*’",
+                 paste0("Determinante ", round(det(r.mat), 4)))
+               )
+```
+
+# Análisis de factores
+
+## Factibilidad del modelo
+
+```{r, echo=TRUE}
+correl = rcorr(as.matrix(Filter(is.numeric, datos1)))
+
+r.mat = correl$r
+
+kmo = KMO(r.mat)
+
+cortest.bartlett(r.mat, nrow(datos1))
+```
+
+## Modelo
+
+```{r}
+
+```
+
