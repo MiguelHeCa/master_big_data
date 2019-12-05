@@ -1,4 +1,5 @@
 
+
 # Paquetes ----------------------------------------------------------------
 
 library(Hmisc)
@@ -11,13 +12,14 @@ library(factoextra)
 library(ggrepel)
 library(cluster)
 library(smacof)
+library(ggthemes)
 
 # Primera parte -----------------------------------------------------------
 
-datos1 = foreign::read.spss("data/M3/PaisesProteinasExamen.sav", to.data.frame = T)
+alim = foreign::read.spss("data/M3/PaisesProteinasExamen.sav", to.data.frame = T)
 
-prot = Filter(is.numeric, datos1)
-rownames(prot) = trimws(datos1$Pais)
+prot = Filter(is.numeric, alim)
+rownames(prot) = trimws(alim$Pais)
 
 # Correlaciones -----------------------------------------------------------
 
@@ -40,7 +42,7 @@ corstars <-
     ## trunctuate the correlation matrix to two decimal
     R <- format(round(cbind(rep(-1.11, ncol(
       x
-    )), R), 3))[,-1]
+    )), R), 3))[, -1]
     
     ## build a new matrix that includes the correlations with their apropriate stars
     Rnew <- matrix(paste(R, mystars, sep = ""), ncol = ncol(x))
@@ -66,7 +68,7 @@ corstars <-
     Rnew <- cbind(Rnew[1:length(Rnew) - 1])
     
     return(Rnew)
-  } 
+  }
 
 t_corstar = corstars(prot)
 nombres_prot = c(
@@ -87,17 +89,16 @@ correl = rcorr(as.matrix(prot))
 
 r.mat = correl$r
 
-kable(
-  t_corstar,
-  format = "latex",
-  # align = c("r", "r", "r", "r", "r", "r", "r", "r" , "r"),
-  align = "r",
-  booktabs = T
-) %>%
-  kable_styling(latex_options = "scale_down") %>% 
-  add_footnote(c("p < .001 ‘***’, p < .01 ‘**’, p < .05 ‘*’",
-                 paste0("Determinante ", round(det(r.mat), 4)))
-  )
+kable(t_corstar,
+      format = "latex",
+      # align = c("r", "r", "r", "r", "r", "r", "r", "r" , "r"),
+      align = "r",
+      booktabs = T) %>%
+  kable_styling(latex_options = "scale_down") %>%
+  add_footnote(c(
+    "p < .001 ‘***’, p < .01 ‘**’, p < .05 ‘*’",
+    paste0("Determinante ", round(det(r.mat), 4))
+  ))
 
 ## TODO
 ## library(pander)
@@ -111,14 +112,6 @@ kmo$MSA
 
 kmo$ImCov
 
-mat.anti = kmo$Image
-
-mat.anti2 = diag(kmo$MSAi)
-
-mat.anti[lower.tri(mat.anti2)] = lower.tri(mat.anti)
-
-mat.anti[diag(mat.anti)] = kmo$MSAi
-
 a = kmo$ImCov
 b = kmo$Image
 c = kmo$MSAi
@@ -129,7 +122,7 @@ nuevo[lower.tri(nuevo)] = b[lower.tri(b)]
 diag(nuevo) = c
 nuevo
 
-bartlett = cortest.bartlett(r.mat, nrow(datos1))
+bartlett = cortest.bartlett(r.mat, nrow(alim))
 
 # AF ----------------------------------------------------------------------
 
@@ -139,18 +132,23 @@ af_srt$Vaccounted
 af_srt$communalities
 af_srt$e.values
 
-ggplot(data.frame(factores = 1:length(af_srt$e.values), eig = af_srt$e.values),
-       aes(x = factores, y = eig)) +
+ggplot(data.frame(
+  factores = 1:length(af_srt$e.values),
+  eig = af_srt$e.values
+),
+aes(x = factores, y = eig)) +
   geom_point(shape = 1) +
   geom_line() +
   geom_hline(yintercept = 1, linetype = "dashed") +
   theme_light() +
-  labs(
-    x = "factores",
-    y = "Autovalor"
-  )
+  labs(x = "factores",
+       y = "Autovalor") +
+  ggthemes::theme_base()
 
-af_varimax = fa(prot, nfactors = 3, rotate = "varimax", scores = "Anderson")
+af_varimax = fa(prot,
+                nfactors = 3,
+                rotate = "varimax",
+                scores = "Anderson")
 af_varimax$scores
 af_varimax$Structure
 af_varimax$Vaccounted
@@ -159,25 +157,112 @@ af_varimax$e.values
 af_varimax$uniquenesses
 
 af_dim = data.frame(
-  x = af_varimax$scores[,1],
-  y = af_varimax$scores[,2],
-  pais = trimws(datos1$Pais),
-  Comunista = datos1$Comunista,
-  Loc = datos1$Localizacion)
+  x = af_varimax$scores[, 1],
+  y = af_varimax$scores[, 2],
+  pais = trimws(alim$Pais),
+  Comunista = alim$Comunista,
+  Loc = alim$Localizacion
+)
 
 ggplot(af_dim, aes(x, y)) +
   geom_point(aes(col = Loc, shape = Comunista)) +
   geom_text_repel(aes(label = pais, color = Loc), show.legend = F)
 
+X = unclass(af_varimax$Structure)
+?sort
+X1 = sort(X[, 1], decreasing = T)
+
+library(data.table)
+
+x.dt = as.data.table(unclass(af_varimax$Structure), keep.rownames = T)
+
+x.dt[, (c("MR1", "MR2", "MR3")) := lapply(.SD, abs), .SDcols = c("MR1", "MR2", "MR3")]
+
+x.dt[order(-MR1, -MR2, -MR3)]
+
+Xt = t(X)
+
+Xt[Xt[,1] == max(Xt[,1]), 1]
+
+melt(x.dt, id.vars = "rn")
+
+x.dt.t = dcast(melt(x.dt, id.vars = "rn"), variable ~ rn)
+
+# MR1
+x.dt.t[CarneBlanca == max(CarneBlanca), .(factor = variable, contr = CarneBlanca, var = "CarneBlanca")]
+x.dt.t[Huevos == max(Huevos), .(factor = variable, contr = Huevos, var = "Huevos")]
+
+mr1 = rbindlist(list(
+  x.dt.t[CarneBlanca == max(CarneBlanca), .(factor = variable, contr = CarneBlanca, var = "CarneBlanca")],
+  x.dt.t[Huevos == max(Huevos), .(factor = variable, contr = Huevos, var = "Huevos")]
+))
+
+# MR3
+mr2 = rbindlist(list(
+  x.dt.t[CarneRoja == max(CarneRoja), .(factor = variable, contr =  CarneRoja, var = "CarneRoja")],
+  x.dt.t[Frutossecos == max(Frutossecos), .(factor = variable, contr =  Frutossecos, var = "Frutossecos")],
+  x.dt.t[Frutosyvegetales == max(Frutosyvegetales), .(factor = variable, contr =  Frutosyvegetales, var = "Frutosyvegetales")],
+  x.dt.t[Leche == max(Leche), .(factor = variable, contr =  Leche, var = "Leche")]
+))
+
+# MR2
+mr3 = rbindlist(
+  list(
+    x.dt.t[Cereales == max(Cereales), .(variable, contr =  Cereales, var = "Cereales")],
+    x.dt.t[`Féculas` == max(`Féculas`), .(variable, contr =  `Féculas`, var = "Féculas")],
+    x.dt.t[Pescado == max(Pescado), .(variable, contr =  Pescado, var = "Pescado")]
+  )
+)
+
+mr = rbindlist(list(mr1, mr3, mr2))
+
+ggplot(af_dim, aes(x, y)) +
+  geom_point(aes(col = Loc, shape = Comunista)) +
+  geom_text_repel(aes(label = pais, color = Loc), show.legend = F) +
+  labs(
+    x = "F1: Carne blanca y huevos",
+    y = "F2: Carne roja, frutos secos, frutos, vegetales y leche"
+  ) +
+  ggthemes::theme_base()
+
+
+library(plotly)
+
+af_dim2 = data.frame(
+  nom = rownames(af_varimax$scores),
+  x = af_varimax$scores[, 1],
+  y = af_varimax$scores[, 2],
+  z = af_varimax$scores[, 3],
+  Localizacion = alim$Localizacion,
+  Commies = alim$Comunista
+)
+
+p_2 = plot_ly(
+  af_dim2,
+  x = ~ x,
+  y = ~ y,
+  z = ~ z,
+  color = ~ Commies
+)
+p_2 = add_markers(p_2)
+p_2 = layout(
+  p_2,
+  title = 'Espacio de factores rotados con Varimax',
+  scene = list(
+    xaxis = list(title = "Carne blanca y huevos"),
+    yaxis = list(title = "Carne roja, leche, frutos secos, frutos y vegetales"),
+    zaxis = list(title = "Pescado, cereales y féculas")
+  )
+)
+
+p_2
+
+
 # Cluster -----------------------------------------------------------------
 
-prot_scl = scale(prot)
+# Variables
 
-d.pearson = get_dist(prot, method = "pearson")
-d.pear = get_dist(prot_scl, method = "pearson")
-
-d.euclid = dist(prot_scl)
-d.euclid2 = d.euclid^2
+d.pear = get_dist(t(prot), method = "pearson")
 
 met.prom = hclust(d.pear, method = "average")
 coe.prom = coef.hclust(met.prom)
@@ -185,35 +270,50 @@ coe.prom = coef.hclust(met.prom)
 plot(met.prom)
 fviz_dend(met.prom, k = 3, horiz = T)
 
+d2 = get_dist(t(prot), method = "euclidean")
+
+met2 = hclust(d2, method = "ward.D2")
+coe2 = coef.hclust(met2)
+
+plot(met2)
+fviz_dend(met2, k = 3, horiz = T)
+
+# Países
+
+prot_scl = scale(prot)
+d.euclid = dist(prot_scl)
+d.euclid2 = dist(prot) ^ 2
+
 met.ward = hclust(d.euclid2, method = "ward.D2")
 coe.ward = coef.hclust(met.ward)
 coe.ward
-fviz_dend(met.ward, k = 3, horiz = T)
+met.ward_reduc = met.ward
+met.ward_reduc$height = met.ward$height^(1/2)
+fviz_dend(met.ward_reduc, k = 3, horiz = T)
 
-plot(met.ward)
-
-d.pearson = get_dist(prot, method = "pearson")
-met.prom2 = hclust(d.pearson, method = "average")
-coe.prom2 = coef.hclust(met.prom2)
-fviz_dend(met.prom2, k = 3, horiz = T)
-
-d.euc = dist(prot)
-d.euc2 = d.euc^2
-met.ward2 = hclust(d.euc2, method = "ward")
+met.ward2 = hclust(d.euclid, method = "ward.D2")
 coe.ward2 = coef.hclust(met.ward2)
 coe.ward2
 fviz_dend(met.ward2, k = 3, horiz = T)
+
+
+met.ward3 = hclust(d.euclid^2, method = "ward.D2")
+coe.ward3 = coef.hclust(met.ward3)
+coe.ward3
+fviz_dend(met.ward3, k = 3, horiz = T)
 
 fviz_nbclust(prot, FUNcluster = hcut, method = "wss")
 fviz_nbclust(prot, FUNcluster = hcut, method = "silhouette")
 fviz_nbclust(prot, FUNcluster = hcut, method = "gap_stat")
 
-fviz_dend(met.ward2, k = 2, horiz = T)
-fviz_dend(met.prom2, k = 2, horiz = T)
+ward3.reduc = met.ward3
+ward3.reduc$height = ward3.reduc$height^(1/2)
+fviz_dend(ward3.reduc, k = 2, horiz = T)
+
 
 # MDS ---------------------------------------------------------------------
 
-prot_dis2_r = dist(prot)^2
+prot_dis2_r = dist(prot) ^ 2
 
 mds.r = mds(prot_dis2_r, type = "ordinal")
 
@@ -224,18 +324,16 @@ plot(mds.r, plot.type = "resplot")
 # plot(mds.r, plot.type = "bubbleplot")
 # plot(mds.r, plot.type = "histogram")
 
-dat.r = data.frame(
-  etiq = rownames(mds.r$conf),
-  x = mds.r$conf[, 1],
-  y = mds.r$conf[, 2]
-)
+dat.r = data.frame(etiq = rownames(mds.r$conf),
+                   x = mds.r$conf[, 1],
+                   y = mds.r$conf[, 2])
 
-ggplot(dat.r, aes(x, -y)) +
+ggplot(dat.r, aes(x,-y)) +
   geom_point() +
   geom_text_repel(aes(label = etiq)) +
   theme_base()
 
-prot_dis2_c = dist(t(prot))^2
+prot_dis2_c = dist(t(prot)) ^ 2
 
 mds.c = mds(prot_dis2_c, type = "ordinal")
 
@@ -248,35 +346,34 @@ plot(mds.c, plot.type = "resplot")
 
 plot_conf = plot(mds.c, plot.type = "Shepard")
 
-dat.c = data.frame(
-  etiq = rownames(mds.c$conf),
-  x = mds.c$conf[, 1],
-  y = mds.c$conf[, 2]
-)
+dat.c = data.frame(etiq = rownames(mds.c$conf),
+                   x = mds.c$conf[, 1],
+                   y = mds.c$conf[, 2])
 
 ggplot(dat.c, aes(x, y)) +
   geom_point() +
   geom_text_repel(aes(label = etiq)) +
   theme_base()
 
-shep.df = data.frame(
-  x = as.vector(mds.c$delta),
-  y = as.vector(mds.c$confdist)
-)
+shep.df = data.frame(x = as.vector(mds.c$delta),
+                     y = as.vector(mds.c$confdist))
 
 ggplot(shep.df, aes(x, y)) +
   geom_point() +
   geom_line() +
   theme_base()
 
-resp.df = data.frame(
-  x = as.vector(mds.c$dhat),
-  y = as.vector(mds.c$confdist)
-)
+resp.df = data.frame(x = as.vector(mds.c$dhat),
+                     y = as.vector(mds.c$confdist))
 
 ggplot(resp.df, aes(x, y)) +
-  geom_point(shape = 1) +
-  geom_smooth(method = 'loess', formula = y ~ x, se = F, size = 0.2) +
+  geom_point(shape = 1, alpha = 0.5) +
+  geom_smooth(
+    method = 'loess',
+    formula = y ~ x,
+    se = F,
+    size = 0.2
+  ) +
   theme_base()
 
 # AC ----------------------------------------------------------------------
@@ -307,7 +404,10 @@ fviz_screeplot(ac_prot) +
 filas = get_ca_row(ac_prot)
 filas$coord
 
-fviz_ca_row(ac_prot, col.row = "darkgreen", shape.row = 15, repel = T) + ggthemes::theme_base()
+fviz_ca_row(ac_prot,
+            col.row = "darkgreen",
+            shape.row = 15,
+            repel = T) + ggthemes::theme_base()
 
 filas$cos2
 
@@ -374,7 +474,8 @@ CA(t.prot)
 
 # > Alt sin rot -----------------------------------------------------------
 
-datos3 = foreign::read.spss("data/M3/PaisesProteinasExamenCorrespondencias.sav", to.data.frame = T)
+datos3 = foreign::read.spss("data/M3/PaisesProteinasExamenCorrespondencias.sav",
+                            to.data.frame = T)
 
 tabla = xtabs(consumo ~ PaisCat + AlimentosCat, data = datos3)
 
@@ -413,7 +514,10 @@ ggplot(coord.df.r, aes(-x, y)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0)
 
-fviz_ca_row(ac_prot, col.row = "darkgreen", shape.row = 15, repel = T) + ggthemes::theme_base()
+fviz_ca_row(ac_prot,
+            col.row = "darkgreen",
+            shape.row = 15,
+            repel = T) + ggthemes::theme_base()
 
 filas$cos2
 
@@ -443,9 +547,11 @@ fviz_ca_row(
 columnas = get_ca_col(ac_prot)
 columnas$coord
 
-coord.df.c = data.frame(x = columnas$coord[, 1],
-                        y = columnas$coord[, 2],
-                        etiq = rownames(columnas$coord))
+coord.df.c = data.frame(
+  x = columnas$coord[, 1],
+  y = columnas$coord[, 2],
+  etiq = rownames(columnas$coord)
+)
 
 ggplot(coord.df.c, aes(-x, y)) +
   geom_point() +
@@ -513,7 +619,10 @@ fviz_screeplot(ac_prot) +
 filas = get_ca_row(ac_prot)
 filas$coord
 
-fviz_ca_row(ac_prot, col.row = "darkgreen", shape.row = 15, repel = T) + ggthemes::theme_base()
+fviz_ca_row(ac_prot,
+            col.row = "darkgreen",
+            shape.row = 15,
+            repel = T) + ggthemes::theme_base()
 
 filas$cos2
 
@@ -571,10 +680,76 @@ fviz_ca_col(
   repel = TRUE
 )
 
-fviz_ca_biplot(ac_prot,
-               map = "rowprincipal",
-               repel = TRUE)
+fviz_ca_biplot(ac_prot, repel = TRUE)
 
 CA(prot)
 
+plot(ac_prot)
 
+# LDA ---------------------------------------------------------------------
+
+library(tidyverse)
+library(caret)
+library(MASS)
+
+
+# Load the data
+data("iris")
+# Split the data into training (80%) and test set (20%)
+set.seed(123)
+
+training.samples <- iris$Species %>%
+  createDataPartition(p = 0.8, list = FALSE)
+
+train.data <- iris[training.samples,]
+test.data <- iris[-training.samples,]
+
+# Estimate preprocessing parameters
+preproc.param <- train.data %>%
+  preProcess(method = c("center", "scale"))
+
+# Transform the data using the estimated parameters
+train.transformed <- preproc.param %>% predict(train.data)
+test.transformed <- preproc.param %>% predict(test.data)
+
+# Fit the model
+model <- lda(Species ~ ., data = train.transformed)
+model
+
+# Make predictions
+predictions <- model %>% predict(test.transformed)
+names(predictions)
+
+# Predicted classes
+head(predictions$class, 6)
+# Predicted probabilities of class memebership.
+head(predictions$posterior, 6)
+
+
+
+
+# Linear discriminants
+head(predictions$x, 3)
+
+lda.data <- cbind(train.transformed, predict(model)$x)
+ggplot(lda.data, aes(LD1, LD2)) +
+  geom_point(aes(color = Species))
+
+# Model accuracy
+mean(predictions$class == test.transformed$Species)
+
+sum(predictions$posterior[, 1] >= .5)
+
+iris.lda = lda(Species ~ . , data = iris)
+table(predict(iris.lda, type = "class")$class, iris$Species)
+
+table(predictions$class, iris$Species)
+
+hist(prot$CarneRoja)
+
+lapply(prot, nortest::lillie.test)
+
+par(mfrow = c(1,1))
+for(i in 1:9) {
+  hist(prot[[i]])
+}
