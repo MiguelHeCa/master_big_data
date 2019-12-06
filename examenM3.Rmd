@@ -6,8 +6,12 @@ output:
     latex_engine: xelatex
     number_section: true
 lang: es
+mainfont: Open Sans
 bibliography: ref/refm3.bib
-abstract: "Se utilizaron análisis de componentes principales, análisis factorial, escalamiento multidimensional y coordenadas principales"
+abstract: | 
+  Se utilizaron análisis de componentes principales, análisis factorial, escalamiento multidimensional y coordenadas principales
+  
+  **Palabras clave**: Análisis, Multivariante, Factorial, Discriminante, Escalamiento Multidimensional, Coordenadas principales
 ---
 
 ```{r setup, include=FALSE}
@@ -19,13 +23,18 @@ library(knitr)
 library(kableExtra)
 library(magrittr)
 library(psych)
+library(factoextra)
+library(ggrepel)
+library(cluster)
+library(smacof)
+library(ggthemes)
 ```
 
 # Introducción
 
 Aquí se inicia
 
-# Los datos
+# Análisis exploratorio de datos
 
 Se importan los datos
 
@@ -116,9 +125,11 @@ kable(
 
 # Análisis de factores
 
+Dado que observamos que existe colinealidad entre las variables, buscaremos reducir las dimensiones de tal forma que sean ortogonales entre ellas. Por eso, utilizaremos el modelo factorial.
+
 ## Factibilidad del modelo
 
-```{r, echo=TRUE}
+```{r, echo=FALSE}
 correl = rcorr(as.matrix(Filter(is.numeric, datos1)))
 
 r.mat = correl$r
@@ -133,4 +144,16 @@ cortest.bartlett(r.mat, nrow(datos1))
 ```{r}
 
 ```
+
+# Análisis clúster
+
+# Escalamiento multidimensional
+
+# Análisis de correspondencias
+
+# Análisis discriminante
+
+# Conclusiones
+
+# Referencias
 
