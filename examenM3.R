@@ -135,15 +135,15 @@ af_srt$e.values
 ggplot(data.frame(
   factores = 1:length(af_srt$e.values),
   eig = af_srt$e.values
-),
-aes(x = factores, y = eig)) +
+  ),
+  aes(x = factores, y = eig)) +
   geom_point(shape = 1) +
   geom_line() +
   geom_hline(yintercept = 1, linetype = "dashed") +
   theme_light() +
   labs(x = "factores",
        y = "Autovalor") +
-  ggthemes::theme_base()
+  theme_base()
 
 af_varimax = fa(prot,
                 nfactors = 3,

@@ -1,0 +1,76 @@
+---
+title: "skim"
+author: "Miguel Hernández"
+date: "12/7/2019"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+    number_section: true
+lang: es
+mainfont: Open Sans
+bibliography: ref/refm3.bib
+abstract: | 
+  Se utilizaron análisis de componentes principales, análisis factorial, escalamiento multidimensional y coordenadas principales
+  
+  **Palabras clave**: Análisis, Multivariante, Factorial, Discriminante, Escalamiento Multidimensional, Coordenadas principales
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(Hmisc)
+# library(xtable)
+library(magrittr)
+library(psych)
+library(FactoMineR)
+library(factoextra)
+library(ggrepel)
+library(cluster)
+library(smacof)
+library(ggthemes)
+library(skimr)
+```
+
+##  Tablas
+
+Imprimir tablas en R es complicado.
+
+Primero carguemos datos:
+
+```{r}
+alim = foreign::read.spss("data/M3/PaisesProteinasExamen.sav", to.data.frame = T)
+alim$Pais = trimws(alim$Pais)
+```
+
+
+Primero usemos `summary()`:
+
+```{r}
+summary(alim)
+```
+
+Luego usemos `skimr`
+
+```{r, echo=FALSE}
+library(skimr)
+
+my_skim <-
+  skim_with(
+    character = sfl(
+      empty = NULL,
+      min = NULL,
+      max = NULL,
+      whitespace = NULL
+    ),
+    numeric = sfl(hist = NULL)
+  )
+
+resumen = my_skim(alim)
+
+resumen2 = resumen
+resumen2$n_missing = NULL
+resumen2$complete_rate = NULL
+
+resumen2
+```
+
