@@ -1,0 +1,242 @@
+---
+title: "Análisis multivariante de proteínas en países europeos"
+author: "José Miguel Hernández Cabrera"
+output: 
+  bookdown::pdf_document2:
+    latex_engine: xelatex
+    number_section: true
+    toc: false
+    includes:
+      in_header: preamble.tex
+lang: es
+mainfont: Open Sans
+bibliography: ref/refm3.bib
+abstract: | 
+  Se utilizaron análisis de componentes principales, análisis factorial, escalamiento multidimensional y coordenadas principales
+  
+  **Palabras clave**: Análisis, Multivariante, Factorial, Discriminante, Escalamiento Multidimensional, Coordenadas principales
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_knit$set(kable.force.latex=FALSE)
+
+library(Hmisc)
+library(magrittr)
+library(psych)
+library(FactoMineR)
+library(factoextra)
+library(ggrepel)
+library(cluster)
+library(smacof)
+library(ggthemes)
+library(skimr)
+```
+
+# Introducción
+
+Al momento de analizar información normalmente se utilizan métodos lineales como primera línea de análisis. Sin embargo, el investigador varias veces se enfrenta con que los datos no cumplen con los supuestos requeridos por los modelos lineales. En estos casos, la variabilidad es considerada como ruido en lugar de aportar algo importante. 
+
+No obstante, la invariabilidad no es normal en el mundo real, por lo que es necesario utilizar otros métodos para poder acceder a información a partir de la heterogeneidad de los datos. Por ello, en este estudio utilizaremos métodos multivariantes que permiten extraer información pertinente a partir de la variabilidad.
+
+# Análisis exploratorio de datos
+
+Los datos con los que trabajaremos provienen de ejemplos utilizados para ejemplificar el funcionamiento de los métodos multivariantes. Se refieren a la composición alimenticia en países del continente europeo en años donde todavía existía la Unión Soviética, Checoslovaquia, Yugoslavia y las dos repúblicas alemanas.
+
+```{r, include=FALSE}
+alim = foreign::read.spss("data/M3/PaisesProteinasExamen.sav", to.data.frame = T)
+alim$Pais = trimws(alim$Pais)
+
+prot = Filter(is.numeric, alim)
+rownames(prot) = alim$Pais
+
+proteinas = alim
+colnames(proteinas) = c("País", "Carne roja", "Carne blanca", "Huevos",
+                        "Leche", "Pescado", "Cereales", "Féculas", 
+                        "Frutos secos", "Frutos y vegetales", "Comunista",
+                        "Localización")
+
+mi_skim =
+  skim_with(
+    factor = sfl(
+      ordered = NULL
+    ),
+    numeric = sfl(hist = NULL)
+  )
+
+eskim = mi_skim(proteinas)
+
+eskim$n_missing = NULL
+eskim$complete_rate = NULL
+
+res_eskim = summary(eskim)
+rownames(res_eskim) = c(
+  "Nombre",
+  "Número de filas",
+  "Número de columnas",
+  "_________________________ ",
+  "Frecuencia de cada tipo: ",
+  "character",
+  "factor", 
+  "numeric",
+  "_________________________  ",
+  "Variables de agrupación"
+)
+res_eskim[10, 1] = "Ninguna"
+```
+
+```{r gen}
+knitr::kable(
+  res_eskim,
+  caption = "Resumen general",
+  col.names = "Valores"
+)
+```
+
+```{r num}
+knitr::kable(
+  partition(eskim)[[3]],
+  caption = "Resumen de variables de composición alimenticia",
+  col.names = c("Variable", "Media", "D.E.", "Q1", "Q2", "Q3", "Q4", "Q5"),
+  digits = 3
+)
+```
+
+```{r fac}
+knitr::kable(
+  partition(eskim)[[2]],
+  caption = "Resumen de variables categóricas",
+  col.names = c("Variable", "Único", "Conteo")
+)
+```
+
+El cuadro \@ref(tab:gen) señala que contamos con la información 25 países explicados en 12 variables: `r paste(toString(colnames(proteinas)[1:11]), "y", colnames(proteinas)[12])`. El cuadro \@ref(tab:num) señala los datos descriptivos de la composición alimenticia de la dieta de los países que nos ocupan. Finalmente, el cuadro \@ref(tab:fac) muestra la distribución de las categorías entre aquellos países identificados con el comunismo y su región.
+
+Como primera instancia, queremos saber si con las variables de composición alimenticia se encuentra colinealidad, uno de los principales obstáculos para el uso de métodos lineales.
+
+```{r corr}
+corstars =
+  function(x,
+           method = c("pearson", "spearman"),
+           removeTriangle = c("upper", "lower")) {
+    #Compute correlation matrix
+    x <- as.matrix(x)
+    correlation_matrix <- rcorr(x, type = method[1])
+    R <- correlation_matrix$r # Matrix of correlation coeficients
+    p <- correlation_matrix$P # Matrix of p-value
+    
+    ## Define notions for significance levels; spacing is important.
+    mystars <-
+      ifelse(p < .001, "*** ", ifelse(p < .01, "**  ", ifelse(p < .05, "*   ", "    ")))
+    
+    ## trunctuate the correlation matrix to two decimal
+    R <- format(round(cbind(rep(-1.11, ncol(
+      x
+    )), R), 3))[, -1]
+    
+    ## build a new matrix that includes the correlations with their apropriate stars
+    Rnew <- matrix(paste(mystars, R, sep = ""), ncol = ncol(x))
+    diag(Rnew) <- paste(diag(R), " ", sep = "")
+    rownames(Rnew) <- colnames(x)
+    colnames(Rnew) <- paste(colnames(x), "", sep = "")
+    
+    ## remove upper triangle of correlation matrix
+    if (removeTriangle[1] == "upper") {
+      Rnew <- as.matrix(Rnew)
+      Rnew[upper.tri(Rnew, diag = TRUE)] <- ""
+      Rnew <- as.data.frame(Rnew)
+    }
+    
+    ## remove lower triangle of correlation matrix
+    else if (removeTriangle[1] == "lower") {
+      Rnew <- as.matrix(Rnew)
+      Rnew[lower.tri(Rnew, diag = TRUE)] <- ""
+      Rnew <- as.data.frame(Rnew)
+    }
+    
+    ## remove last column and return the correlation matrix
+    Rnew <- cbind(Rnew[1:length(Rnew) - 1])
+    
+    return(Rnew)
+  }
+
+t_corstar = corstars(prot)
+nombres_prot = c(
+  "Carne roja",
+  "Carne blanca",
+  "Huevos",
+  "Leche",
+  "Pescado",
+  "Cereales",
+  "Féculas",
+  "Frutos secos",
+  "Futos y vegetales"
+)
+colnames(t_corstar) = nombres_prot[1:8]
+rownames(t_corstar) = nombres_prot
+
+correl = rcorr(as.matrix(prot))
+
+r.mat = correl$r
+
+knitr::kable(
+  t_corstar,
+  format = "latex",
+  align = c("r", "r", "r", "r", "r", "r", "r", "r" , "r"),
+  caption = "Correlaciones entre variables de composición alimenticia",
+  booktabs = T
+) %>%
+  kableExtra::kable_styling(latex_options = "scale_down") %>%
+  kableExtra::add_footnote(c(
+    "p < .001 ‘***’, p < .01 ‘**’, p < .05 ‘*’",
+    paste0("Determinante ", round(det(r.mat), 4))
+  ))
+```
+
+El cuadro \@ref(tab:corr) muestra que los *cereales* tienen una correlación negativa estadísticamente significativa con todas las demás variables, a excepción de la relación positiva con los *frutos secos* y no significativa con los *frutos y vegetales*. A su vez, los *frutos secos* también muestran una asociación negativa significativa entre *carne blanca*, *huevos*, *leche* y *féculas*. Por otra parte, la *carne roja* tiene una asociación lineal positiva significativa con *huevos* y *leche*. Análogamente, la *carne blanca* está relacionada con *huevos*.
+
+En suma, existe colinealidad entre las variables, por lo que reducir las dimensiones puede ser un procedimiento adecuado para estos casos.
+
+# Análisis de factores
+
+El análisis factorial se caracteriza por encontrar variables latentes que emanan de las observadas. Para que el análisis sea interpretable, los datos no deben tener forma esférica. Una esfericidad completa se presenta mediante la matriz de identidad: 
+
+$$
+\mathbf{R} = \begin{pmatrix}
+  1 & 0 & 0 & 0 \\
+  0 & 1 & 0 & 0 \\
+  \vdots  & \vdots  & \ddots & \vdots  \\
+  0 & 0 & \cdots & 1 
+ \end{pmatrix}
+$$
+
+Entonces, para descartar que los datos se comportan de esa forma existen tres formas de verificarlo: el coeficiente de determinación, la prueba Kaiser-Meyel-Olkin y la prueba de esfericidad de Bartlett.
+
+En cuanto al coeficiente de determinación, el cuadro \@ref(tab:corr) muestra que es cercano a 0, por lo que se pouede asegurar que no existe esfericidad.
+
+Por otra parte, la prueba de esfericidad de Bartlett, en donde la hipótesis nulea ($H_0$) reside en que los datos presentan esfericidad completa. Es decir, mide el grado en que la matriz se desvía de la matriz de identidad $\mathbf{R}$. Para calcular esta diferencia se utiliza el paquete `psych` [@psych] del lenguaje `R` [@Rcoreteam].
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Referencias

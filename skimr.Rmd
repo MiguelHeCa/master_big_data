@@ -51,26 +51,55 @@ summary(alim)
 
 Luego usemos `skimr`
 
+## La buena
+
 ```{r, echo=FALSE}
 library(skimr)
+alim2 = alim
+colnames(alim2) = c("País", "Carne roja", "Carne blanca", "Huevos", "Leche", "Pescado", "Cereales", "Féculas", "Frutos secos", "Frutos y vegetales", "Comunista", "Localización")
 
-my_skim <-
+mi_skim =
   skim_with(
     character = sfl(
       empty = NULL,
-      min = NULL,
-      max = NULL,
       whitespace = NULL
     ),
     numeric = sfl(hist = NULL)
   )
 
-resumen = my_skim(alim)
+eskim = mi_skim(alim2)
 
-resumen2 = resumen
-resumen2$n_missing = NULL
-resumen2$complete_rate = NULL
+eskim$n_missing = NULL
+eskim$complete_rate = NULL
 
-resumen2
+res_eskim = summary(eskim)
+rownames(res_eskim) = c(
+  "Nombre",
+  "Número de filas",
+  "Número de columnas",
+  "_________________________ ",
+  "Frecuencia de cada tipo: ",
+  "character",
+  "factor", 
+  "numeric",
+  "_________________________  ",
+  "Variables de agrupación"
+)
+res_eskim[10, 1] = "Ninguna"
+
+knitr::kable(res_eskim, caption = "Resumen general", col.names = "Valores")
+#knitr::kable(summary(eskim), caption = "Resumen general", col.names = "Valores")
+knitr::kable(partition(eskim)[[1]],
+             caption = "Resumen de variable tipo **character**",
+             col.names = c("", "Mín", "Máx", "Únicos"))
+
+knitr::kable(partition(eskim)[[2]],
+             caption = "Resumen de variable tipo **factor**",
+             col.names = c("", "Ordenado", "Único", "Conteo"))
+
+knitr::kable(partition(eskim)[[3]],
+             caption = "Resumen de variable tipo **numeric**",
+             col.names = c("", "Media", "D.E.", "Q1", "Q2", "Q3", "Q4", "Q5"),
+             digits = 3)
 ```
 
