@@ -214,18 +214,162 @@ Entonces, para descartar que los datos se comportan de esa forma existen tres fo
 
 En cuanto al coeficiente de determinación, el cuadro \@ref(tab:corr) muestra que es cercano a 0, por lo que se pouede asegurar que no existe esfericidad.
 
-Por otra parte, la prueba de esfericidad de Bartlett, en donde la hipótesis nulea ($H_0$) reside en que los datos presentan esfericidad completa. Es decir, mide el grado en que la matriz se desvía de la matriz de identidad $\mathbf{R}$. Para calcular esta diferencia se utiliza el paquete `psych` [@psych] del lenguaje `R` [@Rcoreteam].
+Por otra parte, la prueba de esfericidad de @bartlett1937, en donde la hipótesis nulea ($H_0$) reside en que los datos presentan esfericidad completa. Es decir, mide el grado en que la matriz se desvía de la matriz de identidad $\mathbf{R}$. Dicho en otras palabras, busca si existe homocedasticidad de las varianzas entre grupos. Para calcular esta diferencia se utiliza el paquete `psych` [@psych] del lenguaje `R` [@Rcoreteam].
+
+```{r bartlett}
+bartlett = cortest.bartlett(r.mat, nrow(prot))
+bartlett = as.data.frame.list(bartlett)
+bartlett[1, 2] = as.character(signif(bartlett[1,2], 2))
+
+knitr::kable(as.data.frame.list(bartlett),
+             caption = "Prueba de esfericidad de Bartlett",
+             col.names = c("$\\chi^2$", "p-valor", "g.l."),
+             align = c("r", "r", "r"),
+             booktabs = TRUE,
+             escape = FALSE)
+```
+
+El cuadro \@ref(tab:bartlett) muestra que el *p-valor* es $< 0.05$, por lo que se puede considerar que existe evidencia suficiente para rechazar que los datos tienen esfericidad completa y, por lo tanto, son aptos para el análisis factorial.
+
+Existe, a su vez, la posibilidad de evaluar la esfericidad directamente sobre la matriz $\mathbf{R}$ mediante la prueba Kaiser-Mayer-Olkin, la cual mide el cuadrado de los elementos de la "imagen" de la matriz comparada con los cuadrados de las correlaciones originales. La imagen consiste en la matriz de covarianzas o correlaciones con el signo opuesto.
+
+Esta prueba muestra la Medida de Adecuación del Muestreo (`MSA`. por sus siglas en inglés). @Kaiser1974 describió la interpretación de la `MSA` de la siguiente manera:
+
+\begin{align*}
+\mathrm{KMO} &\geq 0.9 \Rightarrow \mathrm{Estupendo} \\
+\mathrm{KMO} &\geq 0.8 \Rightarrow \mathrm{Meritorio} \\
+\mathrm{KMO} &\geq 0.7 \Rightarrow \mathrm{Intermedio} \\
+\mathrm{KMO} &\geq 0.6 \Rightarrow \mathrm{Mediocre} \\
+\mathrm{KMO} &\geq 0.5 \Rightarrow \mathrm{Miserable} \\
+\mathrm{KMO} &< 0.5 \Rightarrow \mathrm{Inaceptable}
+\end{align*}
+
+Aunque otros usuarios la sugieren de esta forma:
+
+\begin{align*}
+\mathrm{KMO} &\geq 0.75 \Rightarrow \mathrm{Bien} \\
+\mathrm{KMO} &\geq 0.5 \Rightarrow \mathrm{Aceptable} \\
+\mathrm{KMO} &< 0.5 \Rightarrow \mathrm{Inaceptable}
+\end{align*} 
 
 
+```{r kmo}
+kmo = psych::KMO(prot)
 
+a = matrix(paste0(format(round(kmo$ImCov, 3), 3), "$^a$"), nrow = 9, ncol = 9)
+b = matrix(paste0(format(round(kmo$Image, 3), 3), "$^b$"), nrow = 9, ncol = 9)
+c = paste0(format(round(kmo$MSAi, 3), 3), "$^c$")
 
+kmo.mat = matrix(NA, nrow = nrow(a), ncol = ncol(a))
+kmo.mat[upper.tri(kmo.mat)] = a[upper.tri(a)]
+kmo.mat[lower.tri(kmo.mat)] = b[lower.tri(b)]
+diag(kmo.mat) = c
+colnames(kmo.mat) = c("C.r.", "C.b.", "H.", "L.", "P.", "C.", "F.", "F.s.", "F.v.")
+rownames(kmo.mat) = colnames(proteinas)[2:10]
 
+knitr::kable(kmo.mat,
+             caption = "Prueba de adecuación Kaiser-Meyer-Olkin",
+             align = c("r", "r", "r", "r", "r", "r", "r", "r", "r"),
+             booktabs = TRUE,
+             escape = FALSE) %>%
+  kableExtra::add_footnote(c(
+    "Matriz de covarianzas anti-imagen",
+    "Matriz de correlaciones anti-imagen",
+    "MSA individuales",
+    paste0("MSA global: ", round(kmo$MSA, 3))
+  )) %>%
+  kableExtra::kable_styling(latex_options = "HOLD_position")
+```
 
+En el cuadro \@ref(tab:kmo) podemos observar que para efectos prácticos, la MSA es *aceptable*, por lo que es adecuado proseguir con el análisis de factores principales.
 
+# Modelo factorial
 
+Se define el modelo factorial de la forma $X_p = a_{ij}F_j + ... +  a_{pq}F_q + d_pU_p$, el cual está compuesto por *saturaciones* $a_{ij}$ de la variable $X_i$ en el factor $F_j$. En el caso de que las variables y los factores estén estandarizados, podemos calcular las **unicidades** $d_i^2$ dado que 
 
+$$var(X_i) = a^2_{i1} + ... +a^2_{iq}+d^2_i$$
 
+Inicial sin rotaciones
 
+```{r af-srt-str}
+af_srt = fa(prot, nfactors = ncol(r.mat), rotate = "none")
+af.srt.str = round(unclass(af_srt$Structure), 3)
+af.srt.var = round(af_srt$Vaccounted, 3)
+af.srt.eig = round(af_srt$e.values, 3)
+af.srt.vartab = rbind(format(af.srt.str, 3),
+                      rep("", times = 9),
+                      format(af.srt.var,3 ),
+                      rep("", times = 9),
+                      format(af.srt.eig, 3))
+rownames(af.srt.vartab) = c(
+  colnames(proteinas[2:10]),
+  "",
+  "Cargas",
+  "% varianza",
+  "% var. acumulada",
+  "% explicada",
+  "% expl. acumulada",
+  "",
+  "Autovalores"
+)
+
+knitr::kable(af.srt.vartab,
+             caption = "Varianza explicada de análisis de factores sin rotación",
+             align = rep("r", times = 9),
+             booktabs = TRUE)
+```
+
+Gráfico de sedimentos
+
+```{r}
+ggplot(data.frame(
+  factores = 1:length(af_srt$e.values),
+  eig = af_srt$e.values
+  ),
+  aes(x = factores, y = eig)) +
+  geom_point(shape = 1) +
+  geom_line() +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  labs(x = "factores",
+       y = "Autovalor") +
+  theme_tufte(base_family = "sans")
+```
+
+Modelo con extracción de 3 factores y rotación varimax
+
+```{r, warning=FALSE}
+af_varimax = fa(prot,
+                nfactors = 3,
+                rotate = "varimax",
+                scores = "Anderson")
+# af_varimax$scores
+# af_varimax$Structure
+# af_varimax$Vaccounted
+# af_varimax$communalities
+# af_varimax$e.values
+# af_varimax$uniquenesses
+```
+
+Gráfico de dimensiones
+
+```{r}
+af_dim = data.frame(
+  x = af_varimax$scores[, 1],
+  y = af_varimax$scores[, 2],
+  pais = trimws(alim$Pais),
+  Comunista = alim$Comunista,
+  Loc = alim$Localizacion
+)
+
+ggplot(af_dim, aes(x, y)) +
+  geom_point(aes(col = Loc, shape = Comunista)) +
+  geom_text_repel(aes(label = pais, color = Loc), show.legend = F) +
+  labs(
+    x = "F1: Carne blanca y huevos",
+    y = "F2: Carne roja, frutos secos, frutos, vegetales y leche"
+  ) +
+  theme_tufte(base_family = "sans")
+```
 
 
 
