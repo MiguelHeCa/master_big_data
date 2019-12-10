@@ -401,28 +401,30 @@ library(patchwork)
 fig.mds.c + fig.mds.r + plot_annotation(tag_levels = 'A')
 
 
-## ----shpres-c, fig.cap="Relación entre disimilaridades y residuos de variables"-----------------------------
+## ----shep, fig.cap="Diagrama de Shepard para variables y países"--------------------------------------------
 par(mfrow = c(1, 2))
-plot(mds.c, plot.type = "Shepard", main = "Diagrama de Shepard", xlab = "Disimilaridades", ylab = "Distancias configuradas",
+plot(mds.c, plot.type = "Shepard", main = "Variables", xlab = "Disimilaridades", ylab = "Distancias configuradas",
   cex.main = 1,
   cex.lab = 0.8,
   cex.axis = 0.8)
-plot(mds.c, plot.type = "resplot", main = "Gráfico de residuos", xlab = "Proximidades transformadas", ylab = "Distancias configuradas",
+plot(mds.r, plot.type = "Shepard", main = "Países", xlab = "Disimilaridades", ylab = "Distancias configuradas",
   cex.main = 1,
   cex.lab = 0.8,
   cex.axis = 0.8)
 
 
-## ----shpres-r, fig.cap="Relación entre disimilaridades y residuos de países"--------------------------------
+## ----resi, fig.cap="Gráfico de residuos para variables y países"--------------------------------------------
 par(mfrow = c(1, 2))
-plot(mds.r, plot.type = "Shepard", main = "Diagrama de Shepard", xlab = "Disimilaridades", ylab = "Distancias configuradas",
+
+plot(mds.c, plot.type = "resplot", main = "Variables", xlab = "Proximidades transformadas", ylab = "Distancias configuradas",
   cex.main = 1,
   cex.lab = 0.8,
   cex.axis = 0.8)
-plot(mds.r, plot.type = "resplot", main = "Gráfico de residuos", xlab = "Proximidades transformadas", ylab = "Distancias configuradas",
+plot(mds.r, plot.type = "resplot", main = "Países", xlab = "Proximidades transformadas", ylab = "Distancias configuradas",
   cex.main = 1,
   cex.lab = 0.8,
   cex.axis = 0.8)
+
 
 
 ## -----------------------------------------------------------------------------------------------------------
@@ -432,11 +434,25 @@ rownames(t.prot) = nom_var_r
 ac_prot = CA(t.prot, graph = FALSE)
 
 
-## -----------------------------------------------------------------------------------------------------------
-fviz_contrib(ac_prot, choice = "row", axes = 1) +
-  fviz_contrib(ac_prot, choice = "row", axes = 2) +
-  fviz_contrib(ac_prot, choice = "row", axes = 3) +
-  fviz_contrib(ac_prot, choice = "row", axes = 4)
+## ----chi2ca, warning=FALSE----------------------------------------------------------------------------------
+chi2 = chisq.test(prot)
+
+chi2tab = matrix(c(format(round(chi2$statistic, 3), 3), chi2$parameter, as.character(signif(chi2$p.value, 3))), nrow = 1)
+colnames(chi2tab) =  c("$\\chi^2$", "g.l.", "p-valor")
+
+knitr::kable(chi2tab,
+             caption = "Prueba de Chi cuadrado de correspondencias",
+             format = "pandoc",
+             align = rep("r", times = 3)
+             )
+
+
+## ----eig-ca-------------------------------------------------------------------------------------------------
+eig.ca = round(t(ac_prot$eig), 3)
+rownames(eig.ca) = c("Valores propios", "% varianza", "% var. acumulada")
+knitr::kable(eig.ca,
+             format = "pandoc",
+             caption = "Valores propios de las correspondencias")
 
 
 ## ----cos-f, fig.cap="Calidad de representación de variables"------------------------------------------------
@@ -444,7 +460,8 @@ cos2.f = fviz_ca_row(
   ac_prot,
   col.row = "cos2",
   gradient.cols = c("#f46d43", "#fee08b", "#1a9850"),
-  repel = TRUE
+  repel = TRUE,
+  labelsize = 3
 ) + 
   theme_tufte(base_family = "sans") +
   theme(panel.background = element_rect(colour = "black"),
@@ -458,14 +475,15 @@ cont.f = fviz_ca_row(
   ac_prot,
   col.row = "contrib",
   gradient.cols = c("#d6604d", "#dedede", "#4393c3"),
-  repel = TRUE
+  repel = TRUE,
+  labelsize = 3
 ) + 
   theme_tufte(base_family = "sans") +
   theme(panel.background = element_rect(colour = "black"),
         text = element_text(size = 10),
         plot.title = element_blank())
 
-cos2.f
+cont.f
 
 
 ## ----cos-c, fig.cap="Calidad de representación de países"---------------------------------------------------
@@ -473,7 +491,8 @@ cos2.c = fviz_ca_col(
   ac_prot,
   col.col = "cos2",
   gradient.cols = c("#f46d43", "#fee08b", "#1a9850"),
-  repel = TRUE
+  repel = TRUE,
+  labelsize = 3
 ) + 
   theme_tufte(base_family = "sans") +
   theme(panel.background = element_rect(colour = "black"),
@@ -488,7 +507,8 @@ cont.c = fviz_ca_col(
   ac_prot,
   col.col = "contrib",
   gradient.cols = c("#d6604d", "#dedede", "#4393c3"),
-  repel = TRUE
+  repel = TRUE,
+  labelsize = 3
 ) + 
   theme_tufte(base_family = "sans") +
   theme(panel.background = element_rect(colour = "black"),
@@ -499,7 +519,7 @@ cont.c
 
 
 ## ----biplot, fig.cap="Similitudes entre variables y países"-------------------------------------------------
-biplot = fviz_ca_biplot(ac_prot, repel = TRUE) + 
+biplot = fviz_ca_biplot(ac_prot, repel = TRUE, labelsize = 3) + 
   theme_tufte(base_family = "sans") +
   theme(panel.background = element_rect(colour = "black"),
         text = element_text(size = 10),

@@ -12,7 +12,7 @@ lang: es
 mainfont: Open Sans
 bibliography: ref/refm3.bib
 abstract: | 
-  En el presente trabajo se utilizan datos de composición alimenticia de países europeos durante la guerra fría para mostrar los resultados de los siguientes modelos multivariantes: análisis análisis factorial, escalamiento multidimensional y análisis de correspondencias. Las conclusiones de la información extraída depende de los parámetros de cada modelo, así como el ajuste de los supuestos que éstos requieran.
+  En el presente trabajo se utilizan datos de composición alimenticia de países europeos durante la guerra fría para mostrar los resultados de los siguientes modelos multivariantes: análisis análisis factorial, escalamiento multidimensional y análisis de correspondencias. En general, se encuentra que las dimensiones se pueden reducir a menos de cuatro dimensiones, dado que esa cantidad capturan la mayor parte de la variabilidad de la información. En particular, existen diferencias en el consumo conjunto de carne blanca y huevos contra carne roja, leche, frutos secos, frutas y verduras entre los distintos países.
   
   **Palabras clave**: Análisis, Multivariante, Factorial, Discriminante, Escalamiento Multidimensional, Coordenadas principales
 ---
@@ -39,6 +39,10 @@ library(skimr)
 Al momento de analizar información normalmente se utilizan métodos lineales como primera línea de análisis. Sin embargo, el investigador varias veces se enfrenta con que los datos no cumplen con los supuestos requeridos por los modelos lineales. En estos casos, la variabilidad es considerada como ruido en lugar de aportar algo importante. 
 
 No obstante, la invariabilidad no es normal en el mundo real, por lo que es necesario utilizar otros métodos para poder acceder a información a partir de la heterogeneidad de los datos. Por ello, en este estudio utilizaremos métodos multivariantes que permiten extraer información pertinente a partir de la variabilidad.
+
+El primero es el análisis de factores principales con rotación VARIMAX. Luego se utiliza el análisis de conglomerados mediante clasificación jerárquica. Posteriormente, se aplica el escalamiento multidimensional con solución de Torgerson y distancia euclídea al cuadrado. Finalmente, mediante el análisis de correspondencias, se buscan la calidad de representación de los datos y su contribución a las dimensiones extraídas.
+
+Como es de esperarse, los resultados varían conforme a la modificación de parámetros en cuanto a distancias y el tratamiento de los datos conforme sea su comportamiento (por ejemplo, la presencia de colinealidad). En general, se encuentra que tres dimensiones capturan la mayor parte de la variabilidad de la información. En particular, coincide que existen diferencias en el consumo conjunto de carne blanca y huevos contra carne roja, leche, frutos secos, frutas y verduras entre los países. Cabe señalar que los matices en los resultados de cada modelo se abordan en el resto del texto. 
 
 # Análisis exploratorio de datos
 
@@ -113,7 +117,7 @@ knitr::kable(
 
 El cuadro \@ref(tab:gen) señala que contamos con la información 25 países explicados en 12 variables: `r paste(toString(colnames(proteinas)[1:11]), "y", colnames(proteinas)[12])`. El cuadro \@ref(tab:num) señala los datos descriptivos de la composición alimenticia de la dieta de los países que nos ocupan. Finalmente, el cuadro \@ref(tab:fac) muestra la distribución de las categorías entre aquellos países identificados con el comunismo y su región.
 
-Como primera instancia, queremos saber si con las variables de composición alimenticia se encuentra colinealidad, uno de los principales obstáculos para el uso de métodos lineales.
+Como primera instancia, queremos saber si con las variables de composición alimenticia se encuentra colinealidad, uno de los principales obstáculos para el uso de métodos lineales.El cuadro \@ref(tab:corr) muestra que los *cereales* tienen una correlación negativa estadísticamente significativa con todas las demás variables, a excepción de la relación positiva con los *frutos secos* y no significativa con las *frutas y vegetales*. A su vez, los *frutos secos* también muestran una asociación negativa significativa entre *carne blanca*, *huevos*, *leche* y *féculas*. Por otra parte, la *carne roja* tiene una asociación lineal positiva significativa con *huevos* y *leche*. Análogamente, la *carne blanca* está relacionada con *huevos*. En suma, existe colinealidad entre las variables, por lo que reducir las dimensiones puede ser un procedimiento adecuado para estos casos.
 
 ```{r corr}
 corstars =
@@ -194,16 +198,12 @@ knitr::kable(
   ))
 ```
 
-El cuadro \@ref(tab:corr) muestra que los *cereales* tienen una correlación negativa estadísticamente significativa con todas las demás variables, a excepción de la relación positiva con los *frutos secos* y no significativa con las *frutas y vegetales*. A su vez, los *frutos secos* también muestran una asociación negativa significativa entre *carne blanca*, *huevos*, *leche* y *féculas*. Por otra parte, la *carne roja* tiene una asociación lineal positiva significativa con *huevos* y *leche*. Análogamente, la *carne blanca* está relacionada con *huevos*.
-
-En suma, existe colinealidad entre las variables, por lo que reducir las dimensiones puede ser un procedimiento adecuado para estos casos.
-
 # Análisis de factores
 
 El análisis factorial se caracteriza por encontrar variables latentes que emanan de las observadas. Para que el análisis sea interpretable, los datos no deben tener forma esférica. Una esfericidad completa se presenta mediante la matriz de identidad: 
 
 $$
-\mathbf{R} = \begin{pmatrix}
+\mathbf{I} = \begin{pmatrix}
   1 & 0 & 0 & 0 \\
   0 & 1 & 0 & 0 \\
   \vdots  & \vdots  & \ddots & \vdots  \\
@@ -211,11 +211,11 @@ $$
  \end{pmatrix}
 $$
 
-Entonces, para descartar que los datos se comportan de esa forma existen tres formas de verificarlo: el coeficiente de determinación, la prueba Kaiser-Meyel-Olkin y la prueba de esfericidad de Bartlett.
+Entonces, para descartar que los datos se comportan de esa forma existen tres formas de verificarlo: el coeficiente de determinación, la prueba Kaiser-Meyer-Olkin y la prueba de esfericidad de Bartlett.
 
-En cuanto al coeficiente de determinación, el cuadro \@ref(tab:corr) muestra que es cercano a 0, por lo que se pouede asegurar que no existe esfericidad.
+En cuanto al coeficiente de determinación, el cuadro \@ref(tab:corr) muestra que es cercano a 0, por lo que se puede asegurar que no existe esfericidad.
 
-Por otra parte, la prueba de esfericidad de @bartlett1937, en donde la hipótesis nulea ($H_0$) reside en que los datos presentan esfericidad completa. Es decir, mide el grado en que la matriz se desvía de la matriz de identidad $\mathbf{R}$. Dicho en otras palabras, busca si existe homocedasticidad de las varianzas entre grupos. Para calcular esta diferencia se utiliza el paquete `psych` [@psych] del lenguaje `R` [@Rcoreteam].
+Por otra parte, la prueba de esfericidad de @bartlett1937, en donde la hipótesis nula ($H_0$) reside en que los datos presentan esfericidad completa. Es decir, mide el grado en que la matriz se desvía de la matriz de identidad $\mathbf{I}$. Dicho en otras palabras, busca si existe homocedasticidad de las varianzas entre grupos. Para calcular esta diferencia se utiliza el paquete `psych` [@psych] del lenguaje `R` [@Rcoreteam].
 
 ```{r bartlett}
 bartlett = cortest.bartlett(r.mat, nrow(prot))
@@ -232,7 +232,7 @@ knitr::kable(as.data.frame.list(bartlett),
 
 El cuadro \@ref(tab:bartlett) muestra que el *p-valor* es $< 0.05$, por lo que se puede considerar que existe evidencia suficiente para rechazar que los datos tienen esfericidad completa y, por lo tanto, son aptos para el análisis factorial.
 
-Existe, a su vez, la posibilidad de evaluar la esfericidad directamente sobre la matriz $\mathbf{R}$ mediante la prueba Kaiser-Mayer-Olkin, la cual mide el cuadrado de los elementos de la "imagen" de la matriz comparada con los cuadrados de las correlaciones originales. La imagen consiste en la matriz de covarianzas o correlaciones con el signo opuesto.
+Existe, a su vez, la posibilidad de evaluar la esfericidad directamente sobre la matriz $\mathbf{I}$ mediante la prueba Kaiser-Mayer-Olkin, la cual mide el cuadrado de los elementos de la "imagen" de la matriz comparada con los cuadrados de las correlaciones originales. La imagen consiste en la matriz de covarianzas o correlaciones con el signo opuesto.
 
 Esta prueba muestra la Medida de Adecuación del Muestreo (`MSA`. por sus siglas en inglés). @Kaiser1974 describió la interpretación de la `MSA` de la siguiente manera:
 
@@ -334,7 +334,7 @@ ggplot(data.frame(
         text = element_text(size = 10))
 ```
 
-Además de la extracción de los factores, también se rotarán las cargas mediante el método Varimax [@kaiser1958] con el fin de aumentar y disminuir saturaciones para que sean más interpretables. 
+Además de la extracción de los factores, también se rotarán las cargas mediante el método VARIMAX [@kaiser1958] con el fin de aumentar y disminuir saturaciones para que sean más interpretables. 
 
 Analizando el primer eje factorial de la matriz rotada dibujada en el cuadro \@ref(tab:matvmx), podemos identificar que la carga factorial más alta recae sobre *carne blanca* y *huevos*. En el segundo eje, la carga se puede expresar como una combinación entre *carne roja*, *leche*, *frutas y  vegetales*. Por último, la combinación del tercer eje contempla *pescado*, *cereales* y *féculas*. Además, se pone en manifiesto que las unicidades no son muy bajas en general, siendo particularmente altas aquellas asociadas a *féculas*, *carne roja* y tanto *frutas* como *vegetales*.
 
@@ -394,9 +394,13 @@ En el cuadro \@ref(tab:af-srt-str) se muestra estos tres factores principales as
 
 ## Análisis de puntuaciones
 
-Utilizando las puntuaciones de Anderson-Rubin, en la figura \@ref(fig:grafact) se dibujan los dos factores que más representación tienen en el modelo de análisis factorial con las combinaciones descritas en el cuadro \@ref(tab:matvmx). En particular, Austria es el país que ocupa el extremo derecho del eje 1 (correspondiente a la carne blanca y huevos), que además se encuentra más próximo a Alemania Occidental y a Holanda. Se podría pensar sus patrones de alimentación son similares pero esa información no está explícitamente en el gráfico. Por otro lado, el país que ocupa el extremo izquierdo de la carne blanca y huevo es Albania, pudiéndose pensar que Austria, Holanda y Alemania Occidental tienen los patrones de comida más diferentes del conglomerado
+Utilizando las puntuaciones de Anderson-Rubin, en la figura \@ref(fig:grafact) se dibujan los dos factores que más representación tienen en el modelo de análisis factorial con las combinaciones descritas en el cuadro \@ref(tab:matvmx). 
 
-Enfocándonos en Alemania Oriental y Alemania Occidental, se puede considera rque tienen patrones similares en el consumo de carne blanca y huevos, pero se diferencian un poco más por el consumo de carne roja y leche, afirmaciones deducidas de la interpretación de ambos ejes factoriales. Por otro lado, es posible deducir que España y Portugal tienen un consumo de carne blanca y huevo algo similar, pero muy diferente del consumo de carne roja y leche. Además, España, Yugoslavia, Bulgaria y Rumania tienen un patrón de comidas muy similar tanto en consumo de carne roja y leche como en consumo de carne blanca y huevos. Asimismo, Austria y Albania con respecto añ primer eje y Finlandia y Portugal con respecto al segundo, son los pares de países que presentan más diferencias en los patrones de sus respectivos ejes.
+\pagebreak
+
+En particular, Austria es el país que ocupa el extremo derecho del eje 1 (correspondiente a la carne blanca y huevos), que además se encuentra más próximo a Alemania Occidental y a Holanda. Se podría pensar sus patrones de alimentación son similares pero esa información no está explícitamente en el gráfico. Por otro lado, el país que ocupa el extremo izquierdo de la carne blanca y huevo es Albania, pudiéndose pensar que Austria, Holanda y Alemania Occidental tienen los patrones de comida más diferentes del conglomerado
+
+Enfocándonos en Alemania Oriental y Alemania Occidental, se puede considerar que tienen patrones similares en el consumo de carne blanca y huevos, pero se diferencian un poco más por el consumo de carne roja y leche, afirmaciones deducidas de la interpretación de ambos ejes factoriales. Por otro lado, es posible deducir que España y Portugal tienen un consumo de carne blanca y huevo algo similar, pero muy diferente del consumo de carne roja y leche. Además, España, Yugoslavia, Bulgaria y Rumanía tienen un patrón de comidas muy similar tanto en consumo de carne roja y leche como en consumo de carne blanca y huevos. Asimismo, Austria y Albania con respecto al primer eje y Finlandia y Portugal con respecto al segundo, son los pares de países que presentan más diferencias en los patrones de sus respectivos ejes.
 
 ```{r grafact, fig.cap="Gráfico factorial con puntaciones Anderson-Rubin", fig.width=6, fig.asp=0.7}
 af_dim = data.frame(
@@ -456,7 +460,7 @@ fviz_dend(
 
 ## Análisis de países
 
-Por la parte de los países, particularmente se muestra que España, Portugal y Alemania oriental forman un *clúster*. Adicionalmente, Holanda, Austria y Alemania Occidental forman parte del clúster 2 (junto con otros paíes), mientras que Rumania, Bulgaria, Yugoslavia pertenecen al tercer conglomerado.
+Por la parte de los países, particularmente se muestra que España, Portugal y Alemania oriental forman un *clúster*. Adicionalmente, Holanda, Austria y Alemania Occidental forman parte del clúster 2 (junto con otros países), mientras que Rumanía, Bulgaria, Yugoslavia pertenecen al tercer conglomerado.
 
 ```{r clueuc, fig.cap="Dendrograma por método entre grupos y distancia de Pearson", fig.width=5, fig.asp=1}
 met.ward2 = hclust(dist(prot.clust)^2, method = "ward.D2")
@@ -497,10 +501,10 @@ dat.r = data.frame(etiq = rownames(mds.r$conf),
 
 El estrés bruto normalizado es muy pequeño (`r round(mds.c$stress, 3)`), lo cual implica un buen ajuste del modelo a los datos. El plano de representación en dos dimensiones para las variables con el algoritmo `MDS`, con solución inicial de Torgerson, con distancia euclídea al cuadrado calculado y calculado mediante el paquete `smacof` [@smacof2009] se muestra en la sección A de la figura \@ref(fig:mdsvar). En este gráfico aparecen los cereales y la leche marcando un posición claramente diferente del patrón general. Ambos tipos de carnes parecen comportarse de forma similar, formando clúster con los frutos secos, los huevos y las féculas.
 
-A su vez, la sección B \@ref(tab:mdsvar) correspondiente a los países, se puede observar que
+A su vez, la sección B \@ref(fig:mdsvar) correspondiente a los países, se puede observar que
 Finlandia y Portugal ocupan posiciones extremas en el eje ortogonal, de manera análoga al análisis factorial con rotación VARIMAX. En contraste, si España y Yugoslavia aparecían en puntos relativamente cercanos en el análisis factorial, con el MDS aparecen con gran distancia en el primer eje.
 
-```{r mdsvar, fig.cap="Plano para variables (A) y países (B) con solución inicial de Torgerson y distancia euclídea al cuadrado", fig.asp=0.6}
+```{r mdsvar, fig.cap="Plano para variables (A) y países (B) con solución inicial de Torgerson y distancia euclídea al cuadrado", fig.asp=0.5}
 fig.mds.c = ggplot(dat.c, aes(x, y)) +
   geom_point() +
   geom_text_repel(aes(label = etiq), size = 2.5) +
@@ -530,9 +534,9 @@ fig.mds.c + fig.mds.r + plot_annotation(tag_levels = 'A')
 
 En la figura \@ref(fig:shep) se puede observar que el diagrama de Shepard, que dibuja la relación entre proximidades y distancias configuradas, de las variables consigue un mejor ajuste que aquel para los países.
 
-Por otra parte, \@ref(fig:resi) pone en manifiesto que la relación entre las proximidades transformadas y las distanicas configuradas es fuerte entre ambos conjuntos de valores al formar aproximadamente una línea recta.
+Por otra parte, \@ref(fig:resi) pone en manifiesto que la relación entre las proximidades transformadas y las distancias configuradas es fuerte entre ambos conjuntos de valores al formar aproximadamente una línea recta.
 
-```{r shep, fig.cap="Diagrama de Shepard para variables y países"}
+```{r shep, fig.cap="Diagrama de Shepard para variables y países", fig.asp=0.6}
 par(mfrow = c(1, 2))
 plot(mds.c, plot.type = "Shepard", main = "Variables", xlab = "Disimilaridades", ylab = "Distancias configuradas",
   cex.main = 1,
@@ -544,7 +548,7 @@ plot(mds.r, plot.type = "Shepard", main = "Países", xlab = "Disimilaridades", y
   cex.axis = 0.8)
 ```
 
-```{r resi, fig.cap="Gráfico de residuos para variables y países"}
+```{r resi, fig.cap="Gráfico de residuos para variables y países", fig.asp=0.6}
 par(mfrow = c(1, 2))
 
 plot(mds.c, plot.type = "resplot", main = "Variables", xlab = "Proximidades transformadas", ylab = "Distancias configuradas",
@@ -567,45 +571,44 @@ rownames(t.prot) = nom_var_r
 ac_prot = CA(t.prot, graph = FALSE)
 ```
 
+El otro método aplicado es el análisis de correspondencias. Partimos de una tabla de frecuencias ${\bf{F}} = ({f_{ij}})$ con $I$ filas y $J$ columnas correspondientes a las categorías de dos variables nominales (u ordinales). @benzecri1973 propone el AFC como una técnica multivariante para representar las filas y las columnas de una tabla de contingencia como puntos de un espacio vectorial de baja dimensión (un plano, por ejemplo) en el cual se pueden interpretar las posiciones de los puntos. @gifi1990 establece que el Análisis de Correspondencias es una técnica multivariante para estudiar relaciones de dependencia entre variables categóricas, a partir de una tabla de contingencia.
 
-Recuerde que el AC puede aplicarse a cualquier matriz de datos positivos, como lo indica @benzecri1973. Trabaje con los valores numéricos como si fueran frecuencias y pondere. NO OLVIDE DEFINIR EL RANGO (25 PAÍSES Y 9 Tipos de PROTEINAS). Utilice el Modelo Principal por columna. Construya los diagramas de dispersión biespacial, puntos de fila y puntos de columna.
+En primer lugar, aplicamos un test de Chi cuadrado para evaluar si existe dependencia estadísticamente significativa entre las variables y los países. El cuadro \@ref(tab:chi2ca) muestra que el p-valor de la prueba es menor a 0.05, por lo que podemos decir que no existe una independencia entre las filas y columnas.
 
-La masa más alta la tiene la leche (dentro de las filas).
+```{r chi2ca, warning=FALSE}
+chi2 = chisq.test(prot)
 
-Los Países con Masa más alta son Francia y Grecia.
+chi2tab = matrix(c(format(round(chi2$statistic, 3), 3), chi2$parameter, as.character(signif(chi2$p.value, 3))), nrow = 1)
+colnames(chi2tab) =  c("$\\chi^2$", "g.l.", "p-valor")
 
+knitr::kable(chi2tab,
+             caption = "Prueba de Chi cuadrado de correspondencias",
+             format = "pandoc",
+             align = rep("r", times = 3)
+             )
+```
 
+Al realizar el análisis de correspondencias, observamos en el cuadro \@ref(tab:eig-ca) que las dos primeras dimensiones recogen el 74% de la variabilidad de los datos. Además, con una dimensión adicional se explica el 86% de la inercia total, por lo que se acercaría a la sugerencia del análisis factorial. En este sentido, en las siguientes secciones se mostrarán la calidad de la representación y sus contribuciones tanto de las variables como de los países
 
-El País con menor masa es Albania.
-
-
-
-El Eje(Dimensión) 1 proporciona la mayor contribución a Rumania, seguida de la contribución a Bulgaria.
-
- El Eje(Dimensión) 1 proporciona la menor contribución a Polonia, seguida de Portugal y Checoslovaquia.
-
-NO El Eje(Dimensión) 2 proporciona las menores contribuciones a Portugal y España, respectivamente.
-
+```{r eig-ca}
+eig.ca = round(t(ac_prot$eig), 3)
+rownames(eig.ca) = c("Valores propios", "% varianza", "% var. acumulada")
+knitr::kable(eig.ca,
+             format = "pandoc",
+             caption = "Valores propios de las correspondencias")
+```
 
 ## Variables
 
-Contribuciones
+La tabla de los datos se puede representar en un espacio bidimensional, ya que estos recogen casi 75% de la inercia total contenida en los datos. Sin embargo, para representar más precisamente el grado de asociación entre filas y columnas con respecto a un eje particular, se utiliza el $\theta^2$ de las variables para expresar la *calidad de la representación* entre las filas. Al respecto, en la figura \@ref(fig:cos-f) vemos que solamente el pescado y los cereales tienen alta calidad de representación. En contraste, las féculas, así como frutas y vegetales tienen la peor calidad.
 
-```{r}
-fviz_contrib(ac_prot, choice = "row", axes = 1) +
-  fviz_contrib(ac_prot, choice = "row", axes = 2) +
-  fviz_contrib(ac_prot, choice = "row", axes = 3) +
-  fviz_contrib(ac_prot, choice = "row", axes = 4)
-```
-
-Contribuciones
-
-```{r cos-f, fig.cap="Calidad de representación de variables"}
+```{r cos-f, fig.cap="Calidad de representación de variables", fig.width=5.5, fig.asp=0.65}
 cos2.f = fviz_ca_row(
   ac_prot,
   col.row = "cos2",
   gradient.cols = c("#f46d43", "#fee08b", "#1a9850"),
-  repel = TRUE
+  repel = TRUE,
+  labelsize = 3
 ) + 
   theme_tufte(base_family = "sans") +
   theme(panel.background = element_rect(colour = "black"),
@@ -614,33 +617,37 @@ cos2.f = fviz_ca_row(
 cos2.f
 ```
 
+Asimismo, para conocer cuál es la variable que más contribuyen a la dimensión se utilizan las contribuciones de las dimensiones. La figura \@ref(fig:cont-f) permite ver que, análogamente a la calidad, el pescado y los cereales contribuyen más a las dimensiones.
 
-```{r cont-f, fig.cap="Contribuciones de variables a las dimensiones"}
+```{r cont-f, fig.cap="Contribuciones de variables a las dimensiones", fig.width=5.5, fig.asp=0.65}
 cont.f = fviz_ca_row(
   ac_prot,
   col.row = "contrib",
   gradient.cols = c("#d6604d", "#dedede", "#4393c3"),
-  repel = TRUE
+  repel = TRUE,
+  labelsize = 3
 ) + 
   theme_tufte(base_family = "sans") +
   theme(panel.background = element_rect(colour = "black"),
         text = element_text(size = 10),
         plot.title = element_blank())
 
-cos2.f
+cont.f
 ```
-
 
 ## Países
 
-Contribuciones
+En cuanto a la calidad de la representación de los países, todos tienen una buena representación salvo Polonia, como se puede observar en la figura \@ref(fig:cos-c). 
 
-```{r cos-c, fig.cap="Calidad de representación de países"}
+No obstante, como se manifiesta en el gráfico \@ref(fig:cont-c), la mayor contribución a las dimensiones es Portugal; señalando que el resto de variables parece no contribuir tanto.
+
+```{r cos-c, fig.cap="Calidad de representación de países", fig.asp=0.65}
 cos2.c = fviz_ca_col(
   ac_prot,
   col.col = "cos2",
   gradient.cols = c("#f46d43", "#fee08b", "#1a9850"),
-  repel = TRUE
+  repel = TRUE,
+  labelsize = 3
 ) + 
   theme_tufte(base_family = "sans") +
   theme(panel.background = element_rect(colour = "black"),
@@ -651,12 +658,13 @@ cos2.c
 ```
 
 
-```{r cont-c, fig.cap="Contribuciones de países a las dimensiones"}
+```{r cont-c, fig.cap="Contribuciones de países a las dimensiones", fig.asp=0.65}
 cont.c = fviz_ca_col(
   ac_prot,
   col.col = "contrib",
   gradient.cols = c("#d6604d", "#dedede", "#4393c3"),
-  repel = TRUE
+  repel = TRUE,
+  labelsize = 3
 ) + 
   theme_tufte(base_family = "sans") +
   theme(panel.background = element_rect(colour = "black"),
@@ -669,8 +677,10 @@ cont.c
 
 ## Total
 
+Considerando el patrón global de los datos, el biplot dibujado en la figura \@ref(fig:biplot) permite ver que las frutas, vegetales y frutos secos se consumen de forma similar en Portugal, España, Grecia e Italia. En cuanto a los cereales, éstos son consumidos más por la Unión Soviética, Rumanía, Hungría, Albania, Yugoslavia y Bulgaria. El resto de los países, en su mayoría no comunistas, tiene un consumo similar de carnes, huevo, leche y féculas. Cabe destacar que el pescado se encuentra en un extremo dentro del cuadrante en el que se encuentran los países Nórdicos, mismo que podría indicar un consumo particular de esos países.
+
 ```{r biplot, fig.cap="Similitudes entre variables y países"}
-biplot = fviz_ca_biplot(ac_prot, repel = TRUE) + 
+biplot = fviz_ca_biplot(ac_prot, repel = TRUE, labelsize = 3) + 
   theme_tufte(base_family = "sans") +
   theme(panel.background = element_rect(colour = "black"),
         text = element_text(size = 10),
@@ -678,9 +688,12 @@ biplot = fviz_ca_biplot(ac_prot, repel = TRUE) +
 biplot
 ```
 
-
 # Conclusiones
 
+Los modelos expuestos señalan que la extracción de información relevante de los datos puede cambiar sustancialmente entre cada modelo. El primer problema enfrentado en el ejemplo utilizado fue la colinealidad, la cual se puede solucionar con una reducción de dimensiones. El modelo factorial muestra que es el referente para los demás modelos. En particular, la representación de las puntuaciones es similar al plano derivado del escalamiento multidimensional. A su vez, la clasificación jerárquica de las variables mediante la correlación de pearson y método de aglomeración promedio se acerca a las combinaciones lineales sugeridas por el modelo factorial. Adicionalmente, el número de dimensiones sugeridas en el análisis de correspondencias es similar al modelo factorial, considerando que la varianza absorbida varía considerablemente entre ambos modelos.
 
+Sin embargo, existe una variedad de resultados cuya descripción va más allá del presente trabajo, dado que requiere una explicación exhaustiva de las consideraciones y supuestos de cada modelo.
+
+\pagebreak
 
 # Referencias
