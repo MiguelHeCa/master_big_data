@@ -495,10 +495,10 @@ dat.r = data.frame(etiq = rownames(mds.r$conf),
                    y = mds.r$conf[, 2])
 ```
 
+El estrés bruto normalizado es muy pequeño (`r round(mds.c$stress, 3)`), lo cual implica un buen ajuste del modelo a los datos. El plano de representación en dos dimensiones para las variables con el algoritmo `MDS`, con solución inicial de Torgerson, con distancia euclídea al cuadrado calculado y calculado mediante el paquete `smacof` [@smacof2009] se muestra en la sección A de la figura \@ref(fig:mdsvar). En este gráfico aparecen los cereales y la leche marcando un posición claramente diferente del patrón general. Ambos tipos de carnes parecen comportarse de forma similar, formando clúster con los frutos secos, los huevos y las féculas.
 
-El estrés bruto normalizado es muy pequeño (`r round(mds.c$stress, 3)`), lo cual implica un buen ajuste del modelo a los datos.
-
-El plano de representación en dos dimensiones para las variables con el algoritmo `MDS`, con solución inicial de Torgerson, con distancia euclídea al cuadrado calculado y calculado mediante el paquete `smacof` [@smacof2009] se muestra en la figura \@ref(fig:mdsvar). En este gráfico aparecen los cereales y la leche marcando un posición claramente diferente del patrón general. Ambos tipos de carnes parecen comportarse de forma similar, formando clúster con los frutos secos, los huevos, las féculas y el pescado.
+A su vez, la sección B \@ref(tab:mdsvar) correspondiente a los países, se puede observar que
+Finlandia y Portugal ocupan posiciones extremas en el eje ortogonal, de manera análoga al análisis factorial con rotación VARIMAX. En contraste, si España y Yugoslavia aparecían en puntos relativamente cercanos en el análisis factorial, con el MDS aparecen con gran distancia en el primer eje.
 
 ```{r mdsvar, fig.cap="Plano para variables (A) y países (B) con solución inicial de Torgerson y distancia euclídea al cuadrado", fig.asp=0.6}
 fig.mds.c = ggplot(dat.c, aes(x, y)) +
@@ -528,42 +528,34 @@ library(patchwork)
 fig.mds.c + fig.mds.r + plot_annotation(tag_levels = 'A')
 ```
 
-El gráfico que presenta la relación entre las proximidades transformadas y las distancias es una línea recta lo cual indica fuerte relación entre ambos conjuntos de valores.
+En la figura \@ref(fig:shep) se puede observar que el diagrama de Shepard, que dibuja la relación entre proximidades y distancias configuradas, de las variables consigue un mejor ajuste que aquel para los países.
 
-El gráfico que presenta la relación entre las proximidades y las proximidades transformadas no es una línea recta lo cual indica débil relación entre ambos conjuntos de valores.
+Por otra parte, \@ref(fig:resi) pone en manifiesto que la relación entre las proximidades transformadas y las distanicas configuradas es fuerte entre ambos conjuntos de valores al formar aproximadamente una línea recta.
 
-El plano de representación en dos dimensiones para los Países con el Algoritmo PROXSCAL es el que aparece a continuación, con solución inicial de Torgerson, distancia euclídea al cuadrado.
-
-Finlandia y Portugal ocupan posiciones extremas(en vertical) igual que ocurría al hacer el análisis factorial(Factor Principal, rotación Varimax).
-
-España y Yugoslavia que aparecían en puntos prácticamente coincidentes en el análisis factorial(Factor Principal, rotación Varimax), con el MDS(PROXCAL, no métrico) aparecen también prácticamente separados.
-
-Los dos gráficos que aparecen más abajo representan la relación entre las proximidades y las proximidades transformadas tras aplicar el Algoritmo PROXSCAL a la matriz X25x9. En el caso de la derecha tenemos el resultado para las variables y a la izquierda para los Países.
-
-El diagrama de Shepard(Proximidades frente a Distancias) para ambos análisis(Variables a la izquierda y Países a la derecha) aparecen debajo y ponen de manifiesto que se ha conseguido mejor ajuste con las variables que con los países, en cuanto a la relación entre proximidades y distancias.
-
-```{r shpres-c, fig.cap="Relación entre disimilaridades y residuos de variables"}
+```{r shep, fig.cap="Diagrama de Shepard para variables y países"}
 par(mfrow = c(1, 2))
-plot(mds.c, plot.type = "Shepard", main = "Diagrama de Shepard", xlab = "Disimilaridades", ylab = "Distancias configuradas",
+plot(mds.c, plot.type = "Shepard", main = "Variables", xlab = "Disimilaridades", ylab = "Distancias configuradas",
   cex.main = 1,
   cex.lab = 0.8,
   cex.axis = 0.8)
-plot(mds.c, plot.type = "resplot", main = "Gráfico de residuos", xlab = "Proximidades transformadas", ylab = "Distancias configuradas",
+plot(mds.r, plot.type = "Shepard", main = "Países", xlab = "Disimilaridades", ylab = "Distancias configuradas",
   cex.main = 1,
   cex.lab = 0.8,
   cex.axis = 0.8)
 ```
 
-```{r shpres-r, fig.cap="Relación entre disimilaridades y residuos de países"}
+```{r resi, fig.cap="Gráfico de residuos para variables y países"}
 par(mfrow = c(1, 2))
-plot(mds.r, plot.type = "Shepard", main = "Diagrama de Shepard", xlab = "Disimilaridades", ylab = "Distancias configuradas",
+
+plot(mds.c, plot.type = "resplot", main = "Variables", xlab = "Proximidades transformadas", ylab = "Distancias configuradas",
   cex.main = 1,
   cex.lab = 0.8,
   cex.axis = 0.8)
-plot(mds.r, plot.type = "resplot", main = "Gráfico de residuos", xlab = "Proximidades transformadas", ylab = "Distancias configuradas",
+plot(mds.r, plot.type = "resplot", main = "Países", xlab = "Proximidades transformadas", ylab = "Distancias configuradas",
   cex.main = 1,
   cex.lab = 0.8,
   cex.axis = 0.8)
+
 ```
 
 # Análisis de correspondencias
