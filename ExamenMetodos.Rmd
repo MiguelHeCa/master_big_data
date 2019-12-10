@@ -54,7 +54,7 @@ rownames(prot) = alim$Pais
 proteinas = alim
 colnames(proteinas) = c("País", "Carne roja", "Carne blanca", "Huevos",
                         "Leche", "Pescado", "Cereales", "Féculas", 
-                        "Frutos secos", "frutas y vegetales", "Comunista",
+                        "Frutos secos", "Frutas y vegetales", "Comunista",
                         "Localización")
 
 mi_skim =
@@ -329,7 +329,9 @@ ggplot(data.frame(
   scale_x_continuous(breaks = 1:9) +
   labs(x = "Factores",
        y = "Valores propios") +
-  theme_tufte(base_family = "sans")
+  theme_tufte(base_family = "sans") +
+  theme(panel.background = element_rect(colour = "black"),
+        text = element_text(size = 10))
 ```
 
 Además de la extracción de los factores, también se rotarán las cargas mediante el método Varimax [@kaiser1958] con el fin de aumentar y disminuir saturaciones para que sean más interpretables. 
@@ -392,7 +394,7 @@ En el cuadro \@ref(tab:af-srt-str) se muestra estos tres factores principales as
 
 ## Análisis de puntuaciones
 
-Utilizando las puntuaciones de Anderson-Rubin, en la figura \@ref(fig:grafact) se dibujan los dos factores que más representación tienen en el modelo de análisis factorial con las combinaciones descritas en el cuadro \@ref(tab:matvmx). En particular, el país que ocupa el extremo derecho del eje 1 (correspondiente a la carne blanca y huevos), es Austriam que se encuentra más próximo a Alemania Occidental y a Holanda. Se podría pensar sus patrones de alimentación son similares pero esa información no está explícitamente en el gráfico. Por otro lado, el país que ocupa el extremo izquierdo de la carne blanca y huevo es Albania, pudiéndose pensar que Austria, Holanda y Alemania Occidental tienen los patrones de comida más diferentes del conglomerado
+Utilizando las puntuaciones de Anderson-Rubin, en la figura \@ref(fig:grafact) se dibujan los dos factores que más representación tienen en el modelo de análisis factorial con las combinaciones descritas en el cuadro \@ref(tab:matvmx). En particular, Austria es el país que ocupa el extremo derecho del eje 1 (correspondiente a la carne blanca y huevos), que además se encuentra más próximo a Alemania Occidental y a Holanda. Se podría pensar sus patrones de alimentación son similares pero esa información no está explícitamente en el gráfico. Por otro lado, el país que ocupa el extremo izquierdo de la carne blanca y huevo es Albania, pudiéndose pensar que Austria, Holanda y Alemania Occidental tienen los patrones de comida más diferentes del conglomerado
 
 Enfocándonos en Alemania Oriental y Alemania Occidental, se puede considera rque tienen patrones similares en el consumo de carne blanca y huevos, pero se diferencian un poco más por el consumo de carne roja y leche, afirmaciones deducidas de la interpretación de ambos ejes factoriales. Por otro lado, es posible deducir que España y Portugal tienen un consumo de carne blanca y huevo algo similar, pero muy diferente del consumo de carne roja y leche. Además, España, Yugoslavia, Bulgaria y Rumania tienen un patrón de comidas muy similar tanto en consumo de carne roja y leche como en consumo de carne blanca y huevos. Asimismo, Austria y Albania con respecto añ primer eje y Finlandia y Portugal con respecto al segundo, son los pares de países que presentan más diferencias en los patrones de sus respectivos ejes.
 
@@ -413,7 +415,8 @@ ggplot(af_dim, aes(x, y)) +
     y = "F2: Carne roja, leche, frutos secos,\nfrutas y vegetales"
   ) +
   theme_tufte(base_family = "sans") +
-  theme(text = element_text(size = 10))
+  theme(panel.background = element_rect(colour = "black"),
+        text = element_text(size = 10))
 ```
 
 Finalmente, utilizando las variables categóricas para diferenciar comunistas y por regiones, encontramos en la figura \@ref(fig:grafact) que existen grandes diferencias en el consumo de carne blanca y huevos. No obstante, existen conglomerados de consumo por regiones al considerar ambos ejes factoriales.
@@ -426,50 +429,104 @@ Para el análisis de las variables se utilizará la distancia de pearson con el 
 
 ## Análisis de variables
 
-Huevos, Leche y los dos tipos de carne forman el cluster 1 de variables, aunque a nivel de subclusters se diferencian, Carne Blanca y Huevos por un lado y Carne Roja y Leche por otro, tal como ocurrió en el Análisis Factorial(Factor Principal, Varimax).
+El primer conglomerado está formado por huevos, leche y los dos tipos de carne; es necesario destacar que la carne blanca y los huevos se encuentran por un lado y la carne roja y la eche por otro, tal como ocurrió en el análisis factorial. El segundo conglomerado lo conforman el pescado  y las féculas. Finalmente, tal como tercer eje factorial de la rotación VARIMAX, el tercer conglomerado está compuesto por los cereales, los frutos secos, las frutas y los vegetales (véase figura \@ref(fig:cluavg)).
 
-El segundo Cluster no está formado por Pescado Féculas y Cereales, como en el 3er eje factorial de variables(Factor Principal, Varimax
+```{r cluavg, fig.cap="Dendrograma por método entre grupos y distancia de Pearson", fig.width=4, fig.asp=0.9}
+prot.clust = prot
+colnames(prot.clust) = nom_var_r
 
-El tercer Cluster de variables está formado por Cereales, Frutos secos, Frutas y Vegetales.
-
-```{r cluavg, fig.cap="Dendrograma por método entre grupos y distancia de Pearson", fig.width=4, fig.asp=0.7}
-d.pear = get_dist(t(prot), method = "pearson")
-
+d.pear = get_dist(t(prot.clust), method = "pearson")
 met.prom = hclust(d.pear, method = "average")
 coe.prom = coef.hclust(met.prom)
 
-fviz_dend(met.prom, k = 3, horiz = T)
+fviz_dend(
+  met.prom,
+  k = 3,
+  horiz = T,
+  repel = T,
+  lwd = 0.5,
+  cex = 0.5,
+  type = "circular"
+  ) +
+  theme(
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank()
+  )
 ```
-
-
-Por otro lado, si se usa el método de ward con distancia euclídea, se obtiene el siguiente resultado:
-
-```{r clueuc, fig.cap="Dendrograma por método de Ward y distancia euclídea", fig.width=4, fig.asp=0.7}
-d2 = get_dist(t(prot), method = "euclidean")
-
-met2 = hclust(d2, method = "ward.D2")
-coe2 = coef.hclust(met2)
-
-fviz_dend(met2, k = 3, horiz = T)
-```
-
 
 ## Análisis de países
 
-CASO Portugal (País 17) forma un único Cluster.
+Por la parte de los países, particularmente se muestra que España, Portugal y Alemania oriental forman un *clúster*. Adicionalmente, Holanda, Austria y Alemania Occidental forman parte del clúster 2 (junto con otros paíes), mientras que Rumania, Bulgaria, Yugoslavia pertenecen al tercer conglomerado.
 
-Holanda ( País 14), Austria (País 2) y Alemania Occidental (País 24) pertenecen al cluster 2, mientras que Alemania Oriental (País 7) pertenece al Cluster 1.
+```{r clueuc, fig.cap="Dendrograma por método entre grupos y distancia de Pearson", fig.width=5, fig.asp=1}
+met.ward2 = hclust(dist(prot.clust)^2, method = "ward.D2")
+ward2.reduc = met.ward2
+ward2.reduc$height = ward2.reduc$height^(1/3)
+fviz_dend(
+  ward2.reduc,
+  k = 3,
+  horiz = T,
+  repel = T,
+  lwd = 0.4,
+  cex = 0.5,
+  type = "circular"
+) +
+  theme(
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank()
+  )
+```
 
 # Escalamiento multidimensional
 
-El Estrés bruto normalizado es realmente muy pequeño, menor del 1 por mil, lo cual implica
-buen ajuste del modelo a los datos.
+```{r}
+prot_dis2_c = dist(t(prot)) ^ 2
+mds.c = mds(prot_dis2_c, type = "ordinal")
+dat.c = data.frame(etiq = nom_var_r,
+                   x = mds.c$conf[, 1],
+                   y = mds.c$conf[, 2])
 
-El S-Estrés es más pequeño que el Estrés bruto normalizado en este análisis de MDS para las variables.
+prot_dis2_r = dist(prot) ^ 2
 
-El plano de representación en dos dimensiones para las variables con el Algoritmo PROXSCAL es el que aparece a continuación, con solución inicial de Torgerson, distancia euclídea al cuadrado.:
+mds.r = mds(prot_dis2_r, type = "ordinal")
 
-En el plano de representación en dos dimensiones para el Algoritmo PROXSCAL, con solución incial de Torgerson, distancia euclídea al cuadrado, aparecen los cereales marcando un posición claramente diferente del patrón general. Algo similar ocurre con la Leche. Carne blanca y Carne roja aparecen como muy similares, formando cluster con Frutos Secos, Huevos, Féculas y Pescado .
+dat.r = data.frame(etiq = rownames(mds.r$conf),
+                   x = mds.r$conf[, 1],
+                   y = mds.r$conf[, 2])
+```
+
+
+El estrés bruto normalizado es muy pequeño (`r round(mds.c$stress, 3)`), lo cual implica un buen ajuste del modelo a los datos.
+
+El plano de representación en dos dimensiones para las variables con el algoritmo `MDS`, con solución inicial de Torgerson, con distancia euclídea al cuadrado calculado y calculado mediante el paquete `smacof` [@smacof2009] se muestra en la figura \@ref(fig:mdsvar). En este gráfico aparecen los cereales y la leche marcando un posición claramente diferente del patrón general. Ambos tipos de carnes parecen comportarse de forma similar, formando clúster con los frutos secos, los huevos, las féculas y el pescado.
+
+```{r mdsvar, fig.cap="Plano para variables (A) y países (B) con solución inicial de Torgerson y distancia euclídea al cuadrado", fig.asp=0.6}
+fig.mds.c = ggplot(dat.c, aes(x, y)) +
+  geom_point() +
+  geom_text_repel(aes(label = etiq), size = 2.5) +
+  labs(
+    x = "Dimensión 1",
+    y = "Dimensión 2"
+  ) +
+  theme_tufte(base_family = "sans") +
+  theme(panel.background = element_rect(colour = "black"),
+        text = element_text(size = 10))
+
+fig.mds.r = ggplot(dat.r, aes(x,-y)) +
+  geom_point() +
+  geom_text_repel(aes(label = etiq), size = 2) +
+  labs(
+    x = "Dimensión 1",
+    y = "Dimensión 2"
+  ) +
+  theme_tufte(base_family = "sans") +
+  theme(panel.background = element_rect(colour = "black"),
+        text = element_text(size = 10))
+
+library(patchwork)
+
+fig.mds.c + fig.mds.r + plot_annotation(tag_levels = 'A')
+```
 
 El gráfico que presenta la relación entre las proximidades transformadas y las distancias es una línea recta lo cual indica fuerte relación entre ambos conjuntos de valores.
 
@@ -485,21 +542,153 @@ Los dos gráficos que aparecen más abajo representan la relación entre las pro
 
 El diagrama de Shepard(Proximidades frente a Distancias) para ambos análisis(Variables a la izquierda y Países a la derecha) aparecen debajo y ponen de manifiesto que se ha conseguido mejor ajuste con las variables que con los países, en cuanto a la relación entre proximidades y distancias.
 
+```{r shpres-c, fig.cap="Relación entre disimilaridades y residuos de variables"}
+par(mfrow = c(1, 2))
+plot(mds.c, plot.type = "Shepard", main = "Diagrama de Shepard", xlab = "Disimilaridades", ylab = "Distancias configuradas",
+  cex.main = 1,
+  cex.lab = 0.8,
+  cex.axis = 0.8)
+plot(mds.c, plot.type = "resplot", main = "Gráfico de residuos", xlab = "Proximidades transformadas", ylab = "Distancias configuradas",
+  cex.main = 1,
+  cex.lab = 0.8,
+  cex.axis = 0.8)
+```
+
+```{r shpres-r, fig.cap="Relación entre disimilaridades y residuos de países"}
+par(mfrow = c(1, 2))
+plot(mds.r, plot.type = "Shepard", main = "Diagrama de Shepard", xlab = "Disimilaridades", ylab = "Distancias configuradas",
+  cex.main = 1,
+  cex.lab = 0.8,
+  cex.axis = 0.8)
+plot(mds.r, plot.type = "resplot", main = "Gráfico de residuos", xlab = "Proximidades transformadas", ylab = "Distancias configuradas",
+  cex.main = 1,
+  cex.lab = 0.8,
+  cex.axis = 0.8)
+```
+
 # Análisis de correspondencias
 
-Recuerde que el AC puede aplicarse a cualquier matriz de datos positivos, como lo indica Benzecri (1973). Trabaje con los valores numéricos como si fueran frecuencias y pondere. NO OLVIDE DEFINIR EL RANGO (25 PAÍSES Y 9 Tipos de PROTEINAS). Utilice el Modelo Principal por columna. Construya los diagramas de dispersión biespacial, puntos de fila y puntos de columna.
+```{r}
+t.prot = t(prot)
+rownames(t.prot) = nom_var_r
+
+ac_prot = CA(t.prot, graph = FALSE)
+```
+
+
+Recuerde que el AC puede aplicarse a cualquier matriz de datos positivos, como lo indica @benzecri1973. Trabaje con los valores numéricos como si fueran frecuencias y pondere. NO OLVIDE DEFINIR EL RANGO (25 PAÍSES Y 9 Tipos de PROTEINAS). Utilice el Modelo Principal por columna. Construya los diagramas de dispersión biespacial, puntos de fila y puntos de columna.
 
 La masa más alta la tiene la leche (dentro de las filas).
 
 Los Países con Masa más alta son Francia y Grecia.
 
+
+
 El País con menor masa es Albania.
+
+
 
 El Eje(Dimensión) 1 proporciona la mayor contribución a Rumania, seguida de la contribución a Bulgaria.
 
  El Eje(Dimensión) 1 proporciona la menor contribución a Polonia, seguida de Portugal y Checoslovaquia.
 
 NO El Eje(Dimensión) 2 proporciona las menores contribuciones a Portugal y España, respectivamente.
+
+
+## Variables
+
+Contribuciones
+
+```{r}
+fviz_contrib(ac_prot, choice = "row", axes = 1) +
+  fviz_contrib(ac_prot, choice = "row", axes = 2) +
+  fviz_contrib(ac_prot, choice = "row", axes = 3) +
+  fviz_contrib(ac_prot, choice = "row", axes = 4)
+```
+
+Contribuciones
+
+```{r cos-f, fig.cap="Calidad de representación de variables"}
+cos2.f = fviz_ca_row(
+  ac_prot,
+  col.row = "cos2",
+  gradient.cols = c("#f46d43", "#fee08b", "#1a9850"),
+  repel = TRUE
+) + 
+  theme_tufte(base_family = "sans") +
+  theme(panel.background = element_rect(colour = "black"),
+        text = element_text(size = 10),
+        plot.title = element_blank())
+cos2.f
+```
+
+
+```{r cont-f, fig.cap="Contribuciones de variables a las dimensiones"}
+cont.f = fviz_ca_row(
+  ac_prot,
+  col.row = "contrib",
+  gradient.cols = c("#d6604d", "#dedede", "#4393c3"),
+  repel = TRUE
+) + 
+  theme_tufte(base_family = "sans") +
+  theme(panel.background = element_rect(colour = "black"),
+        text = element_text(size = 10),
+        plot.title = element_blank())
+
+cos2.f
+```
+
+
+## Países
+
+Contribuciones
+
+```{r cos-c, fig.cap="Calidad de representación de países"}
+cos2.c = fviz_ca_col(
+  ac_prot,
+  col.col = "cos2",
+  gradient.cols = c("#f46d43", "#fee08b", "#1a9850"),
+  repel = TRUE
+) + 
+  theme_tufte(base_family = "sans") +
+  theme(panel.background = element_rect(colour = "black"),
+        text = element_text(size = 10),
+        plot.title = element_blank())
+
+cos2.c
+```
+
+
+```{r cont-c, fig.cap="Contribuciones de países a las dimensiones"}
+cont.c = fviz_ca_col(
+  ac_prot,
+  col.col = "contrib",
+  gradient.cols = c("#d6604d", "#dedede", "#4393c3"),
+  repel = TRUE
+) + 
+  theme_tufte(base_family = "sans") +
+  theme(panel.background = element_rect(colour = "black"),
+        text = element_text(size = 10),
+        plot.title = element_blank())
+
+cont.c
+```
+
+
+## Total
+
+```{r biplot, fig.cap="Similitudes entre variables y países"}
+biplot = fviz_ca_biplot(ac_prot, repel = TRUE) + 
+  theme_tufte(base_family = "sans") +
+  theme(panel.background = element_rect(colour = "black"),
+        text = element_text(size = 10),
+        plot.title = element_blank())
+biplot
+```
+
+
+# Conclusiones
+
 
 
 # Referencias

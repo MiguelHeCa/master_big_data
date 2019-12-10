@@ -25,7 +25,7 @@ rownames(prot) = alim$Pais
 proteinas = alim
 colnames(proteinas) = c("País", "Carne roja", "Carne blanca", "Huevos",
                         "Leche", "Pescado", "Cereales", "Féculas", 
-                        "Frutos secos", "frutas y vegetales", "Comunista",
+                        "Frutos secos", "Frutas y vegetales", "Comunista",
                         "Localización")
 
 mi_skim =
@@ -239,7 +239,9 @@ ggplot(data.frame(
   scale_x_continuous(breaks = 1:9) +
   labs(x = "Factores",
        y = "Valores propios") +
-  theme_tufte(base_family = "sans")
+  theme_tufte(base_family = "sans") +
+  theme(panel.background = element_rect(colour = "black"),
+        text = element_text(size = 10))
 
 
 ## ----matvmx, warning=FALSE----------------------------------------------------------------------------------
@@ -309,5 +311,198 @@ ggplot(af_dim, aes(x, y)) +
     y = "F2: Carne roja, leche, frutos secos,\nfrutas y vegetales"
   ) +
   theme_tufte(base_family = "sans") +
-  theme(text = element_text(size = 10))
+  theme(panel.background = element_rect(colour = "black"),
+        text = element_text(size = 10))
+
+
+## ----cluavg, fig.cap="Dendrograma por método entre grupos y distancia de Pearson", fig.width=4, fig.asp=0.9----
+prot.clust = prot
+colnames(prot.clust) = nom_var_r
+
+d.pear = get_dist(t(prot.clust), method = "pearson")
+met.prom = hclust(d.pear, method = "average")
+coe.prom = coef.hclust(met.prom)
+
+fviz_dend(
+  met.prom,
+  k = 3,
+  horiz = T,
+  repel = T,
+  lwd = 0.5,
+  cex = 0.5,
+  type = "circular"
+  ) +
+  theme(
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank()
+  )
+
+
+## ----clueuc, fig.cap="Dendrograma por método entre grupos y distancia de Pearson", fig.width=5, fig.asp=1----
+met.ward2 = hclust(dist(prot.clust)^2, method = "ward.D2")
+ward2.reduc = met.ward2
+ward2.reduc$height = ward2.reduc$height^(1/3)
+fviz_dend(
+  ward2.reduc,
+  k = 3,
+  horiz = T,
+  repel = T,
+  lwd = 0.4,
+  cex = 0.5,
+  type = "circular"
+) +
+  theme(
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank()
+  )
+
+
+## -----------------------------------------------------------------------------------------------------------
+prot_dis2_c = dist(t(prot)) ^ 2
+mds.c = mds(prot_dis2_c, type = "ordinal")
+dat.c = data.frame(etiq = nom_var_r,
+                   x = mds.c$conf[, 1],
+                   y = mds.c$conf[, 2])
+
+prot_dis2_r = dist(prot) ^ 2
+
+mds.r = mds(prot_dis2_r, type = "ordinal")
+
+dat.r = data.frame(etiq = rownames(mds.r$conf),
+                   x = mds.r$conf[, 1],
+                   y = mds.r$conf[, 2])
+
+
+## ----mdsvar, fig.cap="Plano para variables (A) y países (B) con solución inicial de Torgerson y distancia euclídea al cuadrado", fig.asp=0.6----
+fig.mds.c = ggplot(dat.c, aes(x, y)) +
+  geom_point() +
+  geom_text_repel(aes(label = etiq), size = 2.5) +
+  labs(
+    x = "Dimensión 1",
+    y = "Dimensión 2"
+  ) +
+  theme_tufte(base_family = "sans") +
+  theme(panel.background = element_rect(colour = "black"),
+        text = element_text(size = 10))
+
+fig.mds.r = ggplot(dat.r, aes(x,-y)) +
+  geom_point() +
+  geom_text_repel(aes(label = etiq), size = 2) +
+  labs(
+    x = "Dimensión 1",
+    y = "Dimensión 2"
+  ) +
+  theme_tufte(base_family = "sans") +
+  theme(panel.background = element_rect(colour = "black"),
+        text = element_text(size = 10))
+
+library(patchwork)
+
+fig.mds.c + fig.mds.r + plot_annotation(tag_levels = 'A')
+
+
+## ----shpres-c, fig.cap="Relación entre disimilaridades y residuos de variables"-----------------------------
+par(mfrow = c(1, 2))
+plot(mds.c, plot.type = "Shepard", main = "Diagrama de Shepard", xlab = "Disimilaridades", ylab = "Distancias configuradas",
+  cex.main = 1,
+  cex.lab = 0.8,
+  cex.axis = 0.8)
+plot(mds.c, plot.type = "resplot", main = "Gráfico de residuos", xlab = "Proximidades transformadas", ylab = "Distancias configuradas",
+  cex.main = 1,
+  cex.lab = 0.8,
+  cex.axis = 0.8)
+
+
+## ----shpres-r, fig.cap="Relación entre disimilaridades y residuos de países"--------------------------------
+par(mfrow = c(1, 2))
+plot(mds.r, plot.type = "Shepard", main = "Diagrama de Shepard", xlab = "Disimilaridades", ylab = "Distancias configuradas",
+  cex.main = 1,
+  cex.lab = 0.8,
+  cex.axis = 0.8)
+plot(mds.r, plot.type = "resplot", main = "Gráfico de residuos", xlab = "Proximidades transformadas", ylab = "Distancias configuradas",
+  cex.main = 1,
+  cex.lab = 0.8,
+  cex.axis = 0.8)
+
+
+## -----------------------------------------------------------------------------------------------------------
+t.prot = t(prot)
+rownames(t.prot) = nom_var_r
+
+ac_prot = CA(t.prot, graph = FALSE)
+
+
+## -----------------------------------------------------------------------------------------------------------
+fviz_contrib(ac_prot, choice = "row", axes = 1) +
+  fviz_contrib(ac_prot, choice = "row", axes = 2) +
+  fviz_contrib(ac_prot, choice = "row", axes = 3) +
+  fviz_contrib(ac_prot, choice = "row", axes = 4)
+
+
+## ----cos-f, fig.cap="Calidad de representación de variables"------------------------------------------------
+cos2.f = fviz_ca_row(
+  ac_prot,
+  col.row = "cos2",
+  gradient.cols = c("#f46d43", "#fee08b", "#1a9850"),
+  repel = TRUE
+) + 
+  theme_tufte(base_family = "sans") +
+  theme(panel.background = element_rect(colour = "black"),
+        text = element_text(size = 10),
+        plot.title = element_blank())
+cos2.f
+
+
+## ----cont-f, fig.cap="Contribuciones de variables a las dimensiones"----------------------------------------
+cont.f = fviz_ca_row(
+  ac_prot,
+  col.row = "contrib",
+  gradient.cols = c("#d6604d", "#dedede", "#4393c3"),
+  repel = TRUE
+) + 
+  theme_tufte(base_family = "sans") +
+  theme(panel.background = element_rect(colour = "black"),
+        text = element_text(size = 10),
+        plot.title = element_blank())
+
+cos2.f
+
+
+## ----cos-c, fig.cap="Calidad de representación de países"---------------------------------------------------
+cos2.c = fviz_ca_col(
+  ac_prot,
+  col.col = "cos2",
+  gradient.cols = c("#f46d43", "#fee08b", "#1a9850"),
+  repel = TRUE
+) + 
+  theme_tufte(base_family = "sans") +
+  theme(panel.background = element_rect(colour = "black"),
+        text = element_text(size = 10),
+        plot.title = element_blank())
+
+cos2.c
+
+
+## ----cont-c, fig.cap="Contribuciones de países a las dimensiones"-------------------------------------------
+cont.c = fviz_ca_col(
+  ac_prot,
+  col.col = "contrib",
+  gradient.cols = c("#d6604d", "#dedede", "#4393c3"),
+  repel = TRUE
+) + 
+  theme_tufte(base_family = "sans") +
+  theme(panel.background = element_rect(colour = "black"),
+        text = element_text(size = 10),
+        plot.title = element_blank())
+
+cont.c
+
+
+## ----biplot, fig.cap="Similitudes entre variables y países"-------------------------------------------------
+biplot = fviz_ca_biplot(ac_prot, repel = TRUE) + 
+  theme_tufte(base_family = "sans") +
+  theme(panel.background = element_rect(colour = "black"),
+        text = element_text(size = 10),
+        plot.title = element_blank())
+biplot
 
