@@ -1,0 +1,144 @@
+---
+title: "HRQoL 1 Osteoporosis"
+output: html_notebook
+---
+
+## Introducción
+
+Calidad de vida: **constructo**[concepto complejo]
+
+* ¿es *universal*?
+* ¿es *unidimensional*?
+* ¿es *estable*?
+
+Es un concepto que tiene forma heterogénea en momentos distintos, dependiendo para la persona o circunstancias.
+
+## Origen
+
+Apareció en 1948 por la OMS
+
+En los 60 y 70, los científicos sociales empezaron a mostrar interés por el término "Calidad de Vida" como consecuencia de la percepción de las desigualdades.
+
+### 1975 - 1985
+
+Entre 1975 y 1985 las definiciones se entendieron a partir de perspectiva económica.
+
+Definiciones:
+
+Shin y Johnson (1978)
+
+Levi y Anderson (1980)
+
+Perspectiva del Status funcional. Se preocupan por la salud, pero todavía en el marco socioeconómico.
+
+### 1985 - 1995
+
+Perspectiva de medio ambiente
+
+Felce y Perry 1995. Calidad de vida ponderando por percepciones
+
+### 1995
+
+"Perspectiva política" Se toman en cuenta los problemas políticos en eso.
+
+### Actualidad
+
+No existe consenso ni en la definición del constructo ni en la forma más adecuada de medida.
+
+## Calidad de vida relacionada con la salud (CVRS)
+
+Factores biológicos y Psicológicos -> Síntomas -> Estado Funcional -> Percepción del Estado de Salud -> Calidad de vida global
+
+Con los propios síntomas no es posible medir la CVRS, sino hay que medir otros factores que dependen de la percepción.
+
+Patrick y erickson (1988)
+
+Bowling (1994) [Preferida por mercedes]
+
+Por lo tanto, es un contructo **no universal**
+
+## Dinamismo del constructo
+
+Los trabajos identifican la calidad de vida con dimensiones, pero no se plantean una definición del constructo.
+
+P.ej. Dolor, estado de ánimo, frustración. Etc.
+
+Por lo tanto, es un contructo **dinámico**
+
+## Motivos para medir
+
+Padecimiento de enfermedad crónicas
+
+Identificar problemas más importantes (Higginson 1994)
+
+Captar información oculta para explicar la gravedad de enfermedad (Stowers et al. 1999)
+
+Ayudar a los pacientes a comunicar sus problemas
+
+Identificar el resultado preferido del paciente
+
+Cambios o respuestas del tratamiento complementado las pruebas de laboratorio
+
+Permitir a los clínicos tener una visión general de los problemas de un individuo
+
+Asegurar que la intervención sanitaria se concentre en lo que es importante para los paciente más que en los aspectos técnicos en la calidad.
+
+Pueden usarse, junto con la mortalidad y la satisfacción, en la gestión y política sanitaria para evaluar los servicios y los tratamientos.
+
+Por estas razones se han elaborado distintos métodos para medirlos
+
+## Construcción de ítems
+
+Variables latentes y los constructos
+
+Respuestas de escalas de tipo Likert
+
+Respuesta dicotómicos
+
+Escala EVA
+
+### Periodos de tiempo
+
+Se pregunta durante un periodo de tiempo determinado
+
+### Tipo de cuestionarios
+
+Genéricos, Sickness Impact Profile (SIP), EUROQOL-5D
+
+Específicos, QUALEFFO
+
+Los cuestionarios tienen que estar validados. No son encuestas de opinión.
+
+El SIP tiene 136 ítems de 12 dimensiones
+
+No todas las dimensiones pueden tener el número de ítems
+
+QUALEFFO
+
+35 items, 7 dimensiones. Pacientes con osteoporosis
+
+## Osteoporosis
+
+Enfermedad sistémica de los huesos caracterizada por
+
+* Disminución de la masa ósea
+
+* Aumento de la fragilidad ósea
+
+* Aumento del riesgo de fracturas
+
+* Deterioro
+
+El riesgo de padecer una fractura de cadera en mujeres es mayor que la suma de riesgos por cáncer de mama, endometrio y ovario.
+
+El riesgo de pacedder fractura de cadera a lo largo de la vida en hombres es mayor que de padecer cáncer de próstata.
+
+El cuestionario estaba diseñado para mujeres, ¿funciona de la misma forma para hombres?
+
+BUA se daba un z-score, o con T-score
+
+VOS
+
+
+
+
