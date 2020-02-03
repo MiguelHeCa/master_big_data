@@ -1763,11 +1763,63 @@ summary {
 <p>PCA 1933 1936</p>
 <p>Biplot-Gabriel 1971 GH-biplot y JK-biplot</p>
 <p>Representación gráfica de datos multivariantes. De la misma manera que un diagrama de dispersión muestra la distribución conjunta de dos variables, un BIPLOT representa tres o más variables. (Gabriel y Odoroff, 1990).</p>
+</div>
+</div>
+<div id="definición-formal" class="section level2">
+<h2>Definición formal</h2>
+<p>Un Biplot par auna matriz de datos <span class="math inline">\(\mathbf{X}\)</span> es una representación gráfica mediante marcadores <span class="math inline">\(\mathbf{g}_1, \mathbf{g}_2, ..., \mathbf{g}_n\)</span> para las filas de <span class="math inline">\(\mathbf{X}\)</span> y <span class="math inline">\(\mathbf{h}_1, \mathbf{h}_2, ..., \mathbf{h}_p\)</span> para las columnas <span class="math inline">\(\mathbf{X}\)</span> de forma que el producto interno (producto escalar) <span class="math inline">\(\mathbf{g}_i^{\mathrm{T}}\mathbf{h}_j\)</span> aproxime el elemento <span class="math inline">\(x_ij\)</span> de la matriz partida, tan bien como sea posible.</p>
+<p>Marcadores, llamados coordenadas.</p>
+<p>Tucker 1966. Some mathematical notes on three Mode factor análisis.</p>
+</div>
+<div id="unicidad-de-la-matriz" class="section level2">
+<h2>Unicidad de la matriz</h2>
+<p>La factorización siempre es posible, pero no es única.</p>
+<p>Para que la representación biplot sea útil, necesitamos imponer una métrica de forma que la descomposición y el biplot resultantes sean únicos.</p>
+</div>
+<div id="caracterización" class="section level2">
+<h2>Caracterización</h2>
+<p><span class="math inline">\(\mathbf{U}\)</span> es una matriz cuyos vectores columna son ortonormales y vectores propios de <span class="math inline">\(\mathbf{XX&#39;}\)</span></p>
+<p><span class="math inline">\(\mathbf{V}\)</span> es una matriz ortonormal cuyos vectores olumna son vectores propios de <span class="math inline">\(\mathbf{X&#39;X}\)</span></p>
+<p><span class="math inline">\(\mathbf{D}\)</span> es la matriz diagonal de valores singulares de X, que son las raíces cuadrradas no negativas de los valores propios de <span class="math inline">\(\mathbf{X&#39;X}\)</span>.</p>
+<p><span class="math display">\[\mathbf{X} = \mathbf{UDV}^{\mathrm{T}}\]</span></p>
+<p>JK-Biplot</p>
+<p>Coordenadas estándar <span class="math inline">\(\mathbf{J} = \mathbf{UD}\)</span></p>
+<p><span class="math inline">\(\mathbf{K} = \mathbf{V}\)</span></p>
+<p>Representa mejor los individuos</p>
+<p>GH-Biplot <span class="math inline">\(\mathbf{G} = \mathbf{U}\)</span></p>
+<p><span class="math inline">\(\mathbf{H} = \mathbf{VD}\)</span></p>
+<p>Representa mejor las variables</p>
+</div>
+<div id="propiedades" class="section level2">
+<h2>Propiedades</h2>
+<p>Los productos escalares de las columnas de X coinciden con los productos escalares de los marcadores H</p>
+<p>La aproximación de los productos escalares (varianzas-covarianzas), en dimensión reducida, es óptima en el sentido de los mínimos cuadraddos.</p>
+<p>Se trabaja con la distancia de Mahalanobis</p>
+</div>
+<div id="biplot-de-componentes-principales" class="section level2">
+<h2>Biplot de componentes principales</h2>
+<p>Si la matriz de datos original está centrada.</p>
+<p>La variabilidad de las variables sobservando la longitud del vector.</p>
+<p>La covariación de las variables: observando el ángulo.</p>
+</div>
+<div id="hj-biplot" class="section level2">
+<h2>HJ Biplot</h2>
+<p>Variación de Puri.</p>
+<p>Partimos de la descomposición en los valores singulares de la matriz Xnxp</p>
+<p><span class="math display">\[
+\mathbf{X} = \mathbf{UDV}^{\mathrm{T}} \\
+\mathbf{J} = \mathbf{UD} \qquad \mathbf{H} = \mathbf{DV}
+\]</span> Filas y columnas pueden ser representadas en el mismo sistema de referencia.</p>
+<ul>
+<li>puntos fila y puntos columna pueden relacionarse mediante combinaciones lineales simétricas.</li>
+<li>Ambas nubes presentan la misma dispersión.</li>
+</ul>
+<p>Bondad de ajuste es idéntica para filas y para columnas</p>
+<p>Cuando hay pobre calidad de representación no se visualiza.</p>
 <!-- rnb-text-end -->
 </div>
-</div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiTcOpdG9kb3MgQmlwbG90IgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgojIyBJbnRyb2R1Y2Npw7NuCgpFbCBhbsOhbGlzaXMgZmFjdG9yaWFsIGVzIGVzZW5jaWFsIGVuIGVzdG8uCgpMYSBzb2x1Y2nDs24gbcOhcyB1dGlsaXphZGEgZXMgZWwgUENBCgojIyBNw6l0b2RvcwoKUnViZW4gR2FicmllbCAxOTk2CgojIyMgRGVzYXJyb2xsbyBkZSBCaXBsb3QKClBjYSAxOTAxCgpQQ0EgMTkzMyAxOTM2CgpCaXBsb3QtR2FicmllbCAxOTcxIEdILWJpcGxvdCB5IEpLLWJpcGxvdAoKUmVwcmVzZW50YWNpw7NuIGdyw6FmaWNhIGRlIGRhdG9zIG11bHRpdmFyaWFudGVzLiBEZSBsYSBtaXNtYSBtYW5lcmEgcXVlIHVuIGRpYWdyYW1hIGRlIGRpc3BlcnNpw7NuIG11ZXN0cmEgbGEgZGlzdHJpYnVjacOzbiBjb25qdW50YSBkZSBkb3MgdmFyaWFibGVzLCB1biBCSVBMT1QgcmVwcmVzZW50YSB0cmVzIG8gbcOhcyB2YXJpYWJsZXMuIChHYWJyaWVsIHkgT2Rvcm9mZiwgMTk5MCkuCgoKCgo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiTcOpdG9kb3MgQmlwbG90IgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgojIyBJbnRyb2R1Y2Npw7NuCgpFbCBhbsOhbGlzaXMgZmFjdG9yaWFsIGVzIGVzZW5jaWFsIGVuIGVzdG8uCgpMYSBzb2x1Y2nDs24gbcOhcyB1dGlsaXphZGEgZXMgZWwgUENBCgojIyBNw6l0b2RvcwoKUnViZW4gR2FicmllbCAxOTk2CgojIyMgRGVzYXJyb2xsbyBkZSBCaXBsb3QKClBjYSAxOTAxCgpQQ0EgMTkzMyAxOTM2CgpCaXBsb3QtR2FicmllbCAxOTcxIEdILWJpcGxvdCB5IEpLLWJpcGxvdAoKUmVwcmVzZW50YWNpw7NuIGdyw6FmaWNhIGRlIGRhdG9zIG11bHRpdmFyaWFudGVzLiBEZSBsYSBtaXNtYSBtYW5lcmEgcXVlIHVuIGRpYWdyYW1hIGRlIGRpc3BlcnNpw7NuIG11ZXN0cmEgbGEgZGlzdHJpYnVjacOzbiBjb25qdW50YSBkZSBkb3MgdmFyaWFibGVzLCB1biBCSVBMT1QgcmVwcmVzZW50YSB0cmVzIG8gbcOhcyB2YXJpYWJsZXMuIChHYWJyaWVsIHkgT2Rvcm9mZiwgMTk5MCkuCgojIyBEZWZpbmljacOzbiBmb3JtYWwKClVuIEJpcGxvdCBwYXIgYXVuYSBtYXRyaXogZGUgZGF0b3MgJFxtYXRoYmZ7WH0kIGVzIHVuYSByZXByZXNlbnRhY2nDs24gZ3LDoWZpY2EgbWVkaWFudGUgbWFyY2Fkb3JlcyAkXG1hdGhiZntnfV8xLCBcbWF0aGJme2d9XzIsIC4uLiwgXG1hdGhiZntnfV9uJCBwYXJhIGxhcyBmaWxhcyBkZSAkXG1hdGhiZntYfSQgeSAkXG1hdGhiZntofV8xLCBcbWF0aGJme2h9XzIsIC4uLiwgXG1hdGhiZntofV9wJCBwYXJhIGxhcyBjb2x1bW5hcyAkXG1hdGhiZntYfSQgZGUgZm9ybWEgcXVlIGVsIHByb2R1Y3RvIGludGVybm8gKHByb2R1Y3RvIGVzY2FsYXIpICRcbWF0aGJme2d9X2lee1xtYXRocm17VH19XG1hdGhiZntofV9qJCBhcHJveGltZSBlbCBlbGVtZW50byAkeF9paiQgZGUgbGEgbWF0cml6IHBhcnRpZGEsIHRhbiBiaWVuIGNvbW8gc2VhIHBvc2libGUuCgpNYXJjYWRvcmVzLCBsbGFtYWRvcyBjb29yZGVuYWRhcy4gCgoKVHVja2VyIDE5NjYuIFNvbWUgbWF0aGVtYXRpY2FsIG5vdGVzIG9uIHRocmVlIE1vZGUgZmFjdG9yIGFuw6FsaXNpcy4KCiMjIFVuaWNpZGFkIGRlIGxhIG1hdHJpegoKTGEgZmFjdG9yaXphY2nDs24gc2llbXByZSBlcyBwb3NpYmxlLCBwZXJvIG5vIGVzIMO6bmljYS4KClBhcmEgcXVlIGxhIHJlcHJlc2VudGFjacOzbiBiaXBsb3Qgc2VhIMO6dGlsLCBuZWNlc2l0YW1vcyBpbXBvbmVyIHVuYSBtw6l0cmljYSBkZSBmb3JtYSBxdWUgbGEgZGVzY29tcG9zaWNpw7NuIHkgZWwgYmlwbG90IHJlc3VsdGFudGVzIHNlYW4gw7puaWNvcy4KCiMjIENhcmFjdGVyaXphY2nDs24KCiRcbWF0aGJme1V9JCBlcyB1bmEgbWF0cml6IGN1eW9zIHZlY3RvcmVzIGNvbHVtbmEgc29uIG9ydG9ub3JtYWxlcyB5IHZlY3RvcmVzIHByb3Bpb3MgZGUgJFxtYXRoYmZ7WFgnfSQKCiRcbWF0aGJme1Z9JCBlcyB1bmEgbWF0cml6IG9ydG9ub3JtYWwgY3V5b3MgdmVjdG9yZXMgb2x1bW5hIHNvbiB2ZWN0b3JlcyBwcm9waW9zIGRlICRcbWF0aGJme1gnWH0kCgokXG1hdGhiZntEfSQgZXMgbGEgbWF0cml6IGRpYWdvbmFsIGRlIHZhbG9yZXMgc2luZ3VsYXJlcyBkZSBYLCBxdWUgc29uIGxhcyByYcOtY2VzIGN1YWRycmFkYXMgbm8gbmVnYXRpdmFzIGRlIGxvcyB2YWxvcmVzIHByb3Bpb3MgZGUgJFxtYXRoYmZ7WCdYfSQuCgokJFxtYXRoYmZ7WH0gPSBcbWF0aGJme1VEVn1ee1xtYXRocm17VH19JCQKCkpLLUJpcGxvdAoKQ29vcmRlbmFkYXMgZXN0w6FuZGFyCiRcbWF0aGJme0p9ID0gXG1hdGhiZntVRH0kCgokXG1hdGhiZntLfSA9IFxtYXRoYmZ7Vn0kCgpSZXByZXNlbnRhIG1lam9yIGxvcyBpbmRpdmlkdW9zCgpHSC1CaXBsb3QKJFxtYXRoYmZ7R30gPSBcbWF0aGJme1V9JAoKJFxtYXRoYmZ7SH0gPSBcbWF0aGJme1ZEfSQKClJlcHJlc2VudGEgbWVqb3IgbGFzIHZhcmlhYmxlcwoKIyMgUHJvcGllZGFkZXMKCkxvcyBwcm9kdWN0b3MgZXNjYWxhcmVzIGRlIGxhcyBjb2x1bW5hcyBkZSBYIGNvaW5jaWRlbiBjb24gbG9zIHByb2R1Y3RvcyBlc2NhbGFyZXMgZGUgbG9zIG1hcmNhZG9yZXMgSAoKTGEgYXByb3hpbWFjacOzbiBkZSBsb3MgcHJvZHVjdG9zIGVzY2FsYXJlcyAodmFyaWFuemFzLWNvdmFyaWFuemFzKSwgZW4gZGltZW5zacOzbiByZWR1Y2lkYSwgZXMgw7NwdGltYSBlbiBlbCBzZW50aWRvIGRlIGxvcyBtw61uaW1vcyBjdWFkcmFkZG9zLgoKU2UgdHJhYmFqYSBjb24gbGEgZGlzdGFuY2lhIGRlIE1haGFsYW5vYmlzCgoKIyMgQmlwbG90IGRlIGNvbXBvbmVudGVzIHByaW5jaXBhbGVzCgpTaSBsYSBtYXRyaXogZGUgZGF0b3Mgb3JpZ2luYWwgZXN0w6EgY2VudHJhZGEuCgpMYSB2YXJpYWJpbGlkYWQgZGUgbGFzIHZhcmlhYmxlcyBzb2JzZXJ2YW5kbyBsYSBsb25naXR1ZCBkZWwgdmVjdG9yLgoKTGEgY292YXJpYWNpw7NuIGRlIGxhcyB2YXJpYWJsZXM6IG9ic2VydmFuZG8gZWwgw6FuZ3Vsby4KCiMjIEhKIEJpcGxvdAoKVmFyaWFjacOzbiBkZSBQdXJpLgoKUGFydGltb3MgZGUgbGEgZGVzY29tcG9zaWNpw7NuIGVuIGxvcyB2YWxvcmVzIHNpbmd1bGFyZXMgZGUgbGEgbWF0cml6IFhueHAKCiQkClxtYXRoYmZ7WH0gPSBcbWF0aGJme1VEVn1ee1xtYXRocm17VH19IFxcClxtYXRoYmZ7Sn0gPSBcbWF0aGJme1VEfSBccXF1YWQgXG1hdGhiZntIfSA9IFxtYXRoYmZ7RFZ9CiQkCkZpbGFzIHkgY29sdW1uYXMgcHVlZGVuIHNlciByZXByZXNlbnRhZGFzIGVuIGVsIG1pc21vIHNpc3RlbWEgZGUgcmVmZXJlbmNpYS4KCiogcHVudG9zIGZpbGEgeSBwdW50b3MgY29sdW1uYSBwdWVkZW4gcmVsYWNpb25hcnNlIG1lZGlhbnRlIGNvbWJpbmFjaW9uZXMgbGluZWFsZXMgc2ltw6l0cmljYXMuCiogQW1iYXMgbnViZXMgcHJlc2VudGFuIGxhIG1pc21hIGRpc3BlcnNpw7NuLgoKQm9uZGFkIGRlIGFqdXN0ZSBlcyBpZMOpbnRpY2EgcGFyYSBmaWxhcyB5IHBhcmEgY29sdW1uYXMKCgpDdWFuZG8gaGF5IHBvYnJlIGNhbGlkYWQgZGUgcmVwcmVzZW50YWNpw7NuIG5vIHNlIHZpc3VhbGl6YS4KCgo=</div>
 
 
 
