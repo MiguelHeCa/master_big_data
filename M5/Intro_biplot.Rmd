@@ -1,0 +1,28 @@
+---
+title: "Métodos Biplot"
+output: html_notebook
+---
+
+## Introducción
+
+El análisis factorial es esencial en esto.
+
+La solución más utilizada es el PCA
+
+## Métodos
+
+Ruben Gabriel 1996
+
+### Desarrollo de Biplot
+
+Pca 1901
+
+PCA 1933 1936
+
+Biplot-Gabriel 1971 GH-biplot y JK-biplot
+
+Representación gráfica de datos multivariantes. De la misma manera que un diagrama de dispersión muestra la distribución conjunta de dos variables, un BIPLOT representa tres o más variables. (Gabriel y Odoroff, 1990).
+
+
+
+
