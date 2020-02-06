@@ -1,0 +1,157 @@
+
+data =
+
+  1x2 cell array
+
+    {1x11 cell}    {1x11 cell}
+
+
+error =
+
+     0
+
+
+h = 
+
+  Figure (GraphEditor) with properties:
+
+      Number: []
+        Name: 'Graph Editor'
+       Color: [1 1 1]
+    Position: [360 221 899 664]
+       Units: 'pixels'
+
+  Use GET to show all properties
+
+Warning: Error occurred while executing the listener callback for event scroll defined for class matlab.graphics.interaction.uiaxes.ScrollEvent:
+Index exceeds the number of array elements (4).
+
+Error in matlab.graphics.interaction.internal.getWiderLimits
+
+Error in matlab.graphics.interaction.uiaxes.DefaultAxesInteractionStrategy/setUntransformedZoomLimits
+
+Error in matlab.graphics.interaction.uiaxes.InteractionStrategy/setUntransformedZoomLimitsInternal
+
+Error in matlab.graphics.interaction.uiaxes.SingleActionZoom/zoomcallback
+
+Error in matlab.graphics.interaction.uiaxes.SingleActionZoom/apply
+
+Error in matlab.graphics.interaction.uiaxes.ScrollZoom/scroll_callback
+
+Error in matlab.graphics.interaction.uiaxes.ScrollZoom>@(o,e)hObj.scroll_callback(o,e)
+
+Error in matlab.graphics.interaction.uiaxes.ScrollEvent/scroll_callback
+
+Error in matlab.graphics.interaction.uiaxes.ScrollEvent>@(o,e)hObj.scroll_callback(o,e)
+
+Error in waitforallfiguresclosed (line 9)
+> In matlab.graphics.interaction.uiaxes.ScrollEvent/scroll_callback
+  In matlab.graphics.interaction.uiaxes.ScrollEvent>@(o,e)hObj.scroll_callback(o,e)
+  In waitforallfiguresclosed (line 9)
+Warning: Error occurred while executing the listener callback for event scroll defined for class matlab.graphics.interaction.uiaxes.ScrollEvent:
+Index exceeds the number of array elements (4).
+
+Error in matlab.graphics.interaction.internal.getWiderLimits
+
+Error in matlab.graphics.interaction.uiaxes.DefaultAxesInteractionStrategy/setUntransformedZoomLimits
+
+Error in matlab.graphics.interaction.uiaxes.InteractionStrategy/setUntransformedZoomLimitsInternal
+
+Error in matlab.graphics.interaction.uiaxes.SingleActionZoom/zoomcallback
+
+Error in matlab.graphics.interaction.uiaxes.SingleActionZoom/apply
+
+Error in matlab.graphics.interaction.uiaxes.ScrollZoom/scroll_callback
+
+Error in matlab.graphics.interaction.uiaxes.ScrollZoom>@(o,e)hObj.scroll_callback(o,e)
+
+Error in matlab.graphics.interaction.uiaxes.ScrollEvent/scroll_callback
+
+Error in matlab.graphics.interaction.uiaxes.ScrollEvent>@(o,e)hObj.scroll_callback(o,e)
+
+Error in waitforallfiguresclosed (line 9)
+> In matlab.graphics.interaction.uiaxes.ScrollEvent/scroll_callback
+  In matlab.graphics.interaction.uiaxes.ScrollEvent>@(o,e)hObj.scroll_callback(o,e)
+  In waitforallfiguresclosed (line 9)
+Warning: Error occurred while executing the listener callback for event scroll defined for class matlab.graphics.interaction.uiaxes.ScrollEvent:
+Index exceeds the number of array elements (4).
+
+Error in matlab.graphics.interaction.internal.getWiderLimits
+
+Error in matlab.graphics.interaction.uiaxes.DefaultAxesInteractionStrategy/setUntransformedZoomLimits
+
+Error in matlab.graphics.interaction.uiaxes.InteractionStrategy/setUntransformedZoomLimitsInternal
+
+Error in matlab.graphics.interaction.uiaxes.SingleActionZoom/zoomcallback
+
+Error in matlab.graphics.interaction.uiaxes.SingleActionZoom/apply
+
+Error in matlab.graphics.interaction.uiaxes.ScrollZoom/scroll_callback
+
+Error in matlab.graphics.interaction.uiaxes.ScrollZoom>@(o,e)hObj.scroll_callback(o,e)
+
+Error in matlab.graphics.interaction.uiaxes.ScrollEvent/scroll_callback
+
+Error in matlab.graphics.interaction.uiaxes.ScrollEvent>@(o,e)hObj.scroll_callback(o,e)
+
+Error in waitforallfiguresclosed (line 9)
+> In matlab.graphics.interaction.uiaxes.ScrollEvent/scroll_callback
+  In matlab.graphics.interaction.uiaxes.ScrollEvent>@(o,e)hObj.scroll_callback(o,e)
+  In waitforallfiguresclosed (line 9)
+
+file =
+
+    'LogFile5469'
+
+Error using load
+Undefined function or variable 'biplotcanonico'.
+
+
+Valores =
+
+    '   1 .-  a_o'
+
+
+IndiceSeleccionado =
+
+     1
+
+Error using load
+Undefined function or variable 'biplotcanonico'.
+
+
+Valores =
+
+    '   1 .-  a_o'
+
+
+IndiceSeleccionado =
+
+     1
+
+
+h = 
+
+  Figure (GraphEditor) with properties:
+
+      Number: []
+        Name: 'Graph Editor'
+       Color: [1 1 1]
+    Position: [360 221 899 664]
+       Units: 'pixels'
+
+  Use GET to show all properties
+
+Unable to perform assignment because brace indexing is not supported for variables of this type.
+
+Error in ventanabiplotcanon>ClusterOrig_Callback (line 480)
+
+Error in gui_mainfcn (line 95)
+
+Error in ventanabiplotcanon (line 42)
+
+Error in matlab.graphics.internal.figfile.FigFile/read>@(hObject,eventdata)ventanabiplotcanon('ClusterOrig_Callback',hObject,eventdata,guidata(hObject))
+
+Error using waitforallfiguresclosed (line 9)
+Error while evaluating Menu Callback.
+
