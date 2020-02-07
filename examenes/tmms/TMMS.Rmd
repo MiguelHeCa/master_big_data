@@ -1,0 +1,281 @@
+---
+title: "TMMS"
+author: 
+  - José Miguel Hernández Cabrera^[Salamanca]
+  - Conrado Reyes Lafontaine^[Salamanca]
+  - Carlos Alfredo Torres Cubilla^[Salamanca]
+output: 
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+fontsize: 10pt
+mainfont: Times New Roman
+geometry: "left=2cm,right=2cm,top=2.25cm,bottom=2.25cm,headheight=12pt,letterpaper"
+lang: es
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
+library(haven)
+library(mirt)
+library(psych)
+library(ltm)
+
+Datos <- read_sav("data/TMMS_corregida2.sav")
+```
+
+# Introducción
+
+# Descripción
+
+```{r}
+# Descripción
+```
+
+```{r}
+TMMS <- Datos[,4:27]
+
+# Eliminar valores en 0 || NA
+TMMS <- TMMS[!(apply(TMMS, 1, function(y) any(y == 0 | y == 6 | is.na(y)))),]
+
+# Convertir en numeros
+TMMS <- mapply(TMMS, FUN = as.numeric)
+
+colnames(TMMS) <- colnames(Datos[,4:27])
+dim(TMMS)
+```
+
+### Atencion
+
+```{r}
+ATENCION <- TMMS[,1:8]
+head(ATENCION)
+```
+
+### Claridad
+
+```{r}
+CLARIDAD <- TMMS[,9:16]
+head(CLARIDAD)
+```
+
+### Reparacion
+
+```{r}
+REPARACION <- TMMS[,17:24]
+head(REPARACION)
+```
+
+# Análisis de las características psicométricas del cuestionario TMMS
+
+## Análisis factorial exploratirio
+
+## Análisis factorial confirmatorio
+
+## Capacidad informativa del test TMMS
+
+
+```{r}
+PolyTMMS <- polychoric(TMMS)
+
+irtTMMS <- irt.fa(PolyTMMS)
+plot(irtTMMS, type = "test")
+```
+
+## Capacidad informativa por dimensión
+
+### Atención
+
+```{r}
+PolyATENCION <- polychoric(ATENCION)
+irtATENCION <- irt.fa(PolyATENCION)
+```
+
+Puntos de corte
+
+```{r}
+irtATENCION$tau
+```
+
+```{r}
+mirtATENCION <- mirt(ATENCION, model = 1, technical = list(removeEmptyRows=TRUE)) 
+summary(mirtATENCION)
+mirtATENCION
+```
+
+Informacion
+
+```{r}
+plot(mirtATENCION, type = "info")
+```
+
+Informacion por ITEM
+
+```{r}
+plot(mirtATENCION, type = "infotrace")
+```
+
+### Claridad
+
+
+```{r}
+PolyCLARIDAD <- polychoric(CLARIDAD)
+irtCLARIDAD <- irt.fa(PolyCLARIDAD)
+```
+
+Puntos de corte
+
+```{r}
+irtCLARIDAD$tau
+```
+
+
+```{r}
+mirtCLARIDAD <- mirt(CLARIDAD, model = 1, technical = list(removeEmptyRows=TRUE)) 
+summary(mirtCLARIDAD)
+mirtCLARIDAD
+```
+
+Informacion
+
+```{r} 
+plot(mirtCLARIDAD, type = "info")
+```
+
+Informacion por ITEM
+
+```{r}
+plot(mirtCLARIDAD, type = "infotrace")
+```
+
+
+### Reparación
+
+```{r}
+PolyREPARACION <- polychoric(REPARACION)
+irtREPARACION <- irt.fa(PolyREPARACION)
+```
+
+Puntos de corte
+
+```{r}
+irtREPARACION$tau
+```
+
+```{r}
+mirtREPARACION <- mirt(REPARACION, model = 1, technical = list(removeEmptyRows=TRUE)) 
+summary(mirtREPARACION)
+mirtREPARACION
+```
+
+Informacion
+
+```{r}
+plot(mirtREPARACION, type = "info")
+```
+
+Informacion por ITEM
+
+```{r}
+plot(mirtREPARACION, type = "infotrace")
+```
+
+## Capacidad discriminante de cada ítem
+
+### Atención
+
+Discriminantes
+
+```{r}
+irtATENCION$irt$discrimination
+```
+
+### Claridad
+
+Discriminantes
+
+```{r}
+irtCLARIDAD$irt$discrimination
+```
+
+### Reparación
+
+Discriminantes
+
+```{r}
+irtREPARACION$irt$discrimination
+```
+
+## Análisis de las categorías de respuesta
+
+### Atención
+
+Respuestas
+
+```{r}
+plot(mirtATENCION, type = "trace")
+```
+
+
+### Claridad
+
+Respuestas
+
+```{r}
+plot(mirtCLARIDAD, type = "trace")
+```
+
+### Reparación
+
+Respuestas
+
+```{r}
+plot(mirtREPARACION, type = "trace")
+```
+
+## Análisis del impacto de los ítems
+
+```{r}
+# Frequencia
+TMMSfeq <- ifelse(TMMS > 1, 1, 0)
+feq <- colSums(TMMSfeq) / dim(TMMS)[1] * 100
+
+# Importancia
+TMMSmea <- TMMS[!(apply(TMMS, 1, function(y) any(y == 1))),]
+mea <- colMeans(TMMSmea)
+
+# Impacto
+TMMSimpa <- cbind(feq, mea, feq * mea)
+colnames(TMMSimpa) = c("Frequencia","Importancia","Impacto")
+TMMSimpa
+```
+
+# Alfa Cronbach
+
+```{r}
+cronbach.alpha(TMMS, na.rm = TRUE)
+```
+
+## Atención
+
+```{r}
+cronbach.alpha(ATENCION, na.rm = TRUE)
+```
+
+
+## Claridad
+
+```{r}
+cronbach.alpha(CLARIDAD, na.rm = TRUE)
+```
+
+## Reparación
+
+```{r}
+cronbach.alpha(REPARACION, na.rm = TRUE)
+```
+
+# Discusión sobre la simplificación del cuestionario
+
+Discusiones finales
