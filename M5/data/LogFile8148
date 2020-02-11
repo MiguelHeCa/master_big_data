@@ -155,3 +155,39 @@ Error in matlab.graphics.internal.figfile.FigFile/read>@(hObject,eventdata)venta
 Error using waitforallfiguresclosed (line 9)
 Error while evaluating Menu Callback.
 
+
+data =
+
+  1×2 <a href="matlab:helpPopup cell" style="font-weight:bold">cell</a> array
+
+    {1×11 cell}    {1×11 cell}
+
+
+error =
+
+     0
+
+{Dot indexing is not supported for variables of this type.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('seleccion>seleccion_OutputFcn', '\\mac\home\Documents\MATLAB\Add-Ons\Apps\MultBiplot\code\Dropbox\Multivar\Biplotnuevo\seleccion.m', 94)" style="font-weight:bold">seleccion>seleccion_OutputFcn</a> (<a href="matlab: opentoline('\\mac\home\Documents\MATLAB\Add-Ons\Apps\MultBiplot\code\Dropbox\Multivar\Biplotnuevo\seleccion.m',94,0)">line 94</a>)
+varargout{1} = handles.output;
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('gui_mainfcn', 'C:\Program Files\MATLAB\R2018a\toolbox\matlab\guide\gui_mainfcn.m', 262)" style="font-weight:bold">gui_mainfcn</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2018a\toolbox\matlab\guide\gui_mainfcn.m',262,0)">line 262</a>)
+        [varargout{1:nargout}] = feval(gui_State.gui_OutputFcn, gui_hFigure, [], gui_Handles);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('seleccion', '\\mac\home\Documents\MATLAB\Add-Ons\Apps\MultBiplot\code\Dropbox\Multivar\Biplotnuevo\seleccion.m', 40)" style="font-weight:bold">seleccion</a> (<a href="matlab: opentoline('\\mac\home\Documents\MATLAB\Add-Ons\Apps\MultBiplot\code\Dropbox\Multivar\Biplotnuevo\seleccion.m',40,0)">line 40</a>)
+    [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ventanabiplot>ProjectRows_Callback', '\\mac\home\Documents\MATLAB\Add-Ons\Apps\MultBiplot\code\Dropbox\Multivar\Biplotnuevo\ventanabiplot.m', 1562)" style="font-weight:bold">ventanabiplot>ProjectRows_Callback</a> (<a href="matlab: opentoline('\\mac\home\Documents\MATLAB\Add-Ons\Apps\MultBiplot\code\Dropbox\Multivar\Biplotnuevo\ventanabiplot.m',1562,0)">line 1562</a>)
+cuales=seleccion('Userdata',estado);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('gui_mainfcn', 'C:\Program Files\MATLAB\R2018a\toolbox\matlab\guide\gui_mainfcn.m', 95)" style="font-weight:bold">gui_mainfcn</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2018a\toolbox\matlab\guide\gui_mainfcn.m',95,0)">line 95</a>)
+        feval(varargin{:});
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ventanabiplot', '\\mac\home\Documents\MATLAB\Add-Ons\Apps\MultBiplot\code\Dropbox\Multivar\Biplotnuevo\ventanabiplot.m', 43)" style="font-weight:bold">ventanabiplot</a> (<a href="matlab: opentoline('\\mac\home\Documents\MATLAB\Add-Ons\Apps\MultBiplot\code\Dropbox\Multivar\Biplotnuevo\ventanabiplot.m',43,0)">line 43</a>)
+    gui_mainfcn(gui_State, varargin{:});
+
+Error in
+<a href="matlab:matlab.internal.language.introspective.errorDocCallback('matlab.graphics.internal.figfile.FigFile/read>@(hObject,eventdata)ventanabiplot(''ProjectRows_Callback'',hObject,eventdata,guidata(hObject))')" style="font-weight:bold">matlab.graphics.internal.figfile.FigFile/read>@(hObject,eventdata)ventanabiplot('ProjectRows_Callback',hObject,eventdata,guidata(hObject))</a>} 
+Error while evaluating UIControl Callback.
+
