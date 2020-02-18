@@ -1,0 +1,40 @@
+---
+title: "CDBIPLOT"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk(echo=FALSE)
+```
+
+## Origen del trabajo y la motivación
+
+Nieto-librero, C-Sierra, PVG, RB, PGV, 2017.
+
+PCA
+Pearson, 1901, Mejor ajuste minimizar el error
+Hotelling 1933, Maximizar la varianza
+Eckart y Young 1936, SVD
+
+## Modelo
+
+$\mathbf{X}_{IJ}$ Matriz de datos (supuesto: estandarizada).
+
+$\mathbf{P}:$ número de grupos
+
+buscar centroides.
+
+La representación HJ Biplot de la matriz de centroides
+
+$$\mathbf{\bar{X}} = \mathbf{D \Lambda M^T}$$
+
+Eckart y Young, 1936
+
+El 
+
+## Disjoint
+
+
+Componentes principales disjuntas
+
+CDPCA, vichy & saporta, 2009
