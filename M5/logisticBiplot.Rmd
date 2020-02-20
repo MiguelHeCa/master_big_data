@@ -1,0 +1,50 @@
+---
+title: "Logistic Biplot"
+author: "Miguel Hernández"
+date: "2/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Classical Biplot
+
+Sea $\mathbf{X}$ una matriz de datos $n \times p$ conteniendo medidas de $p$ variables (normalmente continuas) con $n$ individuos.
+
+Matriz
+
+$$\mathbf{X} = \mathbf{AB'} + \mathbf{E}$$
+
+Si consideramos $\mathbf{A}$ como fija, los marcadores de las columnas $\mathbf{B}$ pueden ser calculadas como una regresión multivariada:
+
+$$\mathbf{B'} = (\mathbf{A}'\mathbf{A})^{-1}\mathbf{A'}\mathbf{X}$$
+
+De la misma manera, para fijar $\mathbf{B}$, $\mathbf{A}$ puede ser obtenida como:
+
+
+$$\mathbf{A'} = (\mathbf{B}'\mathbf{B})^{-1}\mathbf{B'}\mathbf{X}$$
+
+Alternando entre los dos, el producto converge hacia SVD.
+
+Se pueden calcular coordenadas principales de $\mathbf{A}$ para obtener lo mismo.
+
+Al final, se puede obtener un biplot JK con las regresiones.
+
+En un biplot, el centro normalmente es la media.
+
+## Geometría de una regresión biplot
+
+Se utiliza el modelo vectorial con regresión
+
+## Biplot logístico para datos binarios
+
+Con el modelo no se puede centrar, porque no conozco las demás
+
+Las flechas parten del punto desde donde parte el punto que ocurre.
+
+
+
+
+

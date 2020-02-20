@@ -1,0 +1,313 @@
+---
+title: "Práctica Biplot con R"
+author: "José Luis Vicente Villardón"
+date: "12/02/2020"
+output:
+  pdf_document: default
+  html_document:
+    number_sections: yes
+    theme: journal
+    toc: yes
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Descripción de los datos
+
+Se analizaron 45 vinos tintos de las denominaciones de origen de **Ribera de Duero** y **Toro**. Para ello se midieron características químicas de los vinos, en lugar de las habituales características sensoriales que son mucho más subjetivas. Las variables medidas están relacionadas con parámetros enológicos convencionales, fenoles y variables relacionadas con el color. 
+Se utilizaron vinos de los años 1986 y 1987 para ambas denominaciones de origen. Los vinos se obtuvieron directamente de los consejos reguladores.\\ Una breve descripción de las variables se muestra en la tabla adjunta (\ref{Variables}). La descripción detallada de las variables y el conjunto completo de datos puede encontrarse en el artículo original.
+
+
+En primer lugar colocaremos el directorio donde hemos guardado los datos como directorio de trabajo. Cada uno tendrá el suyo.
+A continuación cargamos los datos
+
+Vamos a trabajar los datos de los vinos que tilizamos habitualmente. Comenzamos colocando el resumen de cada una de las variables analizadas.
+Asegúrese de que tiene instalado el paquete "MultBiplotR"
+
+```{r message =FALSE}
+library(MultBiplotR)
+load("M5/data/Vinos.rda")
+head(Vinos)
+```
+
+El <span style="color:red">*data.frame*</span>  que contiene los datos del archivo se denomina <span style="color:red">**Vinos**</span>. Para ver los nombres de las variables podemos escribir
+
+```{r message =FALSE}
+names(Vinos)
+```
+
+Un gráfico descriptivo simple para todas las variables separadas por denominación.
+
+```{r message =FALSE}
+library(car)
+BoxPlotPanel(Vinos[,4:9], nrows=2, groups=Vinos$denomina)
+```
+
+O incluso para todos los grupos
+
+```{r message =FALSE}
+BoxPlotPanel(Vinos[,4:9], nrows=2, groups=Vinos$grupo)
+```
+
+
+## Análisis Multivariante
+
+
+Un primer gráfico sería el panel de diagramas de dispersión para varias variames.
+```{r message =FALSE}
+X=Vinos[,4:21]
+plot(X[,1:9])
+plot(X[,10:18])
+
+```
+
+## Análisis de Componentes Principales
+
+Podemos utilizar las Componentes Principales para describir las simiitudes entre los individuos en dimensión reducida. 
+
+```{r message =FALSE}
+acpvino=PCA.Analysis(X, Scaling = 5)
+summary(acpvino)
+```
+
+El resumen de las componentes principales nos proporciona las varianzas explicadas por cada una de las componentes así como la estructura, es decir, la correlación de las componentes con cada una de las variables observadas.
+
+Si queremos explorar más a fondo lo que contiene el objeto que hemos obtenido como resultado del ACP podemos mostrar los campos que contiene. 
+```{r message =FALSE}
+names(acpvino)
+```
+
+Podemos también dibular el objeto correspondiente. El dibujo típico es un diagrama de dispersión que muestra las coordenadas de los individuos (filas) sobre las primeras componentes. (Utilice help("plot.ContinuousBiplot") para ver las opciones del dibujo aunque detallremos algunas a continuación cuando dibujemos un biplot).
+
+```{r message =FALSE}
+plot(acpvino)
+```
+
+Por defecto no colocamos escalas en los ejes ya que no contienen información relevante sobre el análisis. La estructura de las variables podemos dibujarlas con el siguiente comando, que nos proporciona una representación de las correlaciones de las componentes con las variables observadas.
+
+```{r message =FALSE}
+plot(acpvino, CorrelationCircle=TRUE, ShowAxis=TRUE)
+```
+
+Sobre el objeto podemos añadir "clusters" procedentes, por ejemplo, de grupos definidos en un factor, por ejemplo, la denominación, el año o la combinación de ambos. La función **AddCluster2Biplot** permite añadir los grupos a un objeto resultado de cualquier técnica de ordenación. Para añadir grupos definidos por el usuario utilizamos **ClusterType="us"** y **Groups = Vinos$grupo** como argumentos en la función anterior. Los resultados de la agrupación se añaden al objeto que contiene las componentes principales. Al dibujar el objeto y especificar que deben dibujarse los clusters (**PlotClus=TRUE**) y podemos dibujar el centro del cluster (**ClustCenters=TRUE**). El dibujo por defecto muestra el polígono convexo mínimo que contiene a todos los elementos del cluster.
+```{r message =FALSE}
+acpvino=AddCluster2Biplot(acpvino, ClusterType="us", Groups = Vinos$grupo)
+plot(acpvino, PlotClus=TRUE, ClustCenters=TRUE, margin=0.05, CexInd=0.7)
+```
+
+Los clusters pueden representarse también utilizando elipses (no paramétricas) de concentración (**TypeClus="el"**).
+
+```{r message =FALSE}
+plot(acpvino, PlotClus=TRUE, ClustCenters=TRUE, margin=0.05, CexInd=0.7, TypeClus="el")
+```
+
+O estrellas que unen cada punto con el centro (**TypeClus="st"**).
+
+```{r message =FALSE}
+plot(acpvino, PlotClus=TRUE, ClustCenters=TRUE, margin=0.05, CexInd=0.7, TypeClus="st")
+```
+
+
+## Biplot (PCA)
+
+Podemos utilizar un Biplot en lugar de las Componentes Principales para describir las simiitudes entre los individuos, obtenemos primero la parte que contiene las variables continuas. La función que calcula un biplot es **PCA.Biplot** (Use *help("PCA.Biplot)* para ver las opciones.). En este caso hemos estandarizado las variables (**Scaling = 5**). Por defecto se calcula un **JK-Biplot** que contiene las coordenadas sobre las componentes principales como marcadores para los individuos.
+
+```{r message =FALSE}
+bipvino=PCA.Biplot(X, Scaling = 5)
+summary(bipvino)
+```
+
+En los resultados hemos colocado las contribuciones en lugar de las correlaciones, tanto para individuos como para variables. El dibujo por defecto es el tradicional biplot en el que los individuos se representan con puntos y las variables con flechas. Las eqtiquetas de las variables las hemos colocado en la punta de la flecha con el mismo ángulo de los vectores que ayuda a leer el gráfico en algunos casos.
+
+```{r message =FALSE}
+plot(bipvino)
+```
+
+En lugar de las flechas, podemos colocar escalas graduadas para cada una de las variables. Añadimos un margen (**margin=0.2**) para dejar más espacio para los nombres. Es conveniente una pantalla grande para que se vean mejor los resultados (puede hacerlo con el zoom en RStudio)
+
+```{r message =FALSE}
+plot(bipvino, mode="s", margin=0.2)
+```
+
+Otra posibilidad es colocar la etiqueta de las flechas fuera del gráfico. La combinación de posibilidades es muy grande.
+
+```{r message =FALSE}
+plot(bipvino, mode="ah", margin=0.2)
+```
+
+Podemos dibujar el círculo de correlaciones.
+
+```{r message =FALSE}
+CorrelationCircle(bipvino)
+```
+
+O incluso un gráfico de las contribuciones en el que se muestran las contribuciones a cada eje y la suma de las mismas
+
+```{r message =FALSE}
+ColContributionPlot(bipvino)
+```
+
+A efectos de la interpetación pueden proyectarse los individuos sobre una variable. Por ejemplo sobre el **grado**
+
+```{r message =FALSE}
+plot(bipvino, dp=1, mode="s", ColorVar=c("black", rep("grey",17)))
+```
+
+O proyectar un individuo (o varios) en todas las variables.
+
+```{r message =FALSE}
+plot(bipvino, PredPoints=1, mode="s", ColorVar=1:18)
+```
+
+Podemos dibujar solamente los individuos.
+
+```{r message =FALSE}
+plot(bipvino, PlotVar=FALSE)
+```
+
+Podemos añadir clusters de la misma forma que antes. O también grupos esultantes de un cluster jerárquico (**ClusterType="hi"**) con el método de Ward (**method="ward.D"**). Ver **hclust* para todas las opciones posibles
+
+```{r message =FALSE}
+bipvino=AddCluster2Biplot(bipvino, NGroups=4, ClusterType="hi", method="ward.D", Original=TRUE)
+plot(bipvino, PlotClus=TRUE)
+```
+
+
+E incluso dibujar el dendrograma.
+
+```{r message =FALSE}
+plot(bipvino$Dendrogram)
+```
+
+Podemos también eliminar variables con baja calidad de representación.
+
+```{r message =FALSE}
+plot(bipvino, MinQualityVars=0.7)
+```
+
+Las posibilidades para la modificación del gráfico son muchas.
+
+
+## MANOVA, Análisis Discriminante y Análisis Canónico
+
+El Análisis de Componentes Principales busca las direcciones de máxima variabilidad. Si lo que queremos son las direcciones de máxima separación entre grupos tenemos que usar un Análisis Canónico (Corrdenadas Discriminantes) que puede considerarse como una representación gráfica asociada al MANOVA o al Análisis Disriminante.
+
+Comenzamos con la clasificación para dos grupos tomando la denominación de origen como referencia.
+```{r message =FALSE}
+library(MASS)
+help(lda)
+LDA=lda(X, Vinos$denomina)
+Prediccion=predict(LDA, X)$class
+ct <- table(Vinos$denomina, Prediccion)
+```
+
+Proporción de clasificación correcta para cada categoría
+```{r message =FALSE}
+diag(prop.table(ct, 1))
+```
+Podemos valorar la discriminación dibujando la función discriminante.
+```{r message =FALSE}
+plot(LDA, dimen=1, type="both")
+```
+
+Proporción total de clasificación correcta
+```{r message =FALSE}
+sum(diag(prop.table(ct)))
+```
+
+Tomaremos ahora el conjunto de los cuatro grupos haciendo, en primer lugar, un Análisis Multivariante de la Varianza (MANOVA).
+```{r message =FALSE}
+help(manova)
+MANOVA = manova(as.matrix(X) ~ Vinos$grupo)
+summary(MANOVA)
+summary(MANOVA, test = "Wilks")
+summary(MANOVA, test = "Hotelling")
+summary(MANOVA, test = "Roy")
+summary.aov(MANOVA)
+```
+
+Las comparaciones por parejas solamente funcionan para cada una de las variables por separado.
+
+También podríamos 
+
+```{r message =FALSE}
+help(lda)
+LDA2=lda(X, Vinos$grupo)
+Prediccion2=predict(LDA2, X)$class
+ct2 <- table(Vinos$grupo, Prediccion2)
+ct2
+```
+
+Proporción de clasificación correcta para cada categoría
+```{r message =FALSE}
+diag(prop.table(ct2, 1))*100
+```
+Podemos valorar la discriminación dibujando la función discriminante.
+```{r message =FALSE}
+plot(LDA2)
+```
+
+Proporción total de clasificación correcta
+```{r message =FALSE}
+sum(diag(prop.table(ct2)))*100
+```
+
+La representación adecuada ahora es el Análisis Canónico (de Poblaciones) o Coordenadas discriminantes.
+
+```{r message =FALSE}
+help(Canonical.Variate.Analysis)
+CVA=Canonical.Variate.Analysis(X, group= Vinos$grupo, InitialTransform = 5)
+summary(CVA)
+plot(CVA)
+```
+
+En el Análisis Canónico se han incluido el Análisis Discriminante y el MANOVA para la comparación de los cuatro grupos.
+
+O el Biplot Canónico
+
+```{r message =FALSE}
+help(Canonical.Variate.Analysis)
+CVAb=CanonicalBiplot(X, group= Vinos$grupo, InitialTransform = 5)
+summary(CVAb)
+plot(CVAb)
+```
+
+## Análisis de Coordenadas Principales
+
+Llevaremos a cabo las Coordenadas Principales usando el paquete MultBiplotR, aunque hay algunos otros como vegan que tambien lo permiten. En primer lugar calculamos la matriz de distancias entre los individuos. Si utilizamos la distancia euclídea con los datos la representación es la misma que la obtenida con el Análisis de Componentes Principales.
+```{r message =FALSE}
+X=as.matrix(X)
+X=TransformIni(X,transform=5)
+rownames(X)=paste("V",1:45,sep="")
+dis=ContinuousProximities(X, coef=1)
+pco=PrincipalCoordinates(dis)
+plot(pco, RowColors=as.integer(Vinos$grupo), RowCex=0.8)
+```
+
+Para datos binarios, el procedimiento es el mismo. Calculamos las distancias a partir de un coeficiente de similaridad (por defecto usamos el de Jaccard)
+
+```{r message =FALSE}
+data(RAPD)
+dist2=BinaryProximities(RAPD, coefficient = "Jaccard")
+pco2=PrincipalCoordinates(dist2)
+plot(pco2, RowCex=0.8)
+```
+
+El mismo paquete contiene una función para hacer un MDS. Lo hacemos primero para la matriz de vinos.
+
+```{r message =FALSE}
+MDSSol=MDS(dis, Model="Ratio")
+plot(MDSSol, RowColors=as.integer(Vinos$grupo), RowCex=0.8)
+MDSSol=AddContVars2Biplot(MDSSol,  X, Scaling = 5)
+plot(MDSSol, RowColors=as.integer(Vinos$grupo), margin=0.15, RowCex=0.8, PlotSupVars=TRUE, ColorSupContVars="black")
+```
+
+A continuación para la de marcadores moleculares
+
+```{r message =FALSE}
+MDSSol2=MDS(dist2, Model="Ordinal")
+plot(MDSSol2, RowCex=0.8)
+```

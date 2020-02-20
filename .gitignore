@@ -43,3 +43,4 @@ rsconnect/
 
 # Documentos de word
 *.docx
+.Rproj.user

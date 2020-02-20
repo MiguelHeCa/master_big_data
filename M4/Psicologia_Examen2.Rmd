@@ -1,0 +1,181 @@
+---
+title: "TRI - TMMS / Psicologia y Deporte"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+setwd("~/Documents/USAL/Optativa 1 - TECNICAS DE ANÁLISIS ESTADÍSTICO APLICADO A LA VALORACIÓN DE RECURSOS EN LA PSICOLOGÍA Y EL DEPORTE/Examen")
+```
+
+## Librerias
+
+Librerias necesarias para el estudio.
+
+```{r}
+#helplibrary(foreign)
+library(haven)
+library(mirt)
+library(psych)
+library(ltm)
+```
+
+## Base de Datos
+
+
+```{r}
+Datos <- read_sav("TMMS_corregida.sav")
+dim(Datos)
+```
+
+### Dimensiones
+
+```{r}
+TMMS <- Datos[,4:27]
+
+# Eliminar valores en 0
+TMMS <- TMMS[!(apply(TMMS, 1, function(y) any(y == 0))),]
+
+# Convertir en numeros
+TMMS <- mapply(TMMS, FUN = as.numeric)
+
+colnames(TMMS) <- colnames(Datos[,4:27])
+dim(TMMS)
+```
+
+#### Atencion
+
+```{r}
+ATENCION <- TMMS[,1:8]
+head(ATENCION)
+```
+
+#### Claridad
+
+```{r}
+CLARIDAD <- TMMS[,9:16]
+head(CLARIDAD)
+```
+
+#### Reparacion
+
+```{r}
+REPARACION <- TMMS[,17:24]
+head(REPARACION)
+```
+
+## Capacidad informativa del test TMMS
+
+```{r}
+PolyTMMS <- polychoric(TMMS)
+
+irtTMMS <- irt.fa(PolyTMMS)
+plot(irtTMMS, type = "test")
+```
+
+## Items
+
+#### Atencion
+
+```{r}
+mirtATENCION <- mirt(ATENCION, model = 1, technical = list(removeEmptyRows=TRUE)) 
+summary(mirtATENCION)
+mirtATENCION
+```
+
+Informacion
+
+```{r}
+plot(mirtATENCION, type = "info")
+```
+
+Informacion por ITEM
+
+```{r}
+plot(mirtATENCION, type = "infotrace")
+```
+
+Respuestas
+
+```{r}
+plot(mirtATENCION, type = "trace")
+```
+
+#### Claridad
+
+```{r}
+mirtCLARIDAD <- mirt(CLARIDAD, model = 1, technical = list(removeEmptyRows=TRUE)) 
+summary(mirtCLARIDAD)
+mirtCLARIDAD
+```
+Informacion
+
+```{r}
+plot(mirtCLARIDAD, type = "info")
+```
+
+Informacion por ITEM
+
+```{r}
+plot(mirtCLARIDAD, type = "infotrace")
+```
+
+Respuestas
+
+```{r}
+plot(mirtCLARIDAD, type = "trace")
+```
+
+#### Reparación
+
+```{r}
+mirtREPARACION <- mirt(REPARACION, model = 1, technical = list(removeEmptyRows=TRUE)) 
+summary(mirtREPARACION)
+mirtREPARACION
+```
+Informacion
+
+```{r}
+plot(mirtREPARACION, type = "info")
+```
+
+Informacion por ITEM
+
+```{r}
+plot(mirtREPARACION, type = "infotrace")
+```
+
+Respuestas
+
+```{r}
+plot(mirtREPARACION, type = "trace")
+```
+
+## Alfa de Cronbach
+
+## Global
+
+```{r}
+cronbach.alpha(TMMS, na.rm = TRUE)
+```
+
+## Dimensiones
+
+Atencion
+
+```{r}
+cronbach.alpha(ATENCION, na.rm = TRUE)
+```
+
+Claridad
+
+```{r}
+cronbach.alpha(CLARIDAD, na.rm = TRUE)
+```
+
+Reparación
+
+```{r}
+cronbach.alpha(REPARACION, na.rm = TRUE)
+```

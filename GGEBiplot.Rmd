@@ -1,0 +1,61 @@
+---
+title: "Biplot en genotipo ambiente"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Intro
+
+Presentar el paquete `GGEBiplotGUI`. Funciones del análisis GGE y de los métodos Biplot clásicos.
+
+Genotipo
+
+- buenos rendimientos
+- estabilidad aceptable
+
+Se busca que reaccione favorablemente a diferentes condiciones ambientales.
+
+Datos
+
+Matriz de $\mathbf{Y} = \mathbf{Genotipos} \times \mathbf{Ambientes}$
+
+$$\mathbf{Y} = \mathbf{I} \times \mathbf{J}$$
+
+ANOVA
+
+
+Modelo SHMM
+
+Modelo multiplicativo GREG
+
+Modelo AMMI
+
+Con el modelo se trabaja con la interacción, no con las sumas globales, por filas ni con columnas.
+
+AMMI 1
+
+Multiplicar M por sus diversos términos multiplicativos.
+
+Si la F sale significativa se introduce la $\lambda_i$, pasa a evaluar al siguiente $L$ hasta que deje de ser significativo según el nivel de significación que se le ponga.
+
+Genotipo próximo, genotivo ambiente.
+
+Los más estables son los que están más próximos al origen de coordenadas.
+
+G E GE
+
+Factor ambiente
+
+
+
+```{r}
+library(GGEBiplotGUI)
+```
+
+El GGE biplot sirve para evaluar las relaciones entre ambientes. Deja ver si son representativos de los entornos de prueba.
+
+Poder de discriminar genotivos de prueba.
+

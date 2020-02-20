@@ -1,0 +1,104 @@
+---
+title: "Métodos Biplot"
+output: html_notebook
+---
+
+## Introducción
+
+El análisis factorial es esencial en esto.
+
+La solución más utilizada es el PCA
+
+## Métodos
+
+Ruben Gabriel 1996
+
+### Desarrollo de Biplot
+
+Pca 1901
+
+PCA 1933 1936
+
+Biplot-Gabriel 1971 GH-biplot y JK-biplot
+
+Representación gráfica de datos multivariantes. De la misma manera que un diagrama de dispersión muestra la distribución conjunta de dos variables, un BIPLOT representa tres o más variables. (Gabriel y Odoroff, 1990).
+
+## Definición formal
+
+Un Biplot par auna matriz de datos $\mathbf{X}$ es una representación gráfica mediante marcadores $\mathbf{g}_1, \mathbf{g}_2, ..., \mathbf{g}_n$ para las filas de $\mathbf{X}$ y $\mathbf{h}_1, \mathbf{h}_2, ..., \mathbf{h}_p$ para las columnas $\mathbf{X}$ de forma que el producto interno (producto escalar) $\mathbf{g}_i^{\mathrm{T}}\mathbf{h}_j$ aproxime el elemento $x_ij$ de la matriz partida, tan bien como sea posible.
+
+Marcadores, llamados coordenadas. 
+
+
+Tucker 1966. Some mathematical notes on three Mode factor análisis.
+
+## Unicidad de la matriz
+
+La factorización siempre es posible, pero no es única.
+
+Para que la representación biplot sea útil, necesitamos imponer una métrica de forma que la descomposición y el biplot resultantes sean únicos.
+
+## Caracterización
+
+$\mathbf{U}$ es una matriz cuyos vectores columna son ortonormales y vectores propios de $\mathbf{XX'}$
+
+$\mathbf{V}$ es una matriz ortonormal cuyos vectores olumna son vectores propios de $\mathbf{X'X}$
+
+$\mathbf{D}$ es la matriz diagonal de valores singulares de X, que son las raíces cuadrradas no negativas de los valores propios de $\mathbf{X'X}$.
+
+$$\mathbf{X} = \mathbf{UDV}^{\mathrm{T}}$$
+
+JK-Biplot
+
+Coordenadas estándar
+$\mathbf{J} = \mathbf{UD}$
+
+$\mathbf{K} = \mathbf{V}$
+
+Representa mejor los individuos
+
+GH-Biplot
+$\mathbf{G} = \mathbf{U}$
+
+$\mathbf{H} = \mathbf{VD}$
+
+Representa mejor las variables
+
+## Propiedades
+
+Los productos escalares de las columnas de X coinciden con los productos escalares de los marcadores H
+
+La aproximación de los productos escalares (varianzas-covarianzas), en dimensión reducida, es óptima en el sentido de los mínimos cuadraddos.
+
+Se trabaja con la distancia de Mahalanobis
+
+
+## Biplot de componentes principales
+
+Si la matriz de datos original está centrada.
+
+La variabilidad de las variables sobservando la longitud del vector.
+
+La covariación de las variables: observando el ángulo.
+
+## HJ Biplot
+
+Variación de Puri.
+
+Partimos de la descomposición en los valores singulares de la matriz Xnxp
+
+$$
+\mathbf{X} = \mathbf{UDV}^{\mathrm{T}} \\
+\mathbf{J} = \mathbf{UD} \qquad \mathbf{H} = \mathbf{DV}
+$$
+Filas y columnas pueden ser representadas en el mismo sistema de referencia.
+
+* puntos fila y puntos columna pueden relacionarse mediante combinaciones lineales simétricas.
+* Ambas nubes presentan la misma dispersión.
+
+Bondad de ajuste es idéntica para filas y para columnas
+
+
+Cuando hay pobre calidad de representación no se visualiza.
+
+

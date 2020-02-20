@@ -1,0 +1,42 @@
+Error using load
+Undefined function or variable 'biplotcanonico'.
+
+
+Valores =
+
+    '   1 .-  a_o'
+
+
+IndiceSeleccionado =
+
+     1
+
+
+h = 
+
+  Figure (GraphEditor) with properties:
+
+      Number: []
+        Name: 'Graph Editor'
+       Color: [1 1 1]
+    Position: [360 221 899 664]
+       Units: 'pixels'
+
+  Use GET to show all properties
+
+fixfig: Fixing Figure Error using fprintf
+Unable to convert 'matlab.ui.Figure' value to 'int64'.
+
+Error in fixfig (line 90)
+
+Error in GraphEditor>AutomaticPresentation_Callback (line 268)
+
+Error in gui_mainfcn (line 95)
+
+Error in GraphEditor (line 42)
+
+Error in matlab.graphics.internal.figfile.FigFile/read>@(hObject,eventdata)GraphEditor('AutomaticPresentation_Callback',hObject,eventdata,guidata(hObject))
+
+Error using waitforallfiguresclosed (line 9)
+Error while evaluating Menu Callback.
+

@@ -1,0 +1,506 @@
+---
+title: "Análisis multivariante de proteínas en países europeos"
+author: "José Miguel Hernández Cabrera"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+    number_section: true
+lang: es
+mainfont: Open Sans
+bibliography: ref/refm3.bib
+abstract: | 
+  Se utilizaron análisis de componentes principales, análisis factorial, escalamiento multidimensional y coordenadas principales
+  
+  **Palabras clave**: Análisis, Multivariante, Factorial, Discriminante, Escalamiento Multidimensional, Coordenadas principales
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(Hmisc)
+library(magrittr)
+library(psych)
+library(FactoMineR)
+library(factoextra)
+library(ggrepel)
+library(cluster)
+library(smacof)
+library(ggthemes)
+library(skimr)
+```
+
+# Introducción
+
+Al momento de analizar información normalmente se utilizan métodos lineales como primera línea de análisis. Sin embargo, el investigador varias veces se enfrenta con que los datos no cumplen con los supuestos requeridos por los modelos lineales. En estos casos, la variabilidad es considerada como ruido en lugar de aportar algo importante. 
+
+No obstante, la invariabilidad no es normal en el mundo real, por lo que es necesario utilizar otros métodos para poder acceder a información a partir de la heterogeneidad de los datos. Por ello, en este estudio utilizaremos métodos multivariantes que permiten extraer información pertinente a partir de la variabilidad.
+
+# Análisis exploratorio de datos
+
+Los datos con los que trabajaremos provienen de ejemplos utilizados para ejemplificar el funcionamiento de los métodos multivariantes. Se refieren a la composición alimenticia en países del continente europeo en años donde todavía existía la Unión Soviética, Checoslovaquia, Yugoslavia y las dos repúblicas alemanas.
+
+```{r, include=FALSE}
+alim = foreign::read.spss("data/M3/PaisesProteinasExamen.sav", to.data.frame = T)
+alim$Pais = trimws(alim$Pais)
+
+prot = Filter(is.numeric, alim)
+rownames(prot) = alim$Pais
+```
+
+```{r}
+library(skimr)
+proteinas = alim
+colnames(proteinas) = c("País", "Carne roja", "Carne blanca", "Huevos", "Leche", "Pescado", "Cereales", "Féculas", "Frutos secos", "Frutos y vegetales", "Comunista", "Localización")
+
+mi_skim =
+  skim_with(
+    character = sfl(
+      empty = NULL,
+      whitespace = NULL
+    ),
+    numeric = sfl(hist = NULL)
+  )
+
+eskim = mi_skim(proteinas)
+
+eskim$n_missing = NULL
+eskim$complete_rate = NULL
+
+res_eskim = summary(eskim)
+rownames(res_eskim) = c(
+  "Nombre",
+  "Número de filas",
+  "Número de columnas",
+  "_________________________ ",
+  "Frecuencia de cada tipo: ",
+  "character",
+  "factor", 
+  "numeric",
+  "_________________________  ",
+  "Variables de agrupación"
+)
+res_eskim[10, 1] = "Ninguna"
+```
+
+
+```{r gen}
+knitr::kable(res_eskim, caption = "Resumen general", col.names = "Valores")
+```
+
+
+```{r cha}
+knitr::kable(partition(eskim)[[1]],
+             caption = "Resumen de variable tipo **character**",
+             col.names = c("", "Mín", "Máx", "Únicos"))
+```
+
+
+```{r fac}
+knitr::kable(partition(eskim)[[2]],
+             caption = "Resumen de variable tipo **factor**",
+             col.names = c("", "Ordenado", "Único", "Conteo"))
+```
+
+
+```{r num}
+knitr::kable(partition(eskim)[[3]],
+             caption = "Resumen de variable tipo **numeric**",
+             col.names = c("", "Media", "D.E.", "Q1", "Q2", "Q3", "Q4", "Q5"),
+             digits = 3)
+```
+
+La tabla \@ref(gen) señala el tamaño de los datos.
+
+Tabla
+
+```{r}
+corstars <-
+  function(x,
+           method = c("pearson", "spearman"),
+           removeTriangle = c("upper", "lower")) {
+    #Compute correlation matrix
+    x <- as.matrix(x)
+    correlation_matrix <- rcorr(x, type = method[1])
+    R <- correlation_matrix$r # Matrix of correlation coeficients
+    p <- correlation_matrix$P # Matrix of p-value
+    
+    ## Define notions for significance levels; spacing is important.
+    mystars <-
+      ifelse(p < .001, "*** ", ifelse(p < .01, "**  ", ifelse(p < .05, "*   ", "    ")))
+    
+    ## trunctuate the correlation matrix to two decimal
+    R <- format(round(cbind(rep(-1.11, ncol(
+      x
+    )), R), 3))[,-1]
+    
+    ## build a new matrix that includes the correlations with their apropriate stars
+    Rnew <- matrix(paste(mystars, R, sep = ""), ncol = ncol(x))
+    diag(Rnew) <- paste(diag(R), " ", sep = "")
+    rownames(Rnew) <- colnames(x)
+    colnames(Rnew) <- paste(colnames(x), "", sep = "")
+    
+    ## remove upper triangle of correlation matrix
+    if (removeTriangle[1] == "upper") {
+      Rnew <- as.matrix(Rnew)
+      Rnew[upper.tri(Rnew, diag = TRUE)] <- ""
+      Rnew <- as.data.frame(Rnew)
+    }
+    
+    ## remove lower triangle of correlation matrix
+    else if (removeTriangle[1] == "lower") {
+      Rnew <- as.matrix(Rnew)
+      Rnew[lower.tri(Rnew, diag = TRUE)] <- ""
+      Rnew <- as.data.frame(Rnew)
+    }
+    
+    ## remove last column and return the correlation matrix
+    Rnew <- cbind(Rnew[1:length(Rnew) - 1])
+    
+    return(Rnew)
+  } 
+
+t_corstar = corstars(prot)
+nombres_prot = c(
+  "Carne roja",
+  "Carne blanca",
+  "Huevos",
+  "Leche",
+  "Pescado",
+  "Cereales",
+  "Féculas",
+  "Frutos secos",
+  "Futos y vegetales"
+)
+colnames(t_corstar) = nombres_prot[1:8]
+rownames(t_corstar) = nombres_prot
+
+correl = rcorr(as.matrix(prot))
+
+r.mat = correl$r
+
+knitr::kable(
+  t_corstar,
+  format = "latex",
+  align = c("r", "r", "r", "r", "r", "r", "r", "r" , "r"),
+  booktabs = T
+) %>%
+  kableExtra::kable_styling(latex_options = "scale_down") %>% 
+  kableExtra::add_footnote(c("p < .001 ‘***’, p < .01 ‘**’, p < .05 ‘*’",
+                 paste0("Determinante ", round(det(r.mat), 4)))
+               )
+```
+
+# Análisis de factores
+
+Dado que observamos que existe colinealidad entre las variables, buscaremos reducir las dimensiones de tal forma que sean ortogonales entre ellas. Por eso, utilizaremos el modelo factorial.
+
+## Factibilidad del modelo
+
+```{r, echo=FALSE}
+correl = rcorr(as.matrix(prot))
+
+r.mat = correl$r
+
+kmo = KMO(r.mat)
+kmo
+
+cortest.bartlett(r.mat, nrow(alim))
+```
+
+## Modelo
+
+Inicial sin rotaciones
+```{r}
+af_srt = fa(prot, nfactors = ncol(r.mat), rotate = "none")
+unclass(af_srt$Structure)
+af_srt$Vaccounted
+af_srt$communalities
+af_srt$e.values
+```
+
+Gráfico de sedimentos
+
+```{r}
+ggplot(data.frame(
+  factores = 1:length(af_srt$e.values),
+  eig = af_srt$e.values
+  ),
+  aes(x = factores, y = eig)) +
+  geom_point(shape = 1) +
+  geom_line() +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  theme_light() +
+  labs(x = "factores",
+       y = "Autovalor")
+```
+
+Modelo con extracción de 3 factores y rotación varimax
+
+```{r}
+af_varimax = fa(prot,
+                nfactors = 3,
+                rotate = "varimax",
+                scores = "Anderson")
+af_varimax$scores
+af_varimax$Structure
+af_varimax$Vaccounted
+af_varimax$communalities
+af_varimax$e.values
+af_varimax$uniquenesses
+```
+
+Gráfico de dimensiones
+
+```{r}
+af_dim = data.frame(
+  x = af_varimax$scores[, 1],
+  y = af_varimax$scores[, 2],
+  pais = trimws(alim$Pais),
+  Comunista = alim$Comunista,
+  Loc = alim$Localizacion
+)
+
+ggplot(af_dim, aes(x, y)) +
+  geom_point(aes(col = Loc, shape = Comunista)) +
+  geom_text_repel(aes(label = pais, color = Loc), show.legend = F) +
+  labs(
+    x = "F1: Carne blanca y huevos",
+    y = "F2: Carne roja, frutos secos, frutos, vegetales y leche"
+  )
+```
+
+
+# Análisis clúster
+
+Análisis aplicado a las variables y observaciones
+
+
+## Análisis de variables
+
+Distancia por correlación de pearson y método de distancia promedio entre grupos.
+
+```{r}
+d.pear = get_dist(t(prot), method = "pearson")
+
+met.prom = hclust(d.pear, method = "average")
+coe.prom = coef.hclust(met.prom)
+
+fviz_dend(met.prom, k = 3, horiz = T)
+```
+
+Distancia euclídia y método de distancia de Ward
+
+```{r}
+d2 = get_dist(t(prot), method = "euclidean")
+
+met2 = hclust(d2, method = "ward.D2")
+coe2 = coef.hclust(met2)
+
+fviz_dend(met2, k = 3, horiz = T)
+```
+
+## Análisis de observaciones
+
+Número óptimo de clústers
+
+```{r}
+fviz_nbclust(prot, FUNcluster = hcut, method = "wss")
+fviz_nbclust(prot, FUNcluster = hcut, method = "silhouette")
+fviz_nbclust(prot, FUNcluster = hcut, method = "gap_stat")
+```
+
+Distancia euclídea simple
+
+```{r}
+d.euclid = dist(prot)
+met.ward = hclust(d.euclid, method = "ward.D2")
+coe.ward = coef.hclust(met.ward)
+coe.ward
+fviz_dend(met.ward, k = 3, horiz = T)
+```
+
+Distancia euclídea al cuadrado
+
+```{r}
+met.ward2 = hclust(d.euclid^2, method = "ward.D2")
+coe.ward2 = coef.hclust(met.ward2)
+coe.ward2
+ward2.reduc = met.ward2
+ward2.reduc$height = ward2.reduc$height^(1/2)
+fviz_dend(ward2.reduc, k = 2, horiz = T)
+```
+
+
+# Escalamiento multidimensional
+
+```{r}
+d.euclid2 = dist(prot) ^ 2
+
+mds.r = mds(d.euclid2, type = "ordinal")
+
+# plot(mds.r, plot.type = "confplot")
+# plot(mds.r, plot.type = "stressplot")
+plot(mds.r, plot.type = "Shepard")
+plot(mds.r, plot.type = "resplot")
+# plot(mds.r, plot.type = "bubbleplot")
+# plot(mds.r, plot.type = "histogram")
+
+dat.r = data.frame(etiq = rownames(mds.r$conf),
+                   x = mds.r$conf[, 1],
+                   y = mds.r$conf[, 2])
+
+ggplot(dat.r, aes(x,-y)) +
+  geom_point() +
+  geom_text_repel(aes(label = etiq))
+
+prot_dis2_c = dist(t(prot)) ^ 2
+
+mds.c = mds(prot_dis2_c, type = "ordinal")
+
+plot(mds.c, plot.type = "confplot")
+# plot(mds.c, plot.type = "stressplot")
+plot(mds.c, plot.type = "Shepard")
+plot(mds.c, plot.type = "resplot")
+# plot(mds.c, plot.type = "bubbleplot")
+# plot(mds.c, plot.type = "histogram")
+
+plot_conf = plot(mds.c, plot.type = "Shepard")
+
+dat.c = data.frame(etiq = rownames(mds.c$conf),
+                   x = mds.c$conf[, 1],
+                   y = mds.c$conf[, 2])
+
+ggplot(dat.c, aes(x, y)) +
+  geom_point() +
+  geom_text_repel(aes(label = etiq))
+
+shep.df = data.frame(x = as.vector(mds.c$delta),
+                     y = as.vector(mds.c$confdist))
+
+ggplot(shep.df, aes(x, y)) +
+  geom_point() +
+  geom_line()
+
+resp.df = data.frame(x = as.vector(mds.c$dhat),
+                     y = as.vector(mds.c$confdist))
+
+ggplot(resp.df, aes(x, y)) +
+  geom_point(shape = 1, alpha = 0.5) +
+  geom_smooth(
+    method = 'loess',
+    formula = y ~ x,
+    se = F,
+    size = 0.2
+  )
+```
+
+
+# Análisis de correspondencias
+
+Principio general
+
+```{r}
+t.prot = t(prot)
+
+ac_prot = CA(t.prot, graph = FALSE)
+
+summary(ac_prot)
+
+autoval = get_eigenvalue(ac_prot)
+autoval
+
+1 / (nrow(t.prot) - 1)
+
+1 / (ncol(t.prot) - 1)
+
+fviz_screeplot(ac_prot) +
+  geom_hline(yintercept = (1 / (ncol(t.prot) - 1) * 100),
+             linetype = 2,
+             color = "red")
+```
+
+
+## Filas
+
+```{r}
+filas = get_ca_row(ac_prot)
+filas$coord
+
+fviz_ca_row(ac_prot,
+            col.row = "darkgreen",
+            shape.row = 15,
+            repel = T) + ggthemes::theme_base()
+
+filas$cos2
+
+fviz_ca_row(
+  ac_prot,
+  col.row = "cos2",
+  gradient.cols = c("red", "gold", "blue"),
+  repel = TRUE
+)
+
+filas$contrib
+
+fviz_contrib(ac_prot, choice = "row", axes = 1)
+fviz_contrib(ac_prot, choice = "row", axes = 2)
+fviz_contrib(ac_prot, choice = "row", axes = 3)
+fviz_contrib(ac_prot, choice = "row", axes = 4)
+
+fviz_ca_row(
+  ac_prot,
+  col.row = "contrib",
+  gradient.cols = c("red", "gold", "blue"),
+  repel = TRUE
+)
+```
+
+
+## Columnas
+
+```{r}
+columnas = get_ca_col(ac_prot)
+columnas$coord
+
+fviz_ca_col(ac_prot,
+            col.col = "darkgreen",
+            shape.col = 15,
+            repel = T) + ggthemes::theme_base()
+
+columnas$cos2
+
+fviz_ca_col(
+  ac_prot,
+  col.col = "cos2",
+  gradient.cols = c("red", "gold", "blue"),
+  repel = TRUE
+)
+
+columnas$contrib
+
+fviz_contrib(ac_prot, choice = "col", axes = 1)
+fviz_contrib(ac_prot, choice = "col", axes = 2)
+fviz_contrib(ac_prot, choice = "col", axes = 3)
+fviz_contrib(ac_prot, choice = "col", axes = 4)
+
+fviz_ca_col(
+  ac_prot,
+  col.col = "contrib",
+  gradient.cols = c("red", "gold", "blue"),
+  repel = TRUE
+)
+
+fviz_ca_biplot(ac_prot,
+               map = "rowprincipal",
+               repel = TRUE)
+
+CA(t.prot)
+```
+
+
+# Análisis discriminante
+
+# Conclusiones
+
+# Referencias
+

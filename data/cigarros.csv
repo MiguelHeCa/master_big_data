@@ -1,0 +1,26 @@
+"","MARCA","TIPO","ALQUITRAN","NICOTINA","PESO","CO"
+"1","Alpine          ","NORMAL",14.1,0.86,0.9853,13.6
+"2","Benson&Hedges   ","NORMAL",16,1.06,1.0938,16.6
+"3","BullDurham      ","NORMAL",29.8,2.03,1.165,23.5
+"4","CamelLights     ","LIGHT",8,0.67,0.928,10.2
+"5","Carlton         ","LIGHT",4.1,0.4,0.9462,5.4
+"6","Chesterfield    ","NORMAL",15,1.04,0.8885,15
+"7","GoldenLights    ","LIGHT",8.8,0.76,1.0267,9
+"8","Kent            ","NORMAL",12.4,0.95,0.9225,12.3
+"9","Kool            ","NORMAL",16.6,1.12,0.9372,16.3
+"10","L&M             ","NORMAL",14.9,1.02,0.8858,15.4
+"11","LarkLights      ","LIGHT",13.7,1.01,0.9643,13
+"12","Marlboro        ","NORMAL",15.1,0.9,0.9316,14.4
+"13","Merit           ","NORMAL",7.8,0.57,0.9705,10
+"14","MultiFilter     ","NORMAL",11.4,0.78,1.124,10.2
+"15","NewportLights   ","LIGHT",9,0.74,0.8517,9.5
+"16","Now             ","NORMAL",1,0.13,0.7851,1.5
+"17","OldGold         ","NORMAL",17,1.26,0.9186,18.5
+"18","PallMallLight   ","LIGHT",12.8,1.08,1.0395,12.6
+"19","Raleigh         ","NORMAL",15.8,0.96,0.9573,17.5
+"20","SalemUltra      ","NORMAL",4.5,0.42,0.9106,4.9
+"21","Tareyton        ","NORMAL",14.5,1.01,1.007,15.9
+"22","True            ","NORMAL",7.3,0.61,0.9806,8.5
+"23","ViceroyRichLight","LIGHT",8.6,0.69,0.9693,10.6
+"24","VirginiaSlims   ","NORMAL",15.2,1.02,0.9496,13.9
+"25","WinstonLights   ","LIGHT",12,0.82,1.1184,14.9
