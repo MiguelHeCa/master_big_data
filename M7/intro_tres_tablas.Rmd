@@ -223,3 +223,12 @@ Escofier & Pages, 1984
 Martin-rodriguez et al, 2002
 
 
+### Modelos de Tucker
+
+Tucker 1966
+
+### CoTUCKER
+
+## Conclusión
+
+Cada modelo presenta ventajas e inconvenientes que deben ser conocidas por el investigador.
