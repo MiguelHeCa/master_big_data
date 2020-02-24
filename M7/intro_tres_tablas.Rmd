@@ -1,0 +1,225 @@
+---
+title: "Análisis Multivariante de tablas de tres vias: 'Milestones'"
+author: "Miguel Hernández"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Intro
+
+Statis, desarrollado en 1976
+
+Desarrollos del statis desde 1976 hasta la actualidad
+
+Limitaciones
+
+alternativas al statis
+
+conclusiones
+
+Estas direcciones buscan máxima variabilidad
+
+Identifico relevancia con variabilidad.
+
+`Inercia == variabilidad`
+
+Masa no unitaria `masa x distancia`
+
+CCA Ter Braak 1986, ecology
+
+Coinercia, DOLEDEC & chessel, 1994
+Dray et al. 2003
+
+Gráfico de Co-Estructuras
+Los individuos con flechas cortas indican que para esos individuos las variables de la matriz Y explican bien la estructura encontrada en la matriz X y viceversa.
+
+El chi2 no captura la variabilidad
+
+## STATIS
+
+Creado por L'Hermier des Plantes, 1976. Thèse de Troiséme Cycle
+Lavit, 1988
+Lavit et al. 1994
+
+Análisis de T matrices
+
+
+Un mismo conjunto individuos, medidos sobre mismo conjunto de variables, diferentes tiempos.
+
+Un mismo conjunto de invididuos, medidos sobre diferentes variables en diferentes timepos
+
+Diferentes individuos, medidos sobre el mismo conjunto de variables en diferentes tiempos
+
+Datos de tres vías (kiers 2000): Se considera un conjunto de individuos, un solo conjunto de variables, un solo conjunto de condiciones.
+
+Datos de conjuntos múltiples (Multiway data).
+
+## Análisis de dos matrices
+
+Representación de matrices de datos
+
+configuración $\mathbf{W}$ (Operador/Objeto)
+
+$$
+\mathbf{W}_{\mathbf{I} \times \mathbf{I}} = \mathbf{X_t}\mathbf{X_t^T}
+$$
+
+$\mathbf{W}$ matriz de productos escalares entre individuos
+
+STATIS: enfatiza la posiciones de los individuos
+
+Configuración \mathbf{C}
+
+$$
+\mathbf{C}_{\mathbf{J} \times \mathbf{J}} = \mathbf{X_t^T}\mathbf{X_t}
+$$
+$\mathbf{C}$ matriz de covarianzas entre variables
+
+STATIS DUAL: Enfatiza las relaciones entre variables
+
+
+
+Statis dual, matriz dee correlaciones vectoriales entre $\mathbf{C_t}$
+
+Se calcula la matriz de correlaciones vectoriales entre las $\mathbf{C_t}$ utilizando la correlación vectorial de Hilbert-Schmidt (HS)
+
+$$\mathbf{\langle C_t | C_{t'} \rangle}_{HS} = tr(\mathbf{C_t | C_{t'}})$$
+
+
+Calcular una media ponderada de todas las matrices de correlaciones y vectoriales, representación euclídea. 
+
+Las más parecidas mayor importancia en una representación euclídea.
+
+
+
+## X-STATIS
+
+Análisis parcial Triádico
+
+No utiliza operadores, trabaja directamente con las matrices.
+
+Jaffrenou, 1978
+
+Los mismos individuos $\mathbf{I}$ y las mismas $\mathbf{J}$ variables
+
+Matriz de componentes principales de $\mathbf{Z}$.
+
+STATIS solo pone atención en el primer vector de la CPZ
+
+
+## DISTATIS
+
+ABDI y col, 2007
+
+Se parte de varias matrices de Distancias, definidas sobre los mismos objetos, en diferentes tiempos o condiciones.
+
+Se comparan los estudios a partir de la matriz de correlaciones vectoriales RV, tal como se hace en el STATIS.
+
+Es presentaddo por los autores como una generalización del método MDS clásico, para el caso de tablas de tres vías.
+
+## COV-STATIS
+
+Thioulouse, 2011
+
+Los operadores que integra son matrices de covarianzas tomadas sobre los mismos individuos.
+
+Annals of Applied Statistics, 5(4), 2300-2335
+
+## CANOSTATIS
+
+Vallejo-arboleda, Vicente-Villardón, J.L., Galindo-Villardón, M.P. 2007
+
+Computational Statistics and Data Analyisis 51, 4193, 4205
+
+Los individuos tienen estructura de grupos,
+
+Los grupos de individuos son los mismos y las vairiables pueden ser diferentes
+
+El objetivo es representar en un espacio de baja dimensión, el cambio de las distancias de Mahalanobis entre las medias, de los grupos de cada estudio.
+
+Operador
+
+$$
+\mathbf{W}_k = \mathbf{\bar{X}}_k\mathbf{S}_k^{-1}\mathbf{\bar{X}}_k^{T}
+$$
+
+El producto escalar de HS. Será una traza entre $\mathbf{W}_k$ y $\mathbf{W}_{k'}$
+Es más compleja, por lo que captura más información.
+
+
+$$\mathbf{\langle W_t | W_{t'} \rangle}_{HS} = tr()$$
+
+## STATICO
+
+SIMIER et al 1999
+
+Datos de partida, Co-inercia, Statis
+
+## Do-ACT
+
+Vivien y sabatier 2004
+
+Para dos tablas multibloque que no tienen necesariamente tiene que tener la misma longitud.
+
+
+## STATIS 4
+
+Sabatier y Vivien, 2008
+
+journal of chemometrics, 22, 399-407
+
+Extienden el STATIS y el DO-ACT y proponen el STATIS-4 que es presentado por sus autores como un nuevo método lineal para analizar tablas multibloque de 4 vías; es decir, más de dos conjuntos de tablas que tengan filas comunes.
+
+Matriz compromiso de compromisos
+
+Se pueden usar diferentes statis y al final combinar los diferentes compromisos.
+
+## t+1 STATIS
+
+Sauzay et al, 2006
+
+Consideran las t matrices que se integran en el statis
+
+y una matriz más con información externa sobre los individuos y presentan el t+1 STATIS.
+
+## CO STATIS
+
+Thiolouse et al, 2011
+Annals of Applied Statistics 5(4), 2300-2325
+
+COSTATIS es una análisis de coinercia de los compromisos de dos anállisis de k-tablas
+
+Tabla Cruzada Coinercia enter los 2 consensos.
+
+## InterStatis
+
+## Limitaciones
+
+La matriz consenso solo refleja matrices altamente correlacionadas con el primer vector propio.
+
+La ponderación pone igual a las variables de una matriz asociada al compromiso.
+
+Declaran altamente relacionadas aquellas matrices que tienen una primera dirección principal común
+
+No captura de manera óptima estructuras multidimensionales, ni estructuras similares en las que no coincide 
+
+Solo captura la parte estable de las estructuras.
+
+## Alternativas
+
+### Power-STATIS
+
+Benasseni & dosse 2012
+
+### AFM
+
+Escofier & Pages, 1984
+
+### Meta-biplot
+
+Martin-rodriguez et al, 2002
+
+
