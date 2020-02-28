@@ -191,3 +191,15 @@ Error in
 <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matlab.graphics.internal.figfile.FigFile/read>@(hObject,eventdata)ventanabiplot(''ProjectRows_Callback'',hObject,eventdata,guidata(hObject))')" style="font-weight:bold">matlab.graphics.internal.figfile.FigFile/read>@(hObject,eventdata)ventanabiplot('ProjectRows_Callback',hObject,eventdata,guidata(hObject))</a>} 
 Error while evaluating UIControl Callback.
 
+
+data =
+
+  1x2 cell array
+
+    {1x11 cell}    {1x11 cell}
+
+
+error =
+
+     0
+

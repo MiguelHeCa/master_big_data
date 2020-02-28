@@ -1,0 +1,16 @@
+---
+title: "Diagramas de dualidad"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Normas
+
+- Sólo hay que tener en cuenta dos métricas, las del mismo orden que Ur y Vr.
+- El primer factor es X, si se quieren filas, o Xt, si se quieren columnas.
+- El segundo y el tercer factor son la métrica y la base ortonormal del mismo orden que el número de columnas del primer factor.
+- Si no existen tales métrica y base, se consideran la métrica y la base de distinto orden que el número de filas del primer factor.
+- Si no existe un camino en el diagrama en el que estén seguidos los tres factores, la matriz resultado será el producto de todas las matrices que pertenezcan al camino más corto que contenga los tres factores.
