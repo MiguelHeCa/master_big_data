@@ -6,11 +6,14 @@ paquetes = c("countrycode", "dplyr", "KTensorGraphs", "ade4")
 no_insta = paquetes[!paquetes %in% installed.packages()[,1]]
 if(length(no_insta) != 0) install.packages(paquetes)
 
+if(!"MExPosition" %in% installed.packages()[, 1]) devtools::install_github("cran/MExPosition")
+
 library(readxl)
 library(countrycode)
 library(dplyr)
 library(KTensorGraphs)
 library(ade4)
+library(MExPosition)
 
 setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
@@ -126,4 +129,9 @@ KTensorGraphs::COSTATIS(
 
 # ade4 --------------------------------------------------------------------
 
+
+
+# MExPosition -------------------------------------------------------------
+
+MExPosition::
 
