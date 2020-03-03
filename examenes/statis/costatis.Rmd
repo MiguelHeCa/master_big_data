@@ -1,0 +1,43 @@
+---
+title: "TMMS"
+author: 
+  - María del Dulce Nombre Anciones Polo^[Universidad de Salamanca, correo@usal.es]
+  - Laura Gil García^[Universidad de Salamanca, correo@usal.es]
+  - José Miguel Hernández Cabrera^[Universidad de Salamanca, idu008675@usal.es]
+abstract: "PARA LUEGO"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+fontsize: 10pt
+mainfont: Times New Roman
+geometry: "left=2cm,right=2cm,top=2.25cm,bottom=2.25cm,headheight=12pt,letterpaper"
+lang: es
+header-includes:
+    - \usepackage{caption}
+    - \usepackage{float}
+bibliography: ref.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Introducción
+
+# Método
+
+# Software
+
+## Material para prueba
+
+## KTensorGraph
+
+## ade4
+
+# Conclusiones
+
+# Referencias
+
+
+
