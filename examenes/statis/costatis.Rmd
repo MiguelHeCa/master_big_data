@@ -23,6 +23,64 @@ bibliography: ref.bib
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+```{r}
+library(readxl)
+library(countrycode)
+library(dplyr)
+
+# Descripciones: http://www.ssfindex.com/ssi/indicator-description/
+nom_ssi = c(
+  # EN | ES
+  # Human Wellbeing | Bienestar humano
+  ## I. Basic Needs | Necesidades básicas
+  "SF", # 1. Sufficient Food | Comida suficiente
+  "SD", # 2. Sufficient to Drink | Bebida suficiente
+  "SS", # 3. Safe Sanitation | Saneamiento seguro
+  ## II. Personal Development & Health
+  "Ed", # 4. Education | Educación
+  "HL", # 5. Healthy Life | Vida saludable
+  "GE", # 6. Gender Equality | Equidad de género
+  ## III. Well-balanced Society | Sociedad balanceada
+  "ID", # 7. Income Distribution | Distribución de ingreso
+  "PG", # 8. Population Growth | Crecimiento poblacional
+  "GG", # 9. Good Governance | Gobernanza adecuada
+  # Environmental Wellbeing | Bienestar medioambiental
+  ## IV. Natural Resources | Recursos materiales
+  "Bd", # 10. Biodiversity | Biodiversidad
+  "RW", # 11. Renewable Water Resources | Recursos acuíferos renovables
+  "Cs", # 12. Consumption | Consumo
+  ## V. Climate & Energy | Clima y energía
+  "EU", # 13. Energy Use | Uso de energía
+  "ES", # 14. Energy Savings | Ahorro de energía
+  "Gr", # 15. Greenhouse Gases | Gases de invernadero
+  "RE", # 16. Renewable Energy | Energía renovable
+  # Economic Wellbeing | Bienestar económico
+  ## VI. Transition | Transición
+  "OF", # 17. Organic Farming | Agricultura orgánica
+  "GS", # 18. Genuine Savings | Ahorro real
+  ## VII. Economy | Economía
+  "GP", # 19. Gross Domestic Product | Producto Interno Bruto
+  "Em", # 20. Employment | Empleo
+  "PD"  # 21. Public Debt | Deuda pública
+)
+
+ingreso = read_xls(
+  "OGHIST.xls",
+  range = "A12:AF229",
+  sheet = "Country Analytical History",
+  col_names = F
+) %>% 
+  mutate(Ingreso = case_when(
+    ...32 == "H"  ~ "A",  # Altos
+    ...32 == "UM" ~ "MA", # Medio-Altos
+    ...32 == "LM" ~ "MB", # Medio-Bajos,
+    ...32 == "L"  ~ "B"   # Bajos
+  )) %>% 
+  select( ID = ...1, Ingreso)
+ssi16 = read_excel("Data_countries_2006-2016.xlsx", sheet = "Scores 2016", range = "A5:V158", col_names = c("pais", nom_ssi))
+ssi16
+```
+
 # Introducción
 
 # Método
