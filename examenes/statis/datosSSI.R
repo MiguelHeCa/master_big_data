@@ -6,14 +6,9 @@ paquetes = c("countrycode", "dplyr", "KTensorGraphs", "ade4")
 no_insta = paquetes[!paquetes %in% installed.packages()[,1]]
 if(length(no_insta) != 0) install.packages(paquetes)
 
-if(!"MExPosition" %in% installed.packages()[, 1]) devtools::install_github("cran/MExPosition")
-
 library(readxl)
 library(countrycode)
 library(dplyr)
-library(KTensorGraphs)
-library(ade4)
-library(MExPosition)
 
 setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
@@ -80,8 +75,11 @@ ssi = lapply(seq(2006, 2016, 2), function(x) {
 })
 names(ssi) = paste0("i", sprintf("%02d", seq(6, 16, 2)))
 
+# ade4 --------------------------------------------------------------------
+library(ade4)
 
 # KTensorGraphs -----------------------------------------------------------
+library(KTensorGraphs)
 
 nom_fil = ssi$i16$BM
 nom_alt = as.character(seq(2006, 2016, 2))
@@ -125,13 +123,3 @@ KTensorGraphs::COSTATIS(
   coloresc1 = clr_Hu,
   coloresc2 = clr_En
 )
-
-
-# ade4 --------------------------------------------------------------------
-
-
-
-# MExPosition -------------------------------------------------------------
-
-MExPosition::
-
