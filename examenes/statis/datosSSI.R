@@ -1,5 +1,4 @@
 
-
 # Preparación de ambiente de trabajo --------------------------------------
 
 paquetes = c("countrycode", "dplyr", "KTensorGraphs", "ade4")
@@ -69,14 +68,51 @@ ssi = lapply(seq(2006, 2016, 2), function(x) {
                  sheet = paste("Scores", x),
                  range = "A5:V158", col_names = c("pais", nom_ssi))
   d %>% 
-    mutate(BM = countrycode(pais, "country.name", "iso3c")) %>% 
-    select(BM, everything()) %>% 
+    mutate(BM = countrycode(pais, "country.name", "iso3c"),
+           a_o = factor(x),
+           nomf = paste(x, BM, sep = "_")) %>% 
+    select(nomf, a_o, BM, everything()) %>% 
     left_join(ingreso, by = "BM")
 })
 names(ssi) = paste0("i", sprintf("%02d", seq(6, 16, 2)))
 
 # ade4 --------------------------------------------------------------------
 library(ade4)
+library(adegraphics)
+
+ssi.long = do.call(rbind, ssi) %>% 
+  arrange(a_o, pais, nomf) %>% 
+  tibble::column_to_rownames("nomf")
+
+ssi.var = select(ssi.long, SF:PD)
+ssi.Hu = ssi.var[, 1:9]
+ssi.En = ssi.var[, 10:16]
+ssi.Ec = ssi.var[, 17:21]
+ssi.BM = rep(ssi$i16$BM, 6)
+ssi.ao = ssi.long$a_o
+
+wit1 = withinpca(ssi.Hu, ssi.ao, scannf = F, scaling = "total")
+Enpca = dudi.pca(ssi.En, scale = F, scannf = F, nf = 2)
+wit2 = wca(Enpca, ssi.ao, scannf = F, nf = 2)
+kta1 = ktab.within(wit1, colnames = ssi.BM)
+kta2 = ktab.within(wit2, colnames = ssi.BM)
+ssi.HuEn.costatis = costatis(kta1, kta2)
+costatis1 <- costatis(kta1, kta2, scannf = FALSE)
+
+sa1 <- s.arrow(costatis1$c1 * 4, xlim = c(-3, 3), ylim = c(-3, 3), 
+               plot = FALSE)
+sc1 <- s.class(costatis1$supIX, factor(ssi.BM), ellipseSize = 0, 
+               xlim = c(-3, 3), ylim = c(-3, 3), plabel.col = "red", 
+               plot = FALSE)
+s1 <- superpose(sa1, sc1)
+sa2 <- s.arrow(costatis1$l1 * 3, xlim = c(-3, 3), ylim = c(-3, 3), 
+               plot = FALSE)
+sc2 <- s.class(costatis1$supIY, factor(ssi.BM), ellipseSize = 0, 
+               xlim = c(-3, 3), ylim = c(-3, 3), plabel.col = "blue", 
+               plot = FALSE)
+s2 <- superpose(sa2, sc2)
+ADEgS(list(s1, s2))
+
 
 # KTensorGraphs -----------------------------------------------------------
 library(KTensorGraphs)
@@ -109,12 +145,12 @@ Hu = SSI[, 1:9, ]
 En = SSI[, 10:16, ]
 Ec = SSI[, 17:21, ]
 
-KTensorGraphs::COSTATIS(
+costatis.ssi = KTensorGraphs::COSTATIS(
   Hu,
   En
 )
 
-KTensorGraphs::COSTATIS(
+COSTATIS(
   Hu,
   En,
   dimX = 1,
@@ -122,4 +158,15 @@ KTensorGraphs::COSTATIS(
   coloresf = clr_r,
   coloresc1 = clr_Hu,
   coloresc2 = clr_En
+)
+
+COSTATIS(
+  Hu,
+  En,
+  dimX = 1,
+  dimY = 2,
+  coloresf = clr_r,
+  coloresc1 = clr_Hu,
+  coloresc2 = clr_En,
+  contr = T
 )
