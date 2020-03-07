@@ -194,7 +194,7 @@ ssi = readRDS("ssi.RDS")
 
 ## ade4
 
-El primer paquete abordado es `ade4`, desarrollado por el equipo del laboratorio de Biometría y Biología Evolutiva de la Universidad de Lyon [@thioulouse1997; @chessel_et_al_2004; @dray_dufour_2007; @dray_et_al_2007; @bougeard_dray_2018] con el propósito de analizar datos ecológicos mediante métodos multivariantes. Con el paso del tiempo, el paquete ha sido ttambién utilizado por otras áreas como la medicina, física, sociología, entre otros [@thioulouse2018].
+El primer paquete abordado es `ade4`, desarrollado por el equipo del laboratorio de Biometría y Biología Evolutiva de la Universidad de Lyon [@thioulouse1997; @chessel_et_al_2004; @dray_dufour_2007; @dray_et_al_2007; @bougeard_dray_2018] con el propósito de analizar datos ecológicos mediante métodos multivariantes. Con el paso del tiempo, el paquete ha sido también utilizado por otras áreas como la medicina, física, sociología, entre otros [@thioulouse2018].
 
 Esta biblioteca de R contiene diversas técnicas de la familia STATIS, aunque en este trabajo solamente abordaremos el método COSTATIS.
 

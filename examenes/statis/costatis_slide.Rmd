@@ -1,35 +1,314 @@
 ---
 title: "COSTATIS"
-author: "Miguel Hernández"
-date: "3/7/2020"
-output: powerpoint_presentation
+author:
+  - María del Dulce Nombre Anciones Polo
+  - Laura Gil García
+  - José Miguel Hernández Cabrera
+output: 
+  powerpoint_presentation:
+    reference_doc: template.pptx
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+library(knitr)
+library(kableExtra)
+library(readxl)
+library(countrycode)
+library(dplyr)
+library(flextable)
 ```
 
-## R Markdown
+## Datos
 
-This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+- SSI: Índice de Sociedad Sostenible 
+- 154 países
+- 21 variables
+- Seis periodos entre 2006 y 2016
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+## Datos - Variables
 
-## Slide with Bullets
+```{r ssi_variab}
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
+mnem.ssi = data.frame(
+  Bienestar = c(rep("Humano", 9),
+                rep("Ambiental", 7),
+                rep("Económico", 5)),
+  Subdimension = c(
+    rep("Necesidades básicas", 3),
+    rep("Salud y desarrollo personal", 3),
+    rep("Sociedad balanceada", 3),
+    rep("Recursos materiales", 3),
+    rep("Clima y energía", 4),
+    rep("Transición", 2),
+    rep("Economía", 3)
+  ),
+  ES = c(
+    # Bienestar humano
+    "Comida suficiente",
+    "Bebida suficiente",
+    "Saneamiento seguro",
+    "Educación",
+    "Vida saludable",
+    "Equidad de género",
+    "Distribución de ingreso",
+    "Crecimiento poblacional",
+    "Gobernanza adecuada",
+    # Bienestar medioambiental
+    "Biodiversidad",
+    "Recursos acuíferos renovables",
+    "Consumo",
+    "Uso de energía",
+    "Ahorro de energía",
+    "Gases de invernadero",
+    "Energía renovable",
+    # Bienestar económico
+    "Agricultura orgánica",
+    "Ahorro real",
+    "Producto Interno Bruto",
+    "Empleo",
+    "Deuda pública"
+  ),
+  # En = c(
+  #   # Human Wellbeing
+  #   "Sufficient Food",
+  #   "Sufficient to Drink",
+  #   "Safe Sanitation",
+  #   "Education",
+  #   "Healthy Life",
+  #   "Gender Equality",
+  #   "Income Distribution",
+  #   "Population Growth",
+  #   "Good Governance",
+  #   # Environmental Wellbeing"
+  #   "Biodiversity",
+  #   "Renewable Water Resources",
+  #   "Consumption",
+  #   "Energy Use",
+  #   "Energy Savings",
+  #   "Greenhouse Gases",
+  #   "Renewable Energy",
+  #   # Economic Wellbeing"
+  #   "Organic Farming",
+  #   "Genuine Savings",
+  #   "Gross Domestic Product",
+  #   "Employment",
+  #   "Public Debt"
+  # ),
+  Variable = c(
+    # EN | ES
+    # Human Wellbeing | Bienestar humano
+    ## I. Basic Needs | Necesidades básicas
+    "SF",
+    # 1. Sufficient Food | Comida suficiente
+    "SD",
+    # 2. Sufficient to Drink | Bebida suficiente
+    "SS",
+    # 3. Safe Sanitation | Saneamiento seguro
+    ## II. Personal Development & Health
+    "Ed",
+    # 4. Education | Educación
+    "HL",
+    # 5. Healthy Life | Vida saludable
+    "GE",
+    # 6. Gender Equality | Equidad de género
+    ## III. Well-balanced Society | Sociedad balanceada
+    "ID",
+    # 7. Income Distribution | Distribución de ingreso
+    "PG",
+    # 8. Population Growth | Crecimiento poblacional
+    "GG",
+    # 9. Good Governance | Gobernanza adecuada
+    # Environmental Wellbeing | Bienestar medioambiental
+    ## IV. Natural Resources | Recursos materiales
+    "Bd",
+    # 10. Biodiversity | Biodiversidad
+    "RW",
+    # 11. Renewable Water Resources | Recursos acuíferos renovables
+    "Cs",
+    # 12. Consumption | Consumo
+    ## V. Climate & Energy | Clima y energía
+    "EU",
+    # 13. Energy Use | Uso de energía
+    "ES",
+    # 14. Energy Savings | Ahorro de energía
+    "Gr",
+    # 15. Greenhouse Gases | Gases de invernadero
+    "RE",
+    # 16. Renewable Energy | Energía renovable
+    # Economic Wellbeing | Bienestar económico
+    ## VI. Transition | Transición
+    "OF",
+    # 17. Organic Farming | Agricultura orgánica
+    "GS",
+    # 18. Genuine Savings | Ahorro real
+    ## VII. Economy | Economía
+    "GP",
+    # 19. Gross Domestic Product | Producto Interno Bruto
+    "Em",
+    # 20. Employment | Empleo
+    "PD"  # 21. Public Debt | Deuda pública
+  )
+)
 
-## Slide with R Output
+var.tab = regulartable(mnem.ssi)
+var.tab = merge_v(var.tab, j = ~ Bienestar + Subdimension)
+var.tab = width(var.tab, j = ~ Bienestar, width = 1)
+var.tab = width(var.tab, j = ~ Subdimension, width = 2)
+var.tab = width(var.tab, j = ~ ES, width = 2.5)
+var.tab = width(var.tab, j = ~ Variable, width = 1)
+var.tab = valign(var.tab, valign = "top", part = "all")
+var.tab = fix_border_issues(theme_booktabs(var.tab))
 
-```{r cars, echo = TRUE}
-summary(cars)
+var.tab = align(var.tab, align = "left", part = "all")
+
+# var.tab = add_header_lines(var.tab, values = "Cuadro 1. Composición del Índice de Sociedad Sostenible")
+# var.tab = add_footer_lines(var.tab, values = "Fuente: Fundación de Sociedad Sostenible.")
+var.tab = set_header_labels(var.tab, 
+                            Bienestar = "Bienestar",
+                            Subdimension = "Subdimensión", 
+                            ES = "Variable", 
+                            Variable = "Mnemónico")
+var.tab
+
+ssi = readRDS("ssi.RDS")
 ```
 
-## Slide with Plot
 
-```{r pressure}
-plot(pressure)
+## ade4
+
+- Desarrollado por el equipo del laboratorio de Biometría y Biología Evolutiva de la Universidad de Lyon.
+- Propósito: analizar datos ecológicos mediante métodos multivariantes.
+- Usado en áreas como medicina, física, sociología, entre otras.
+
+## ade4 - Preparación de datos
+
+```{r, echo=TRUE}
+# Paquetes
+library(dplyr)
+library(ade4)
+library(adegraphics)
+
+# Convertir matrices de los diferentes años en una matriz larga
+ssi.long = do.call(rbind, ssi) %>% 
+  arrange(a_o, pais, nomf) %>% 
+  tibble::column_to_rownames("nomf")
 ```
+## ade4 - Preparación de datos
+
+```{r, echo=TRUE}
+dim(ssi.long)
+
+ssi.var = select(ssi.long, SF:PD) # Mantiene variables
+ssi.Hu = ssi.var[, 1:9]           # Bienestar humano
+ssi.En = ssi.var[, 10:16]         # Bienestar ambiental
+ssi.Ec = ssi.var[, 17:21]         # Bienestar económico
+ssi.BM = rep(ssi$i16$BM, 6)       # Nombres de países
+ssi.ao = ssi.long$a_o             # Vector de años de los datos
+```
+
+## ade4 - Clases propias del paquete
+
+```{r, echo=TRUE}
+# Convierte la matriz en clases propias de ade4
+wit1 = withinpca(ssi.Hu, ssi.ao, scannf = F, scaling = "total")
+Enpca = dudi.pca(ssi.En, scale = F, scannf = F, nf = 2)
+wit2 = wca(Enpca, ssi.ao, scannf = F, nf = 2)
+kta1 = ktab.within(wit1, colnames = ssi.BM)
+kta2 = ktab.within(wit2, colnames = ssi.BM)
+ssi.HuEn.costatis = costatis(kta1, kta2, scannf = F)
+
+# Cálculo de costatis
+costatis1 <- costatis(kta1, kta2, scannf = FALSE)
+```
+
+## ade4 - Resultados
+
+```{r}
+res.costatis = data.frame(
+  Ejes = 1:5,
+  Eigenvalues = c(11.616064,  0.638180,  0.131078,  0.029909,  0.008043),
+  Inercia = c(93.49871,  5.13677,  1.05506,  0.24074,  0.06474),
+  Acumulada = c(93.50,   98.64,   99.69,   99.93,  100.00)
+)
+# knitr::kable(res.costatis, format = "pandoc", col.names = c("Ejes", "Valores propios", "Inercia (%)", "Inercia acumulada (%)"), booktabs = T)
+
+res.tab = regulartable(res.costatis)
+res.tab = valign(res.tab, valign = "top", part = "all")
+res.tab = align(res.tab, align = "right", part = "all")
+res.tab = fix_border_issues(theme_booktabs(res.tab))
+
+res.tab = add_footer_lines(res.tab, values = "Inercia total: 12.42")
+res.tab = set_header_labels(res.tab, 
+                            Ejes = "Ejes",
+                            Eigenvalues = "Valores propios", 
+                            Inercia = "Inercia (%)", 
+                            Acumulada = "Inercia acumulada (%)")
+res.tab
+```
+
+## ade4 - Resultados
+
+```{r}
+sa1 <- s.arrow(costatis1$c1 * 4, xlim = c(-3, 3), ylim = c(-3, 3), 
+               plot = FALSE)
+sc1 <- s.class(costatis1$supIX, factor(ssi.BM), ellipseSize = 0, 
+               xlim = c(-3, 3), ylim = c(-3, 3), plabel.col = "red", 
+               plot = FALSE)
+s1 <- superpose(sa1, sc1)
+s1
+```
+
+```{r}
+sa2 <- s.arrow(costatis1$l1 * 3, xlim = c(-3, 3), ylim = c(-3, 3), 
+               plot = FALSE)
+sc2 <- s.class(costatis1$supIY, factor(ssi.BM), ellipseSize = 0, 
+               xlim = c(-3, 3), ylim = c(-3, 3), plabel.col = "blue", 
+               plot = FALSE)
+s2 <- superpose(sa2, sc2)
+s2
+```
+
+
+## KTensorGraphs
+
+- Enfocado a mostrar los resultados gráficos
+- Desarrollado por Miguel Rodriguez Rosa
+- No devuelve objetos
+- Utiliza el objeto de clase `array`. Permite contener datos de varias dimensiones. 
+
+## KTensorGraphs - Preparación de datos
+
+```{r, echo=TRUE}
+library(KTensorGraphs)
+
+nom_col = as.character(mnem.ssi$Variable)
+nom_fil = ssi$i16$BM
+nom_alt = as.character(seq(2006, 2016, 2))
+
+ssi.var_ = lapply(ssi, function(x) {
+  d = select(x, SF:PD)
+})
+names(ssi.var_) = paste0("i", sprintf("%02d", seq(6, 16, 2)))
+
+SSI = array(as.matrix(do.call(cbind, ssi.var_)),
+            dim = c(nrow(ssi$i16), ncol(ssi.var_$i16), length(nom_alt)),
+            dimnames = list( nom_fil, nom_col, nom_alt))
+```
+
+## KTensorGraphs - COSTATIS
+
+```{r, echo=TRUE}
+class(SSI)
+
+dim(SSI)
+```
+
+
+```{r, echo=TRUE, eval=FALSE}
+# Invocación de función
+COSTATIS(Hu, En)
+```
+
+## KTensorGraphs - Resultados
 
