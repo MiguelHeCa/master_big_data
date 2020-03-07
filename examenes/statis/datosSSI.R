@@ -76,27 +76,34 @@ ssi = lapply(seq(2006, 2016, 2), function(x) {
 })
 names(ssi) = paste0("i", sprintf("%02d", seq(6, 16, 2)))
 
+saveRDS(ssi, "ssi.RDS")
+
 # ade4 --------------------------------------------------------------------
+# Carga de datos
 library(ade4)
 library(adegraphics)
 
+# Convertir matrices de los diferentes años en una matriz larga
 ssi.long = do.call(rbind, ssi) %>% 
   arrange(a_o, pais, nomf) %>% 
   tibble::column_to_rownames("nomf")
 
-ssi.var = select(ssi.long, SF:PD)
-ssi.Hu = ssi.var[, 1:9]
-ssi.En = ssi.var[, 10:16]
-ssi.Ec = ssi.var[, 17:21]
-ssi.BM = rep(ssi$i16$BM, 6)
-ssi.ao = ssi.long$a_o
+ssi.var = select(ssi.long, SF:PD) # Mantiene variables
+ssi.Hu = ssi.var[, 1:9]           # Bienestar humano
+ssi.En = ssi.var[, 10:16]         # Bienestar ambiental
+ssi.Ec = ssi.var[, 17:21]         # Bienestar económico
+ssi.BM = rep(ssi$i16$BM, 6)       # Nombres de países
+ssi.ao = ssi.long$a_o             # Vector de años de los datos
 
+# Convierte la matriz en clases propias de ade4
 wit1 = withinpca(ssi.Hu, ssi.ao, scannf = F, scaling = "total")
 Enpca = dudi.pca(ssi.En, scale = F, scannf = F, nf = 2)
 wit2 = wca(Enpca, ssi.ao, scannf = F, nf = 2)
 kta1 = ktab.within(wit1, colnames = ssi.BM)
 kta2 = ktab.within(wit2, colnames = ssi.BM)
-ssi.HuEn.costatis = costatis(kta1, kta2)
+ssi.HuEn.costatis = costatis(kta1, kta2, scannf = F)
+
+# Cálculo de costatis
 costatis1 <- costatis(kta1, kta2, scannf = FALSE)
 
 sa1 <- s.arrow(costatis1$c1 * 4, xlim = c(-3, 3), ylim = c(-3, 3), 
@@ -105,33 +112,40 @@ sc1 <- s.class(costatis1$supIX, factor(ssi.BM), ellipseSize = 0,
                xlim = c(-3, 3), ylim = c(-3, 3), plabel.col = "red", 
                plot = FALSE)
 s1 <- superpose(sa1, sc1)
+s1
 sa2 <- s.arrow(costatis1$l1 * 3, xlim = c(-3, 3), ylim = c(-3, 3), 
                plot = FALSE)
 sc2 <- s.class(costatis1$supIY, factor(ssi.BM), ellipseSize = 0, 
                xlim = c(-3, 3), ylim = c(-3, 3), plabel.col = "blue", 
                plot = FALSE)
 s2 <- superpose(sa2, sc2)
-ADEgS(list(s1, s2))
+s2
+# ADEgS(list(s1, s2))
 
 
 # KTensorGraphs -----------------------------------------------------------
 library(KTensorGraphs)
 
+nom_col = as.character(mnem.ssi$Variable)
 nom_fil = ssi$i16$BM
 nom_alt = as.character(seq(2006, 2016, 2))
 
-ssi.var = lapply(ssi, function(x) {
+ssi.var_ = lapply(ssi, function(x) {
   d = select(x, SF:PD)
 })
-names(ssi.var) = paste0("i", sprintf("%02d", seq(6, 16, 2)))
+names(ssi.var_) = paste0("i", sprintf("%02d", seq(6, 16, 2)))
 
-SSI = array(as.matrix(do.call(cbind, ssi.var)),
-            dim = c(nrow(ssi$i16), ncol(ssi.var$i16), length(nom_alt)),
-            dimnames = list( nom_fil, nom_ssi, nom_alt))
+SSI = array(as.matrix(do.call(cbind, ssi.var_)),
+            dim = c(nrow(ssi$i16), ncol(ssi.var_$i16), length(nom_alt)),
+            dimnames = list( nom_fil, nom_col, nom_alt))
 
-clr_Hu = rep("#ffc300", 9) # Human Wellbeing
-clr_En = rep("#bcff00", 7) # Environmental Wellbeing
-clr_Ec = rep("#ff4400", 5) # Economical Wellbeing
+Hu = SSI[, 1:9, ]
+En = SSI[, 10:16, ]
+Ec = SSI[, 17:21, ]
+
+clr_Hu = rep("#4f5b66", 9) # Human Wellbeing
+clr_En = rep("#854442", 7) # Environmental Wellbeing
+clr_Ec = rep("#8caba8", 5) # Economical Wellbeing
 clr_col = c(clr_Hu, clr_En, clr_Ec)
 
 clr_r = case_when(
@@ -141,24 +155,17 @@ clr_r = case_when(
   ssi$i16$Ingreso == "B"  ~ "#fa3c4c"
 )
 
-Hu = SSI[, 1:9, ]
-En = SSI[, 10:16, ]
-Ec = SSI[, 17:21, ]
-
-costatis.ssi = KTensorGraphs::COSTATIS(
+COSTATIS(
   Hu,
   En
 )
-
-COSTATIS(
-  Hu,
-  En,
-  dimX = 1,
-  dimY = 2,
-  coloresf = clr_r,
-  coloresc1 = clr_Hu,
-  coloresc2 = clr_En
-)
+# 
+# COSTATIS(
+#   Hu,
+#   En,
+#   dimX = 1,
+#   dimY = 2
+# )
 
 COSTATIS(
   Hu,

@@ -4,20 +4,26 @@ author:
   - María del Dulce Nombre Anciones Polo^[Universidad de Salamanca, correo@usal.es]
   - Laura Gil García^[Universidad de Salamanca, correo@usal.es]
   - José Miguel Hernández Cabrera^[Universidad de Salamanca, idu008675@usal.es]
-abstract: "PARA LUEGO"
-output: word_document
-fontsize: 10pt
-mainfont: Times New Roman
-geometry: "left=2cm,right=2cm,top=2.25cm,bottom=2.25cm,headheight=12pt,letterpaper"
+abstract: "El uso de COSTATIS permite estudiar las covarianzas entre los objetos en las diferentes ocasiones para saber si son estables. El análisis se realiza a partir de matrices de covarianzas sobre las varianzas. Para efectos de ejemplifación, se utilizan los paquetes ade4 y KTensorGraphs del lenguaje R."
+output: 
+  word_document:
+    reference_docx: styles.docx
 lang: es
-header-includes:
-    - \usepackage{caption}
-    - \usepackage{float}
 bibliography: ref.bib
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+paquetes = c("countrycode", "dplyr", "KTensorGraphs", "ade4", "kableExtra")
+no_insta = paquetes[!paquetes %in% installed.packages()[,1]]
+if(length(no_insta) != 0) install.packages(paquetes)
+
+library(knitr)
+library(kableExtra)
+library(readxl)
+library(countrycode)
+library(dplyr)
+library(flextable)
 ```
 
 # Introducción
@@ -26,13 +32,290 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # Software
 
-## Material para prueba
+Abordado el método COSTATIS, se utilizarán los paquetes de R [@r2019] `ade4` y `KTensorGraphs`. Para ejemplificar su uso sobre dicho método se utilizan los datos del Índice de Sociedad Sostenible (SSI, por sus siglas en ingés), proporcionados de la Fundación Sociedad Sostenible [@van2014sustainable]. 
 
-## KTensorGraph
+## Datos de trabajo
+
+El SSI es un instrumento de medición del nivel de sostenibilidad de un país basado en tres constructos de bienestar: Humano, Ambiental y Económico. La propia fundación señala que los constructos más importantes son los del bienestar humano y ambiental, mientras que el económico debe ser considerado como una reserva. Fue publicado por primera vez en 2006 actualizado cada dos años hasta 2016, por lo tanto tiene seis ediciones. 
+
+En cuanto al concepto de sostenibilidad, la Fundación considera que una sociedad es sostenible si cubre las necesidades de la presente generación, no compromete la capacidad de cubrir las necesidaddes de las próximas generaciones y que cualquier ser humano tenga la capacidad de desarrollarse libremente, en el marco de una sociedad balanceada y armoniosa con su entorno [@saisana2012, p. 15].
+
+Cabe resaltar que en 2012 la Fundación invitó al Centro Común de Investigación (CCI) de la Comsión Europea, cuya la labor es contribuir a la elaboración de políticas públicas dentro de la Unión Europea, para auditar al SSI. El reporte señala que el índice provee un panorama confiable respecto al desempeño en sostenibilidad de los países evaluados, cumple con los requisitos  estadísticos del CCI y es conceptualmente coherente [@saisana2012, pp. 33 y 51]. 
+
+Adicionalmente, el índice aporta evidencia de que existe una relación inversa entre el bienestar ambiental contra el bienestar humano y económico. En particular, los cambios en cada dimensión pueden darse en un cambio por en una de las variables observadas en particular. Los países que mejoran en el bienestar general son aquellos que mejoran sus marcas en indicadores de las tres dimensiones, pero la variabilidad es mayor en aquellos países que presentan menores niveles de bienestar [@saisana2012, pp. 50]
+
+En este contexto, los datos del SSI se utilizarán para mostrar el comportamiento entre las variables observadas de las distintas dimensiones de bienestar. Se consideran 154 países en seis periodos comprendidos entre 2006 y 2016 con 21 variables descritas en el cuadro 1:
+
+```{r ssi_variab}
+
+mnem.ssi = data.frame(
+  Bienestar = c(rep("Humano", 9),
+                rep("Ambiental", 7),
+                rep("Económico", 5)),
+  Subdimension = c(
+    rep("Necesidades básicas", 3),
+    rep("Salud y desarrollo personal", 3),
+    rep("Sociedad balanceada", 3),
+    rep("Recursos materiales", 3),
+    rep("Clima y energía", 4),
+    rep("Transición", 2),
+    rep("Economía", 3)
+  ),
+  ES = c(
+    # Bienestar humano
+    "Comida suficiente",
+    "Bebida suficiente",
+    "Saneamiento seguro",
+    "Educación",
+    "Vida saludable",
+    "Equidad de género",
+    "Distribución de ingreso",
+    "Crecimiento poblacional",
+    "Gobernanza adecuada",
+    # Bienestar medioambiental
+    "Biodiversidad",
+    "Recursos acuíferos renovables",
+    "Consumo",
+    "Uso de energía",
+    "Ahorro de energía",
+    "Gases de invernadero",
+    "Energía renovable",
+    # Bienestar económico
+    "Agricultura orgánica",
+    "Ahorro real",
+    "Producto Interno Bruto",
+    "Empleo",
+    "Deuda pública"
+  ),
+  # En = c(
+  #   # Human Wellbeing
+  #   "Sufficient Food",
+  #   "Sufficient to Drink",
+  #   "Safe Sanitation",
+  #   "Education",
+  #   "Healthy Life",
+  #   "Gender Equality",
+  #   "Income Distribution",
+  #   "Population Growth",
+  #   "Good Governance",
+  #   # Environmental Wellbeing"
+  #   "Biodiversity",
+  #   "Renewable Water Resources",
+  #   "Consumption",
+  #   "Energy Use",
+  #   "Energy Savings",
+  #   "Greenhouse Gases",
+  #   "Renewable Energy",
+  #   # Economic Wellbeing"
+  #   "Organic Farming",
+  #   "Genuine Savings",
+  #   "Gross Domestic Product",
+  #   "Employment",
+  #   "Public Debt"
+  # ),
+  Variable = c(
+    # EN | ES
+    # Human Wellbeing | Bienestar humano
+    ## I. Basic Needs | Necesidades básicas
+    "SF",
+    # 1. Sufficient Food | Comida suficiente
+    "SD",
+    # 2. Sufficient to Drink | Bebida suficiente
+    "SS",
+    # 3. Safe Sanitation | Saneamiento seguro
+    ## II. Personal Development & Health
+    "Ed",
+    # 4. Education | Educación
+    "HL",
+    # 5. Healthy Life | Vida saludable
+    "GE",
+    # 6. Gender Equality | Equidad de género
+    ## III. Well-balanced Society | Sociedad balanceada
+    "ID",
+    # 7. Income Distribution | Distribución de ingreso
+    "PG",
+    # 8. Population Growth | Crecimiento poblacional
+    "GG",
+    # 9. Good Governance | Gobernanza adecuada
+    # Environmental Wellbeing | Bienestar medioambiental
+    ## IV. Natural Resources | Recursos materiales
+    "Bd",
+    # 10. Biodiversity | Biodiversidad
+    "RW",
+    # 11. Renewable Water Resources | Recursos acuíferos renovables
+    "Cs",
+    # 12. Consumption | Consumo
+    ## V. Climate & Energy | Clima y energía
+    "EU",
+    # 13. Energy Use | Uso de energía
+    "ES",
+    # 14. Energy Savings | Ahorro de energía
+    "Gr",
+    # 15. Greenhouse Gases | Gases de invernadero
+    "RE",
+    # 16. Renewable Energy | Energía renovable
+    # Economic Wellbeing | Bienestar económico
+    ## VI. Transition | Transición
+    "OF",
+    # 17. Organic Farming | Agricultura orgánica
+    "GS",
+    # 18. Genuine Savings | Ahorro real
+    ## VII. Economy | Economía
+    "GP",
+    # 19. Gross Domestic Product | Producto Interno Bruto
+    "Em",
+    # 20. Employment | Empleo
+    "PD"  # 21. Public Debt | Deuda pública
+  )
+)
+
+var.tab = regulartable(mnem.ssi)
+var.tab = merge_v(var.tab, j = ~ Bienestar + Subdimension)
+var.tab = width(var.tab, j = ~ Bienestar, width = 1)
+var.tab = width(var.tab, j = ~ Subdimension, width = 2)
+var.tab = width(var.tab, j = ~ ES, width = 2.5)
+var.tab = width(var.tab, j = ~ Variable, width = 1)
+var.tab = valign(var.tab, valign = "top", part = "all")
+var.tab = fix_border_issues(theme_booktabs(var.tab))
+
+var.tab = align(var.tab, align = "left", part = "all")
+
+var.tab = add_header_lines(var.tab, values = "Cuadro 1. Composición del Índice de Sociedad Sostenible")
+var.tab = add_footer_lines(var.tab, values = "Fuente: Fundación de Sociedad Sostenible.")
+var.tab = set_header_labels(var.tab, 
+                            Bienestar = "Bienestar",
+                            Subdimension = "Subdimensión", 
+                            ES = "Variable", 
+                            Variable = "Mnemónico")
+var.tab
+
+ssi = readRDS("ssi.RDS")
+```
 
 ## ade4
 
-## MExPosition
+El primer paquete abordado es `ade4`, desarrollado por el equipo del laboratorio de Biometría y Biología Evolutiva de la Universidad de Lyon [@thioulouse1997; @chessel_et_al_2004; @dray_dufour_2007; @dray_et_al_2007; @bougeard_dray_2018] con el propósito de analizar datos ecológicos mediante métodos multivariantes. Con el paso del tiempo, el paquete ha sido ttambién utilizado por otras áreas como la medicina, física, sociología, entre otros [@thioulouse2018].
+
+Esta biblioteca de R contiene diversas técnicas de la familia STATIS, aunque en este trabajo solamente abordaremos el método COSTATIS.
+
+En general, el programa necesita convertir las matrices en clase `dudi`, cuyo nombre corresponde a "diagrama dual". En el caso de COSTATIS, se utilizan las funciones `withinpca()` y `wca` en las matrices $\mathbf{X}$ e $\mathbf{Y}$, dado que esto es un paso previo para analizar estructuras con temporalidad [@thioulouse2018, pp. 119]. Con los datos en comento, las seis matrices contenidas en cada año se deben convertir a formato largo, por lo que se pegan verticalmente en un una sola matriz, cuyas dimensiones quedan en 924 observaciones ($n_{países} * k_{años} \; ; \; n = 1...154, \; k = 1...6 $).
+
+Posteriormente, para aprovechar la dimensión $K$ relativa al tiempo, los objetos de clase `dudi` se convierten a `ktab` (o tablas $K$). Finalmente, se invoca la función `costatis()` con las dos tablas $K$ como argumentos.
+
+```{r, echo=TRUE}
+# Carga de datos
+library(ade4)
+library(adegraphics)
+
+# Convertir matrices de los diferentes años en una matriz larga
+ssi.long = do.call(rbind, ssi) %>% 
+  arrange(a_o, pais, nomf) %>% 
+  tibble::column_to_rownames("nomf")
+
+ssi.var = select(ssi.long, SF:PD) # Mantiene variables
+ssi.Hu = ssi.var[, 1:9]           # Bienestar humano
+ssi.En = ssi.var[, 10:16]         # Bienestar ambiental
+ssi.Ec = ssi.var[, 17:21]         # Bienestar económico
+ssi.BM = rep(ssi$i16$BM, 6)       # Nombres de países
+ssi.ao = ssi.long$a_o             # Vector de años de los datos
+
+# Convierte la matriz en clases propias de ade4
+wit1 = withinpca(ssi.Hu, ssi.ao, scannf = F, scaling = "total")
+Enpca = dudi.pca(ssi.En, scale = F, scannf = F, nf = 2)
+wit2 = wca(Enpca, ssi.ao, scannf = F, nf = 2)
+kta1 = ktab.within(wit1, colnames = ssi.BM)
+kta2 = ktab.within(wit2, colnames = ssi.BM)
+ssi.HuEn.costatis = costatis(kta1, kta2, scannf = F)
+
+# Cálculo de costatis
+costatis1 <- costatis(kta1, kta2, scannf = FALSE)
+```
+
+Mediante la función `summary()` se obtienen las inercias proyectadas entre las dimensiones.
+
+```{r}
+res.costatis = data.frame(
+  Ejes = 1:5,
+  Eigenvalues = c(11.616064,  0.638180,  0.131078,  0.029909,  0.008043),
+  Inercia = c(93.49871,  5.13677,  1.05506,  0.24074,  0.06474),
+  Acumulada = c(93.50,   98.64,   99.69,   99.93,  100.00)
+)
+# knitr::kable(res.costatis, format = "pandoc", col.names = c("Ejes", "Valores propios", "Inercia (%)", "Inercia acumulada (%)"), booktabs = T)
+
+res.tab = regulartable(res.costatis)
+res.tab = valign(res.tab, valign = "top", part = "all")
+res.tab = align(res.tab, align = "right", part = "all")
+res.tab = fix_border_issues(theme_booktabs(res.tab))
+
+res.tab = add_header_lines(res.tab, values = "Cuadro 2. Inercias proyectadas de las dimensiones de bienestar humano y ambiental")
+res.tab = add_footer_lines(res.tab, values = "Inercia total: 12.42")
+res.tab = set_header_labels(res.tab, 
+                            Ejes = "Ejes",
+                            Eigenvalues = "Valores propios", 
+                            Inercia = "Inercia (%)", 
+                            Acumulada = "Inercia acumulada (%)")
+res.tab
+
+```
+
+El paquete `ade4` junto con su complemento gráfico `adegraphics` ofrecen opciones de visualización de los ejes. No obstante, su manipulación es difícil y si se presentan varias observaciones (como en nuestro caso), las gráficas se vuelven ilegibles, como lo muestran las figuras 1 y 2.
+
+```{r}
+sa1 <- s.arrow(costatis1$c1 * 4, xlim = c(-3, 3), ylim = c(-3, 3), 
+               plot = FALSE)
+sc1 <- s.class(costatis1$supIX, factor(ssi.BM), ellipseSize = 0, 
+               xlim = c(-3, 3), ylim = c(-3, 3), plabel.col = "red", 
+               plot = FALSE)
+s1 <- superpose(sa1, sc1)
+s1
+sa2 <- s.arrow(costatis1$l1 * 3, xlim = c(-3, 3), ylim = c(-3, 3), 
+               plot = FALSE)
+sc2 <- s.class(costatis1$supIY, factor(ssi.BM), ellipseSize = 0, 
+               xlim = c(-3, 3), ylim = c(-3, 3), plabel.col = "blue", 
+               plot = FALSE)
+s2 <- superpose(sa2, sc2)
+s2
+# ADEgS(list(s1, s2))
+```
+
+A pesar de lo anterior, en general el paquete permite obtener métricas y matrices de cada uno de los pasos, por lo que no es sorpresa de que sea el paquete más utilizado para el análisis datos multivariantes y reducción de dimensiones.
+
+## KTensorGraph
+
+A diferencia del paquete anterior, la biblioteca `KTensorGraphs` se enfoca a mostrar los resultados gráficos de métodos de análisis multivariantes en comento. Fue desarrollado por [@rodriguez2019] y ofrece un amplio repertorio de gráficos duales.
+
+En contraste con `ade4`, este paquete utiliza el objeto de clase `array`, el cual permite contener datos de varias dimensiones. En nuestro caso, se obtiene un `array` con los 154 países, 21 variables y 6 años registrados.
+
+El paso siguiente es dividir los datos en las matrices a contratar, terminando con la invocación de la función `COSTATIS()` con dos `array`s como argumento.
+
+La limitante del método radica en que la función en sí no genera ningún objeto, por lo que no se pueden observar directamente los resultados a parte de las gráficas. Para obtenerlos es necesario imprimir la función en sí misma y codificar manualmente las funciones que llevan al resultado.
+
+No obstante, las gráficas generadas brindan mucha mejor información que las propuestas por `ade4`, por lo que se sugiere utilizarla como complemento visual de análisis multivariantes.
+
+```{r, echo=TRUE}
+library(KTensorGraphs)
+
+nom_col = as.character(mnem.ssi$Variable)
+nom_fil = ssi$i16$BM
+nom_alt = as.character(seq(2006, 2016, 2))
+
+ssi.var_ = lapply(ssi, function(x) {
+  d = select(x, SF:PD)
+})
+names(ssi.var_) = paste0("i", sprintf("%02d", seq(6, 16, 2)))
+
+SSI = array(as.matrix(do.call(cbind, ssi.var_)),
+            dim = c(nrow(ssi$i16), ncol(ssi.var_$i16), length(nom_alt)),
+            dimnames = list( nom_fil, nom_col, nom_alt))
+
+Hu = SSI[, 1:9, ]   # Bienestar humano
+En = SSI[, 10:16, ] # Bienestar ambiental
+Ec = SSI[, 17:21, ] # Bienestar económico
+```
+```{r, echo=TRUE, eval=FALSE}
+COSTATIS(Hu, En)
+```
+
 
 # Conclusiones
 
