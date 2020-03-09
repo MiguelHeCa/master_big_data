@@ -1,0 +1,104 @@
+---
+title: "Big Data: Introducción y conceptos"
+author: Miguel Hernandez
+output: html_document
+---
+
+# Introducción
+
+Para diferenciar si se está haciendo Big Data no se está realizando en el ordenador.
+
+# Definición
+
+**H.A.C.E.**: Tratamiento de grandes volúmenes de información de características ...
+
+**3V**: Volumen, Variedad, Velocidad
+
+**4V**: Volumen, Variedad, Velocidad, *Veracidad*
+
+**5V**: Volumen, Variedad, Velocidad, Veracidad, *Valor*
+
+**6V**: Volumen, Variedad, Velocidad, Veracidad, Valor, *Variabilidad*
+
+## Específico
+
+- Dato
+- Información
+- Conocimiento
+
+## Big Data vs BI
+
+En BD opera con grandes volúmenes y puede trabajar con datos externos a la empresa
+
+Tiene ciclos de trabajo con metodologías "ágiles"
+
+## Ecosistema
+
+Proveedor de datos
+
+Proveedor de big data
+
+Exploración humana: campo nuevo. Es importante la visualización de datos para detectar patrones.
+
+# Retos
+
+Dificultad de manejar
+
+Trazabilidad (procedencia)
+Calidad
+Algoritmos
+Seguridad, privacidad e integridad
+Compartir
+Visualización
+
+# Funciones y competencias profesionales
+
+Científicos de datos o analistas de datos
+
+## Ecosistema laboral
+
+- HPC
+- Bases de dsatos
+- Minería de DAtos
+
+# Herramientas
+
+Panorama [Matt Turck](https://mattturck.com)
+
+Big Data
+
+Map Reduce
+
+Hadoop y Spark
+
+Casos
+
+Soluciones integradas
+
+
+Cuadrante Mágico de Gartner
+
+## Concepto Básico
+
+**Big Data**
+
+Almacenar información en muchos nodos de proceso, y aplicar procesamiento en esos nodos aprovechanddo la ventaja de la velocidad de lectura secuencial ded los discos modernos.
+
+**MapReduce**
+
+Dividir datos para facilidad de análisis
+
+## RDBMS
+
+SQL
+
+Big Data no es compatible con el esquema ACID
+
+OLTP vs OLAP
+
+
+
+
+
+
+
