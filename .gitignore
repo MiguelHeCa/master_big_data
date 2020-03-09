@@ -44,3 +44,6 @@ rsconnect/
 # Documentos de word
 *.docx
 .Rproj.user
+
+# No subir
+Nosubir/
