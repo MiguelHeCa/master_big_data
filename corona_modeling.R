@@ -9,7 +9,7 @@ conf = fread("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/c
 
 names(conf)[1:2] = c("province", "country")
 
-conf
+# Mexico ------------------------------------------------------------------
 
 mex = conf[country == "Mexico", -c("province", "Lat", "Long")]
 mex = melt(mex, id.vars = "country", variable.name = "date", variable.factor = F, value.name = "conf")
@@ -47,6 +47,17 @@ spn[, date := as.Date(date, "%m/%d/%y")]
 spn = spn[conf > 0]
 spn[, t := .I]
 mod1 = glm(conf ~ t, data = spn, family = gaussian("log"))
+
+c.0 = min(spn$conf) * 0.5
+mod0 = lm(log(conf - c.0) ~ t, data = spn)
+start = list(a = exp(coef(mod0)[1]), b = coef(mod0)[2], c = c.0)
+mod2 = nls(conf ~ SSlogis(t),
+           data = spn)
+
+nls(conf ~ SSlogis(t),
+    data = spn)
+
+
 spn[, predicted := predict(mod1, type = "response")]
 
 spn_pred = data.table(
@@ -68,3 +79,14 @@ ggplot(spn_pred, aes(x = date, y = conf)) +
   geom_point() +
   geom_line(aes(y = predicted, color = expected)) + 
   scale_x_date(date_breaks = "5 days", date_labels = "%d %b")
+
+
+
+# ECSE --------------------------------------------------------------------
+
+download.file("https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-2020-03-19.xlsx", paste0("covid19-ECDC-", Sys.Date(), ".xlsx"))
+ecdc = as.data.table(readxl::read_excel("covid19-ECDC-2020-03-20.xlsx"))
+
+ecdc[GeoId == "ES"]
+
+

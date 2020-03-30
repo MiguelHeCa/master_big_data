@@ -1,0 +1,25 @@
+---
+title: "Intro a Machine Learning"
+author: "Miguel Hernández"
+output: html_output
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Funciones
+
+Aprendizaje supervisado: Conjunto de variables independientes (features) $X$ y una variable respuesta $y$ de la que conocemos su valor correcto. Se diseña un algoritmo para aprende una función que os permita precedir la respuesta.
+
+$y = h(X)$
+
+La función $h$ se denomina *hipótesis*.
+
+- regresión: respuesta es una variable numérica
+- Clasificación: la respuesta es una variable nominal
+
+```{r}
+heart = 
+```
+

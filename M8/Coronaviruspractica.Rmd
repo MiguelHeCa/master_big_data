@@ -1,0 +1,61 @@
+---
+title: "Tarea Big Data"
+author: "María Anciones Polo"
+date: "16/3/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Tarea de Construcción de Mapas
+
+Representaremos en un mapa **la distribución del COVID-19 a nivel mundial**. Tomando como variables a estudio: el pais del afectado, la fecha del contagio o en el peor de los casos, la fecha de la muerte. Añadimos a cada uno de los paises que componen nuestra base su latitud y longitud, fundamentales a la hora de representarlos en el mapa. 
+
+El fichero de datos se adjuntará junto al pdf.
+
+Esta **tarea** es un claro ejemplo de los que podemos entener como "Big Data", especialmete si tenemos en cuenta la **procedencia** de los datos, su **volumen**, la gran **velocidad** a la que estos se reproducen y la enorme **variedad** de información que disponemos.  Cabe destacar además, el **"valor"** que tiene en la actualidad comprender como se comporta esta horrible pandemia.
+
+
+Procedamos entonces con la tarea:
+
+Primero, cargamos los datos, guardados como excel.
+
+```{r include=TRUE, message=FALSE}
+library(readxl, warn.conflicts=F, quietly=T)
+Mundo <- read_excel("CoronavirusMundial.xlsx")
+head(Mundo)
+```
+
+
+Cargamos el paquete *ggmap*. Tendras que instalarla si no la tienes (install.packages("ggmap")).
+
+```{r}
+library(ggmap, warn.conflicts=F, quietly=T)
+```
+
+Un mapa con todos los paises del mundo puede encontrarlo aquí.
+
+```{r}
+library(maps)
+world_map <- map_data("world")
+p <- ggplot()  + geom_polygon(data=world_map,aes(x=long, y=lat, group=group), col = "blue4", fill =world_map$group) + theme_bw()
+p
+```
+
+
+
+```{r}
+library(maps)
+world_map <- map_data("world")
+p <- ggplot()  + geom_polygon(data=world_map,aes(x=long, y=lat, group=group), col = "blue4", fill ="white") + geom_point(data = , aes(x = Longitud, y = Latitud, size = Contagios16))
+p
+```
+
+
+
+
+

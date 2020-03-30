@@ -96,6 +96,20 @@ Big Data no es compatible con el esquema ACID
 
 OLTP vs OLAP
 
+# Heramientas físicas
+
+Clusters - Grid de ordenadores
+
+La nube
+
+# Aspectos legales
+
+# Aplicaciones
+
+CRISP-DM
+
+
+
 
 
 
