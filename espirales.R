@@ -22,100 +22,128 @@ primos <- RcppAlgos::primeSieve(2, 86028121, 8)
 
 # Dibujar espiral ---------------------------------------------------------
 
-datos_polares <- function(n = NULL) {
+espiral <- function(n = NULL) {
   if (is.null(n)) {
     r <- theta <- primos
+    n <- length(primos)
   } else {
     r <- theta <- primos[1:n]
+  }
+  if (n <= 1e2) {
+    a <- 1
+  } else {
+    a <- r - length(r)
+  }
+  
+  if (n >= 1e6) {
+    rango_tam <- c(0, 0.0001)
+  } else if (n >= 1e5) {
+    rango_tam <- c(0, 0.001)
+  } else if (n >= 1e4) {
+    rango_tam <- c(0, 0.01)
+  } else if (n >= 1e3) {
+    rango_tam <- c(0, 0.1)
+  } else {
+    rango_tam <- c(0, 1)
   }
   d <-
     data.frame(
       x = r * cos(theta),
       y = r * sin(theta),
-      C = r - length(r),
       n = 1:length(r),
+      C = r - length(r),
+      a = a,
       tiempo = max(ceiling(log(r))) - ceiling(log(r)) + 1
     )
+  ggplot(d, aes(x, y)) +
+    geom_point(aes(size = C, alpha = a), color = "#5dc0d7", show.legend = F) +
+    scale_size(range = rango_tam) +
+    labs(title = paste(scales::comma(n), "números primos")) +
+    tema_espirales()
 }
 
 # Cien elementos ----------------------------------------------------
 
-# r <- theta <- primos[1:1e2]
-# dt <- data.frame(x = r * cos(theta), y = r * sin(theta))
-dt = datos_polares(1e2)
-titulo = paste("Números primos;", scales::comma(length(r)), "elementos")
-
-p_1e2 <- ggplot(datos_polares(1e2), aes(x, y)) +
-  geom_point(size = 1, color = "#5dc0d7", alpha = 1) +
-  labs(title = titulo) +
-  tema_espirales()
+p_1e2 <- espiral(1e2)
 
 ggsave("primos_1e2.png", p_1e2, device = "png", width = 11, height = 11)
 
+p_5e2 <- espiral(5e2)
+
+ggsave("primos_5e2.png", p_5e2, device = "png", width = 11, height = 11)
+
 # Mil ---------------------------------------------------------------------
 
-r <- theta <- primos[1:1e3]
-dt <- data.frame(x = r * cos(theta), y = r * sin(theta))
-titulo = paste("Números primos;", scales::comma(length(r)), "elementos")
-
-p_1e3 <- ggplot(dt, aes(x, y)) +
-  geom_point(size = 0.25, color = "#5dc0d7", alpha = 1) +
-  labs(title = titulo) +
-  tema_espirales()
+p_1e3 <- espiral(1e3)
 
 ggsave("primos_1e3.png", p_1e3, device = "png", width = 11, height = 11)
 
+p_5e3 <- espiral(5e3)
+
+ggsave("primos_5e3.png", p_5e3, device = "png", width = 11, height = 11)
+
 # Diez mil ----------------------------------------------------------------
 
-r <- theta <- primos[1:1e4]
-dt <- data.frame(x = r * cos(theta), y = r * sin(theta))
-titulo = paste("Números primos;", scales::comma(length(r)), "elementos")
-
-p_1e4 <- ggplot(dt, aes(x, y)) +
-  geom_point(size = 0.1, color = "#5dc0d7", alpha = 1) +
-  labs(title = titulo) +
-  tema_espirales()
+p_1e4 <- espiral(1e4)
 
 ggsave("primos_1e4.png", p_1e4, device = "png", width = 11, height = 11)
 
+p_5e4 <- espiral(5e4)
+
+ggsave("primos_5e4.png", p_5e4, device = "png", width = 11, height = 11)
+
 # Cien mil ----------------------------------------------------------------
 
-r <- theta <- primos[1:1e5]
-dt <- data.frame(x = r * cos(theta), y = r * sin(theta))
-titulo <- paste("Números primos;", scales::comma(length(r)), "elementos")
-
-p_1e5 <- ggplot(dt, aes(x, y)) +
-  geom_point(size = 0.01, color = "#5dc0d7", alpha = 0.9) +
-  labs(title = titulo) +
-  tema_espirales()
+p_1e5 <- espiral(1e5)
 
 ggsave("primos_1e5.png", p_1e5, device = "png", width = 12, height = 12)
 
+p_5e5 <- espiral(5e5)
+
+ggsave("primos_5e5.png", p_5e5, device = "png", width = 12, height = 12)
+
 # Un millón ---------------------------------------------------------------
 
-r <- theta <- primos[1:1e6]
-dt <- data.frame(x = r * cos(theta), y = r * sin(theta))
-titulo <- paste("Números primos;", scales::comma(length(r)), "elementos")
-
-p_1e6 <- ggplot(dt, aes(x, y)) +
-  geom_point(size = 0.001, color = "#5dc0d7", alpha = 0.9) +
-  labs(title = titulo) +
-  tema_espirales()
+p_1e6 <- espiral(1e6)
 
 ggsave("primos_1e6.png", p_1e6, device = "png", width = 12, height = 12)
 
-# Cinco millones ----------------------------------------------------------
-
-r <- theta <- primos
-dt <- data.frame(x = r * cos(theta), y = r * sin(theta))
-titulo <- paste("Números primos;", scales::comma(length(r)), "elementos")
-
-p_5e6 <- ggplot(dt, aes(x, y)) +
-  geom_point(size = 0.0001, color = "#5dc0d7", alpha = 0.9) +
-  labs(title = titulo) +
-  tema_espirales()
+p_5e6 <- espiral()
 
 ggsave("primos_5e6.png", p_5e6, device = "png", width = 12, height = 12)
+
+
+# Gradual -----------------------------------------------------------------
+
+# Cien
+ggsave("primos1_1e2.png", espiral(1e2), device = "png", width = 11, height = 11)
+
+ggsave("primos2_5e2.png", espiral(5e2), device = "png", width = 11, height = 11)
+
+# Mil 
+
+ggsave("primos3_1e3.png", espiral(1e3), device = "png", width = 11, height = 11)
+
+ggsave("primos4_5e3.png", espiral(5e3), device = "png", width = 11, height = 11)
+
+# Diez mil 
+
+ggsave("primos5_1e4.png", espiral(1e4), device = "png", width = 11, height = 11)
+
+ggsave("primos6_5e4.png", espiral(5e4), device = "png", width = 11, height = 11)
+
+# Cien mil 
+
+ggsave("primos7_1e5.png", espiral(1e5), device = "png", width = 12, height = 12)
+
+ggsave("primos8_5e5.png", espiral(5e5), device = "png", width = 12, height = 12)
+
+# Un millón 
+
+ggsave("primos9_1e6.png", espiral(1e6), device = "png", width = 12, height = 12)
+
+ggsave("primos10_5e6.png", espiral(), device = "png", width = 12, height = 12)
+
 
 # Golden ratio ------------------------------------------------------------
 
