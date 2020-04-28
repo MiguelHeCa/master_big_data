@@ -1,0 +1,196 @@
+---
+title: "Manual KTensorGraph"
+subtitle: "Modelos para describir tablas de 3 entradas"
+author: "José Miguel Hernández Cabrera"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+    include:
+      in_header: preamble.tex
+geometry: margin=1in
+mainfont: "Open Sans"
+monofont: "Fira Code Medium"
+linestretch: 1.15
+lang: es
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introducción
+
+## Preparación de entorno de trabajo
+
+**NOTA** Este manual se realizó con la versión 3.6.3. Cabe señalar que la versión 4.0.0 ya está disponible, se sugiere mantenerse en las versiones 3.3+ dado que el paquete `KTensorGraph` podría sufrir problemas de compatibilidad.
+
+Pasos para instalar y preparar la carga de los archivos
+
+### Instalación del paquete
+
+Para instalar el paquete se escribe el código siguiente:
+
+```{r, eval=FALSE}
+install.packages("KTensorGraphs")
+```
+
+Notar que es necesario mantener las mayúsculas dado que R es sensible a mayúsculas y minúsculas.
+
+Una vez instalado se carga con la función `library()`.
+
+```{r, message=FALSE}
+library(KTensorGraphs)
+```
+
+### Indicación de de directorio
+
+Existen varias formas de indicarle al programa qué directorio utilizará. La más recomendada para cuestiones de reproducibilidad es crear un proyecto de R llamado `.Rproj`. Las instrucciones para cómo hacerlo se pueden consultar en la página de [RStudio](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects). Con los proyectos ya no es necesario establecer en cada sesión el directorio y se pueden guardar opciones específicas para ese entorno en caso de ser necesario. Además, se puede compartir el archivo `.Rproj`, por lo que facilita reproducir el trabajo en cualquier ordenador.
+
+Otra forma es utilizar la función `rstudioapi` como argumento de `setwd()` para establecer el directorio donde esté guardado el script:
+
+```{r, eval=FALSE}
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+# Descripción de funciones
+# rstudioapi::getSourceEditorContext()$path # muestra el directorio del script
+# dirname() # Extrae el directorio padre del archivo donde se trabajará todo
+# setwd()   # Establece el directorio de trabajo
+```
+
+De esta manera no es necesario especificar explícitamente el directorio, manteniendo la ventaja de reproducibilidad sin necesidad de instalar un proyecto de R. No obstante, a diferencia de `.Rproj`, no se pueden establecer opciones específicos.
+
+La otra vía es declarar explícitamente el directorio como argumento de `setwd()` similar al siguiente código:
+
+```{r, eval=FALSE}
+setwd("C:/Users/usuario/carpeta/personalizada")
+```
+
+Sin embargo, esta forma no se recomienda por limitar la reproducibilidad y ser propensa a errores.
+
+## Preparación de datos
+
+### Importación
+
+Una vez establecido el entorno de trabajo, se pueden importar los datos. Para este manual se utilizará como ejemplo un cubo de datos ecológicos con lugares de río en filas, variables medioambientales en columnas y estaciones del año en capas en un archivo denominado `variables.txt`. En este caso, el archivo está separado por tabulador, por ello se utiliza la función `read.table()` para importar los datos en un objeto de clase  `data.frame`. Si los datos estuviesen separados por comas, se utilizaría `read.csv`. Por último, en caso de que se encuentren en una hoja de cálculo, e.g. `.xlsx`, se utilizaría la función `readxl::read_excel()`.
+
+```{r}
+variables <- read.table("variables.txt", )
+class(variables)
+dim(variables) # Filas y columnas
+```
+
+Finalmente, los datos deben estar designados por `.` y no por `,` porque podría arrojar error. No obstante, las funciones `read.*` tienen un argumento llamado `dec` que recibirá el caracter que de corresponda a los decimales, pudiendo así leer archivos con decimales con coma. Aun así, el programa siempre convertirá cualquier numérico con decimales separados por puntos.
+
+Al tratarse de un cubo, varias columnas se repiten de nombre por contener las estaciones del año. Como los nombres están repetidos de origen, R pone un sufijo `..N` para cada nombre repetido. De esta forma tenemos las columnas de `r paste(toString(colnames(var)[1:9]), colnames(var)[10], sep = " y ")` por cada estación:
+
+```{r}
+colnames(variables)
+```
+
+De la misma manera, importaremos el archivo `especies.txt`, que tiene el mismo formato de origen que `variables.txt`.
+
+```{r}
+especies <- read.table("especies.txt")
+class(especies)
+dim(especies)
+colnames(especies)
+```
+
+### Preprocesamiento
+
+Para facilitar los resultados de las funciones de `KTensorGraphs` se pueden designar los nombres de cada una de las dimensiones del tensor con ayuda de la función `dimnames()`.
+
+```{r}
+nom_esp <- dimnames(especies)
+nom_var <- dimnames(variables)
+class(nom_var)
+```
+
+Esta función genera una `list` de la cual se pueden seleccionar los elementos mediante tres selectores: `[]`, `[[]]` y `$`.
+
+* `[]` recibe como argumento un número entero que indicará el lugar del elemento de la lista. Su resultado será otra lista. Ejemplo: `class(lista[1])` será de clase `list`.
+* `[[]]` también recibe un entero, pero devuelve la clase del elemento que contiene. Es decir, si el elemento `lista[[1]]` es de clase `logical`, tendremos un resultado booleano.
+* `$` funciona al igual que una `data.frame` en el sentido de que también arroja la clase del elemento seleccionado. Sin embargo, para que esto funcione la lista debe contener un nombre, de lo contrario no arrojará ningún resultado.
+
+```{r}
+names(nom_var) <- names(nom_esp) <- c("filas", "columnas")
+nom_var
+```
+
+En nuestro ejemplo se definen nombres en cuatro objetos: el de las filas `nom_filas`, el de las columnas `nom_col_x` y `nom_col_y` y el de las repeticiones `nom_repet`:
+
+```{r}
+nom_filas <- nom_esp$filas
+nom_col_x <- nom_esp$columnas[1:13]
+nom_col_y <- nom_var$columnas[1:10]
+
+# Como no existen previamente los nombres de las estaciones,
+# los establecemos manualmente
+nom_repet <- c("Primavera", "Verano", "Otoño", "Invierno")
+```
+
+También utilizaremos el número de cada dimensión de la siguiente manera: [^num-estaciones]
+
+```{r}
+n_repet <- length(nom_repet)
+n_filas <- nrow(especies)
+n_col_x <- ncol(especies) / n_repet
+n_col_y <- ncol(variables) / n_repet
+```
+
+Una vez que se definen los nombres, creamos el tensor. Sabemos que `especies` y `variables` son de clase `data.frame`. Esto significa que son datos de dos dimensiones. Para hacerlos de tres dimensiones se transforman a la clase `array` con su función homónima, de la cual definiremos los siguientes argumentos `x`, `dim` y `dimnames`:
+
+* En `data` tendremos la `data.frame`. Es posible cambiarla a clase `matrix` con la función `as.matrix()` para explícitamente cambie `data.frame -> matrix -> array`. De esta manera el objeto de resultado es más legible, aunque esto es opcional.[^matrix-array]
+* En `dim` se coloca un vector cuyo número de elementos indicarán el número de dimensiones. Cada valor de los elementos establecerá el tamaño de cada dimensión.
+* En `dimnames` se indica una lista con los nombres de cada dimensión.
+
+[^matrix-array]: En la versión 4.0.0 la clase `matrix` ya contiene también la clase `array`.
+[^num-estaciones]: En el contexto del ejercicio `dimnames` basta con poner `c(6, 10, 4)`. No obstante, se considera como buena práctica extraer el número de los elementos con las funciones `dim()`, `nrow()`, `ncol()` o `length()`. Esto con el fin de evitar errores del programa en caso de que el tamaño de los datos cambien.
+
+Siguiendo con nuestro ejemplo, el código queda de la siguiente manera:
+
+```{r}
+X <- array(
+  data = as.matrix(especies),
+  dim = c(n_filas, n_col_x, n_repet),
+  dimnames = list(nom_filas, nom_col_x, nom_repet)
+)
+round(X, 2) # Se redondean los números para impresión sin cambiar el tensor
+```
+
+```{r}
+Y <- array(
+  data = as.matrix(variables),
+  dim = c(n_filas, n_col_y, n_repet),
+  dimnames = list(nom_filas, nom_col_y, nom_repet)
+)
+round(Y, 2)
+```
+
+Finalmente, para se definen colores de las filas y las columnas que servirán para diferenciar los datos en los gráficos producidos.
+
+```{r}
+col_filas <- rep("#428bca", times = n_filas)
+col_col_x <- rep("#d9534f", times = n_col_x)
+col_col_y <- rep("#5cb85c", times = n_col_y)
+```
+
+Terminados estos pasos, podemos proceder a analizar los paquetes.
+
+## Función
+
+* Uso de la función TUCKER3 y sus argumentos
+
+* Justificación del modelo elegido para los datos en base a gráficos o tablas
+* Interpretación de al menos 4 elementos del core array (signos, interacciones, etc.) mediante
+los gráficos bidimensionales conjuntos
+* Justificación de la elección de esos 4 elementos
+
+## Justificación d e4 elementos
+
+# Resultados
+
+# Conclusiones 
+
+
+# Bibliografía
+
