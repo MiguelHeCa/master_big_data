@@ -19,7 +19,7 @@ csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa
 bibliography: tucker.bib
 ---
 
-```{r setup, include=FALSE}
+```{r setup, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -27,11 +27,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Este es un manual sobre cómo realizar un flujo de trabajo con el paquete `KTensorGraph` desarrollado por @Rodriguez2019 para utilizar la técnicas Tucker. En manual se centrarán en el Tucker-3, dado que con esta técnica se pueden detectar interacciones para la que se hayan retenido diferentes números de componentes para tres dimensiones. Asimismo, el flujo es reproducible ante cualquier otra técnica. Se recomienda revisar el trabajo de @rodriguez2018 para encontrar cálculos similares como referencia. 
 
-Los datos utilizados provienen de la investigación de @thioulouse2004, en el cual los investigadores utilizaron el método STATICO para analizar una serie de tablas ecológicas pareadas de un áera geográfica de Francia, cuyos nombres se describen en la tabla #. El par se compone de abundancia de especies del lugar [^especies] y variables ambientales. Las filas corresponden a los sitios muestrados, los cuales son los mismos en ambas tablas. Además, las tablas se repiten por cada estación del año. 
+Los datos utilizados provienen de la investigación de @thioulouse2004, en el cual los investigadores utilizaron el método STATICO para analizar una serie de tablas ecológicas pareadas de un área geográfica de Francia, cuyos nombres se describen en el cuadro \ref{descripcion}. El par se compone de abundancia de especies del lugar [^especies] y variables ambientales. Las filas corresponden a los sitios muestrados, los cuales son los mismos en ambas tablas. Además, las tablas se repiten por cada estación del año. 
 
 [^especies]: Cabe aclarar que algunas especies pueden estar ausentes en algunas tablas.
 
-```{r, eval=FALSE, include=FALSE}
+
+```{r, eval=FALSE, echo=FALSE}
 defin = data.frame(
     esp = c("Eda", "Bsp", "Brh", "Bni", "Bpu", "Cen", "Ecd", "Rhi", "Hla", "Hab", "Par", "Cae", "Eig"),
     Des = c(
@@ -99,7 +100,8 @@ Eig        Ephemerella ignita
 
 -----------------------------------------------------------------------------
 
-: Descripción de especies y variables.
+: Descripción de especies y variables. \label{descripcion}
+
 
 El objetivo principal del presente manual es brindar al lector las herramientas necesarias para poder diversas preguntas de investigación. Continuando con el ejemplo de las especies, los ejercicios responden las siguientes preguntas: 
 
@@ -107,7 +109,7 @@ El objetivo principal del presente manual es brindar al lector las herramientas 
 * ¿qué tendencias se pueden descubrir a lo largo de las estaciones?
 * ¿hay diferentes tipos de lugares?
 
-Esta no es una lista exhaustiva de todas las preguntas de investigación disponibles y es posible realizar investigaciones más profundas. Esto queda determinado por las inquietudes del investgador. 
+Esta no es una lista exhaustiva de todas las preguntas de investigación disponibles y es posible realizar investigaciones más profundas. Esto queda determinado por las inquietudes del investigador. 
 
 ## Preparación de entorno de trabajo
 
@@ -127,6 +129,60 @@ Una vez instalado se carga con la función `library()`.
 
 ```{r, message=FALSE}
 library(KTensorGraphs)
+```
+
+
+### Indicación de de directorio
+
+Existen varias formas de indicarle al programa qué directorio utilizará. La más recomendada para cuestiones de reproducibilidad es crear un proyecto de R llamado `.Rproj`. Las instrucciones para cómo hacerlo se pueden consultar en la página de [RStudio](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects). Con los proyectos ya no es necesario establecer en cada sesión el directorio y se pueden guardar opciones específicas para ese entorno en caso de ser necesario. Además, se puede compartir el archivo `.Rproj`, por lo que facilita reproducir el trabajo en cualquier ordenador.
+
+Otra forma es utilizar la función `rstudioapi` como argumento de `setwd()` para establecer el directorio donde esté guardado el script:
+
+```{r, eval=FALSE}
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+# Descripción de funciones
+# rstudioapi::getSourceEditorContext()$path # directorio del script
+# dirname() # Extrae el directorio padre del archivo donde se trabajará todo
+# setwd()   # Establece el directorio de trabajo
+```
+
+De esta manera no es necesario especificar explícitamente el directorio, manteniendo la ventaja de reproducibilidad sin necesidad de instalar un proyecto de R. No obstante, a diferencia de `.Rproj`, no se pueden establecer opciones específicos.
+
+La otra vía es declarar explícitamente el directorio como argumento de `setwd()` similar al siguiente código:
+
+```{r, eval=FALSE}
+setwd("C:/Users/usuario/carpeta/personalizada")
+```
+
+Sin embargo, esta forma no se recomienda por limitar la reproducibilidad y ser propensa a errores.
+
+## Preparación de datos
+
+### Importación
+
+Una vez establecido el entorno de trabajo, se pueden importar los datos. Para este manual se utilizará como ejemplo un cubo de datos ecológicos con lugares de río en filas, variables medioambientales en columnas y estaciones del año en capas en un archivo denominado `variables.txt`. En este caso, el archivo está separado por tabulador, por ello se utiliza la función `read.table()` para importar los datos en un objeto de clase  `data.frame`. Si los datos estuviesen separados por comas, se utilizaría `read.csv`. Por último, en caso de que se encuentren en una hoja de cálculo, e.g. `.xlsx`, se utilizaría la función `readxl::read_excel()`.
+
+```{r}
+variables <- read.table("variables.txt")
+class(variables)
+dim(variables) # Filas y columnas
+```
+
+Finalmente, los datos deben estar designados por `.` y no por `,` porque podría arrojar error. No obstante, las funciones `read.*` tienen un argumento llamado `dec` que recibirá el caracter que de corresponda a los decimales, pudiendo así leer archivos con decimales con coma. Aun así, el programa siempre convertirá cualquier numérico con decimales separados por puntos.
+
+Al tratarse de un cubo, varias columnas se repiten de nombre por contener las estaciones del año. Como los nombres están repetidos de origen, R pone un sufijo `..N` para cada nombre repetido. De esta forma tenemos las columnas de `r paste(toString(colnames(var)[1:9]), colnames(var)[10], sep = " y ")` por cada estación:
+
+```{r}
+colnames(variables)
+```
+
+De la misma manera, importaremos el archivo `especies.txt`, que tiene el mismo formato de origen que `variables.txt`.
+
+```{r}
+especies <- read.table("especies.txt")
+class(especies)
+dim(especies)
+colnames(especies)
 ```
 
 ### Indicación de de directorio
@@ -267,9 +323,9 @@ Terminados estos pasos, podemos proceder a analizar los paquetes.
 
 ## Función
 
-Para estudiar las posibles relaciones entre lugares y los cambios en las variables mediambientales durante las cuatro estaciones del año mediante un Tucker3 se utiliza la función `KTensorGraph::TUCKER3()`. 
+Para estudiar las posibles relaciones entre lugares y los cambios en las variables medioambientales durante las cuatro estaciones del año mediante un Tucker3 se utiliza la función `KTensorGraph::TUCKER3()`. 
 
-El primer paso es calcular un **screeplot** para saber de él cuál es el modelo más simple y más estable. Para ello, hay que considerar los siguientes argumentos de la función `TUCKER3()`: 
+El primer paso es calcular un **screeplot** para saber de él cuál es el modelo más simple y más estable. Para ello, hay que considerar los argumentos de la función `TUCKER3()` mostrados en el cuadro \ref{arg_screeplot}: 
 
 -----------------------------------------------------------------
 Argumento  Descripción
@@ -291,7 +347,7 @@ Argumento  Descripción
            como medida de seguridad para evitar consumo de memoria
            innecesario. Por defecto se establecen `5` componentes.
 
-`iter`     Recibe un `integer` que indica el número máximo de iteracioness
+`iter`     Recibe un `integer` que indica el número máximo de iteraciones
            computado para cada combinación de componentes. Generalmente 
            se busca aumentar el número de iteraciones para igualar la
            matriz original. Esto puede provocar un bucle infinito, por 
@@ -305,23 +361,32 @@ Argumento  Descripción
            puede reducir el número de iteraciones. Por defecto la
            tolerancia es de `1e-8`.
            
+`P1`,      Representaciones de los ejes horizontal (`*1`) y  
+`P2`       vertical (`*2`) de la primear dimensión. Reciben un 
+           `integer >= 1` o `<=` el número de elementos que 
+           integran la primera dimensión, además deben cumplir 
+           `P1 < P2` (a menos que se retenga un solo componente).
+           
+`Q1`, `Q2`  Aplica de manera análoga a los argumentos `P*`.
+,`R1`, 
+`R2`
+           
 -----------------------------------------------------------------
 
-: Argumentos de `TUCKER3()` para hacer un screeplot.
+: Argumentos de `TUCKER3()` para hacer un screeplot. \label{arg_screeplot}
 
 Luego entonces, si queremos normalizar las variables y utilizar el resto de argumentos por defecto resulta razonable, el código queda de la siguiente manera:
+
 
 ```{r, eval=FALSE}
 TUCKER3(X = var_cubo, norm = TRUE)
 ```
 
-```{r screeplot, out.width = "100%", fig.cap = "Screeplot de variables medio ambientales"}
+```{r screeplot, echo=FALSE, out.width = "100%", fig.cap = "Screeplot de variables medio ambientales"}
 knitr::include_graphics("var_screeplot.pdf")
 ```
 
-La figura  muestra los modelos por cada dimensión. Los puntos están nombrados por cuántos componentes fueron retenidos. La línea azul indica los modelos con mejor ajuste para cada complejidad; el mejor ajuste estará más cercano a la línea poligonal. La línea rosa la estabilidad separa a los modelos más estables en la parte derecha de los inestables en la parte izquierda. Por lo tanto, el mejor modelo será el más estable, con mejor ajuste y menos complejo, que en el caso de las variables es el modelo $3 \times 3 \times 2$.
-
-<!-- \@ref(fig:screeplot) -->
+La figura \@ref(fig:screeplot) muestra los modelos por cada dimensión. Los puntos están nombrados por cuántos componentes fueron retenidos. La línea azul indica los modelos con mejor ajuste para cada complejidad; el mejor ajuste estará más cercano a la línea poligonal. La línea rosa la estabilidad separa a los modelos más estables en la parte derecha de los inestables en la parte izquierda. Por lo tanto, el mejor modelo será el más estable, con mejor ajuste y menos complejo, que en el caso de las variables es el modelo $3 \times 3 \times 2$.
 
 Una vez elegidas la combinación de componentes, se obtienen la tabla con las contribuciones y el core array. Para realizar lo anterior se define el argumento `contr = TRUE`.
 
@@ -331,7 +396,7 @@ TUCKER3(var_cubo, norm = TRUE, contr = TRUE)
 
 La función genera un archivo denominado `results.txt` en el que coloca los resultados.
 
-Table: Todas las combinaciones 
+Table: Todas las combinaciones \label{combinaciones}
 
  Number  Model Size      Sum  Best given Sum       SS(Res)   Prop. SS(Fit)   Number of iterations
 -------  -----------  ------  --------------- ------------  --------------  ---------------------
@@ -394,8 +459,8 @@ Table: Todas las combinaciones
     100  5x5x4          14    *                  2.509695        95.81722                      2
 
 
-Table: (Combinaciones con mejor ajuste) \label{mej-ajuste}
 
+Table: Combinaciones con mejor ajuste \label{mej-ajuste}
 
  Number  Model Size         S       SS(Res)          DifFit   Prop. SS(Fit)   Number of iterations
 -------  -----------  -------  -------------  -------------  --------------  ---------------------
@@ -411,48 +476,35 @@ Table: (Combinaciones con mejor ajuste) \label{mej-ajuste}
      80  4x5x4             13       3.040837       3.977552        94.93200                      4
     100  5x5x4             14       2.509695       0.885227        95.81722                      2
 
-
-
-Entonces, conforme a los cuadros   en el modelo elegido $3 \times 4 \times 3$, se tiene una suma de 10 (`Sum` o `S`), está indicado como uno de los mejores modelos dada la suma (`Best given Sum`), con una suma de cuadrados desigual de $9.04$ (`SS(Res)`), cuya proporción de varianza explicada con respecto al cubo original es de $84.93\%$ (`Prop. SS(Fit)`) que aumentó $4.42$ con respecto al modelo anterior (`DiffFit`) y con 11 iteraciones realizadas.
-
-<!-- \ref{combinaciones} y \ref{mej-ajuste} -->
-
-Se podría elegir el $3 \times 3 \times 2$ por ser más simple y estable, además con un crecimiento con respecto al modelo anterior es superior, pero no se ajusta tanto como el modelo anterior por lo que se elige el primer modelo elegido.
+Entonces, conforme a los cuadros \ref{combinaciones} y \ref{mej-ajuste}  en el modelo elegido $3 \times 4 \times 3$, se tiene una suma de 10 (`Sum` o `S`), está indicado como uno de los mejores modelos dada la suma (`Best given Sum`), con una suma de cuadrados desigual de $9.04$ (`SS(Res)`), cuya proporción de varianza explicada con respecto al cubo original es de $84.93\%$ (`Prop. SS(Fit)`) que aumentó $4.42$ con respecto al modelo anterior (`DiffFit`) y con 11 iteraciones realizadas.
 
 ### Descomposición Tucker3
 
 Una vez que se ha definido el modelo $3 \times 4 \times 3$, en la función `TUCKER3()` se pueden utilizar los parámetros `p`, `q`, y `r` respectivamente. A su vez, se definen los colores con los argumentos `colores*`.
 
 ```{r, eval=FALSE}
-TUCKER3(X = var_cubo,
-        norm = TRUE,
-        contr = TRUE,
-        p = 3,
-        q = 4,
-        r = 3,
-        coloresf = col_filas,
-        coloresc = col_col_y)
+TUCKER3(X = var_cubo, norm = TRUE, contr = TRUE, p = 3, q = 4, r = 3, 
+        coloresf = col_filas, coloresc = col_col_y)
 ```
 
 
-```{r encima_debajo, out.width = "100%", fig.cap = "Elementos de la contribución media"}
+
+```{r encdeb, echo=FALSE, fig.cap="Elementos de la contribución media"}
 knitr::include_graphics("encima_debajo_var.pdf")
 ```
 
-En primer lugar, da como resultado el gráfico  que indica los elementos por encima y por debajo de la contribución media. En el cuadro de la izquierda señala que los lugares `S1`, `S3`, `S4` y `S5` se encuentran por encima de la media. Análogamente, al cuadro de en medio corresponden a `Oxygen`, `Temp` y `pH`. Finalmente, en el cuadro de la derecha, las estaciones de verano y otoño tienen una contribución menor.
-
-<!-- \@ref(fig:encima_debajo) -->
+En primer lugar, da como resultado el gráfico \@ref(fig:encdeb) que indica los elementos por encima y por debajo de la contribución media. En el cuadro de la izquierda señala que los lugares `S1`, `S3`, `S4` y `S5` se encuentran por encima de la media. Análogamente, al cuadro de en medio corresponden a `Oxygen`, `Temp` y `pH`. Finalmente, en el cuadro de la derecha, las estaciones de verano y otoño tienen una contribución menor.
 
 Asimismo, se crea una nueva tabla de resultados `results.txt` con el *core array* (el más importante), las contribuciones y los porcentajes de ajuste.
 
-En el caso del *core array*, la tabla está dividida en dos partes: en un lado se muestra la suma de cuadrados residual (los elementos del `core array`) y en otra la varianza explicada (su desglose para cada una de las combinaciones). Además, los modos indican las dimensiones a las que se refieren. Modo 1 corresponde a `p`, Modo 2 a `q` y Modo 3 a `r`.
-
-```{r core_array, out.width="100%", fig.cap="Configuración del core array."}
-knitr::include_graphics("core_array.pdf")
+```{r corearray, echo=FALSE, out.width="95%", fig.cap="Configuración del core array."}
+knitr::include_graphics("core_array.png")
 ```
 
+Como lo muestra el esquema \@ref(fig:corearray) En el caso del *core array*, la tabla está dividida en dos partes: en un lado se muestra la suma de cuadrados residual (los elementos del `core array`) y en otra la varianza explicada (su desglose para cada una de las combinaciones). Además, los modos indican las dimensiones a las que se refieren. Modo 1 corresponde a `p`, Modo 2 a `q` y Modo 3 a `r`.
 
-Table: Porcentajes de ajuste
+
+Table: Porcentajes de ajuste \label{ajuste}
 
 Componentes                    Dimensión 1   Dimensión 2   Dimensión 3
 ----------------------------  ------------  ------------  ------------
@@ -463,95 +515,53 @@ Componentes                    Dimensión 1   Dimensión 2   Dimensión 3
 Total de varianza explicada         84.940       84.9400       84.9400
 
 
-Adicionalmente, el cuadro  muestra el porcentaje del ajuste de varianza total y de cada componente del modelo.
 
-Las coordenadas de las filas, de las columnas  y de las repeticiones, así como sus contribuciones correspondientes, se obtienen para biplots posteriores.
+Adicionalmente, el cuadro \ref{ajuste} muestra el porcentaje del ajuste de varianza total y de cada componente del modelo.
+
+El archivo `results.txt` también contiene as coordenadas de las filas, de las columnas y de las repeticiones, así como sus contribuciones correspondientes, se obtienen para biplots posteriores. Se pueden consultar directamente en el archivo.
 
 ### Interacciones
 
-Finalmente, para poder interpretar las diferentes interacciones más profundas entre lugares, variables medioambientales y estaciones del año, se extraen 4 elementos del *core array*. Se cuenta con la ayuda de gráficos bidimensionales. Esto se logra escribiendo los siguientes argumentos derivados del *core array*:
+Finalmente, para poder interpretar las diferentes interacciones más profundas entre lugares, variables medioambientales y estaciones del año, se extraen 4 elementos del *core array*. Se cuenta con la ayuda de gráficos bidimensionales. En el cuadro \ref{arg_screeplot} se describen los argumentos de la función `TUCKER3()` para obtener dicho `array`.
 
------------------------------------------------------------------
-Argumento   Descripción
-----------  ------------------------------------------------------
-`P1`, `P2`  Representaciones de los ejes horizontal (`*1`) y 
-            vertical (`*2`) de la primear dimensión. Reciben un 
-            `integer >= 1` o `<=` el número de elementos que 
-            integran la primera dimensión, además deben cumplir 
-            `P1 < P2` (a menos que se retenga un solo componente).
-           
-`Q1`, `Q2`  Aplica de manera análoga a los argumentos `P*`.
-,`R1`, 
-`R2`
-
------------------------------------------------------------------
-
-: Argumentos para interacciones entre variables
-
-En suma, el criterio para elegir las combinaciones de signos adecuados es considerar los elementos que tengan la varianza explicada más alta, con los elementos de valores residuales con signo positivo. 
+El criterio para elegir las combinaciones de signos adecuados es considerar los elementos que tengan la varianza explicada más alta, con los elementos de valores residuales con signo positivo. Cabe señalar que en los modelos **Tucker**, los signos del *core array* en conjunto con los de las contribuciones determina la dirección de interacción entre las dimensiones.
 
 Luego entonces, conforme a lo señalado en el esquema , el elemento con la varianza explicada más alta  es $52.95\%$ y corresponde a los modos 1, 1, 1 y el signo de la varianza core es negativo (porque la suma de residuos es $-11.27$) . El segundo elemento de los modos 2, 2, 1 es $8.92\%$, también con signo negativo. Le sigue el elemento con modos 3, 3, 1 con $5.49\%$ de varianza explicada y signo positivo. Finalmente, el cuarto elemento se encuentra en los modos 3,4,2 con $2.25\%$ de varianza explicada y signo positivo. 
 
-<!-- \@ref{fig:core_array} -->
-
-Cabe señalar que en los modelos **Tucker**, los signos del `core array` en conjunto con los de las contribuciones determina la dirección de interacción entre las dimensiones.
-
-Se interpretan las primeras dos configuraciones de los elementos. Notar que en el nuevo código no es necesario pedir las contibuciones:
+Se prosigue a interpretar las primeras dos configuraciones de los elementos. Notar que en el nuevo código no es necesario pedir las contribuciones:
 
 ```{r, eval=FALSE}
-TUCKER3(X = var_cubo,
-        norm = TRUE,
-        p = 3,
-        q = 4,
-        r = 3,
-        P1 = 1,
-        P2 = 2,
-        Q1 = 1,
-        Q2 = 2,
-        R1 = 1,
-        R2 = 2,
-        coloresf = col_filas,
-        coloresc = col_col_y)
+TUCKER3(X = var_cubo, norm = TRUE, p = 3, q = 4, r = 3,
+        P1 = 1, P2 = 2, Q1 = 1, Q2 = 2, R1 = 1, R2 = 2,
+        coloresf = col_filas, oloresc = col_col_y)
 ```
 
-```{r elem_1_2, out.width="100%", fig.cap="Biplots de contribuciones 1 y 2"}
+```{r elem12, echo=FALSE, fig.cap="Biplots de contribuciones 1 y 2"}
 knitr::include_graphics("interaccion_var_1_2.pdf")
 ```
 
-```{r elem_1_2_may, out.width="100%", fig.cap="Elementos de 1 y 2 con mayor contribución"}
+```{r elem12may, echo=FALSE, fig.cap="Elementos de 1 y 2 con mayor contribución"}
 knitr::include_graphics("interaccion_var_1_2_mayor.pdf")
 ```
 
-Se obtienen los gráficos . El primero muestra la interacción desglosada por dimensiones, mientras que el segundo señala los elementos con mayor contribución.
+La figura \@ref(fig:elem12) muestran tres cuadros: de izquierda a derecha señala los lugares, las variables medioambientales y las estaciones del año. En todos está el componente 1 en el eje horizontal y el componente dos en el de las ordenadas. Del mismo modo, la figura \@ref(fig:elem12may) solamente muestra los elementos con mayor contribución en cada componente. Por ejemplo: en los sitios `S4` y `S5` están positivamente relacionados con el `pH` y el `Oxygen` y negativamente en todas las épocas del año. Pero como el signo del *core array* es negativo, quedará en total una relación positiva.
 
-<!-- \@ref{fig:elem_1_2} y \@ref{fig:elem_1_2_may} -->
-Continuando con el ejercicio, los siguientes elementos serían:
+Esta interpretación se repite para cada uno de los elementos que se deseen. Esto implica que el método para interpretar  las figuras \@ref(fig:elem34) y \@ref(fig:elem34may) será el mismo que para las figuras anteriores.
 
 ```{r}
-TUCKER3(X = var_cubo,
-        norm = TRUE,
-        p = 3,
-        q = 4,
-        r = 3,
-        P1 = 2,
-        P2 = 3,
-        Q1 = 3,
-        Q2 = 4,
-        R1 = 1,
-        R2 = 2,
-        coloresf = col_filas,
-        coloresc = col_col_y)
+TUCKER3(X = var_cubo, norm = TRUE, p = 3, q = 4, r = 3,
+        P1 = 2, P2 = 3, Q1 = 3, Q2 = 4, R1 = 1, R2 = 2,
+        coloresf = col_filas, coloresc = col_col_y)
 ```
 
-```{r elem_3_4, out.width="100%", fig.cap="Biplots de contribuciones 1 y 2"}
+```{r elem34, out.width="100%", fig.cap="Biplots de contribucionesc 3 y 4"}
 knitr::include_graphics("interaccion_var_3_4.pdf")
 ```
 
-```{r elem_3_4_may, out.width="100%", fig.cap="Elementos de 1 y 2 con mayor contribución"}
+```{r elem34may, out.width="100%", fig.cap="Elementos de 3 y 4 con mayor contribución"}
 knitr::include_graphics("interaccion_var_3_4_mayor.pdf")
 ```
 
-<!-- Así también, los gráficos \@ref{fig:elem_3_4} y \@ref{fig:elem_3_4_may} -->
 
 
 ## Conclusiones 
@@ -559,4 +569,3 @@ knitr::include_graphics("interaccion_var_3_4_mayor.pdf")
 Con este manual se intentó mostrar cómo aplicar el modelo Tucker-3 para datos de tres dimensiones. Esta técnica permite fácilmente desglosar las interacciones entre variables que de otra forma solo se podrían obtener agregadamente. Existe mucha investigación por realizar con estas técnicas, con especial atención a datos espaciales.
 
 # Bibliografía
-
