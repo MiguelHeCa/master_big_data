@@ -435,10 +435,6 @@ TUCKER3(X = var_cubo,
 ```
 
 
-```{r encima_debajo, out.width = "100%", fig.cap = "Elementos de la contribución media"}
-knitr::include_graphics("encima_debajo_var.pdf")
-```
-
 En primer lugar, da como resultado el gráfico  que indica los elementos por encima y por debajo de la contribución media. En el cuadro de la izquierda señala que los lugares `S1`, `S3`, `S4` y `S5` se encuentran por encima de la media. Análogamente, al cuadro de en medio corresponden a `Oxygen`, `Temp` y `pH`. Finalmente, en el cuadro de la derecha, las estaciones de verano y otoño tienen una contribución menor.
 
 <!-- \@ref(fig:encima_debajo) -->
@@ -446,10 +442,6 @@ En primer lugar, da como resultado el gráfico  que indica los elementos por enc
 Asimismo, se crea una nueva tabla de resultados `results.txt` con el *core array* (el más importante), las contribuciones y los porcentajes de ajuste.
 
 En el caso del *core array*, la tabla está dividida en dos partes: en un lado se muestra la suma de cuadrados residual (los elementos del `core array`) y en otra la varianza explicada (su desglose para cada una de las combinaciones). Además, los modos indican las dimensiones a las que se refieren. Modo 1 corresponde a `p`, Modo 2 a `q` y Modo 3 a `r`.
-
-```{r core_array, out.width="100%", fig.cap="Configuración del core array."}
-knitr::include_graphics("core_array.pdf")
-```
 
 
 Table: Porcentajes de ajuste
@@ -488,72 +480,7 @@ Argumento   Descripción
 
 : Argumentos para interacciones entre variables
 
-En suma, el criterio para elegir las combinaciones de signos adecuados es considerar los elementos que tengan la varianza explicada más alta, con los elementos de valores residuales con signo positivo. 
-
-Luego entonces, conforme a lo señalado en el esquema , el elemento con la varianza explicada más alta  es $52.95\%$ y corresponde a los modos 1, 1, 1 y el signo de la varianza core es negativo (porque la suma de residuos es $-11.27$) . El segundo elemento de los modos 2, 2, 1 es $8.92\%$, también con signo negativo. Le sigue el elemento con modos 3, 3, 1 con $5.49\%$ de varianza explicada y signo positivo. Finalmente, el cuarto elemento se encuentra en los modos 3,4,2 con $2.25\%$ de varianza explicada y signo positivo. 
-
-<!-- \@ref{fig:core_array} -->
-
-Cabe señalar que en los modelos **Tucker**, los signos del `core array` en conjunto con los de las contribuciones determina la dirección de interacción entre las dimensiones.
-
-Se interpretan las primeras dos configuraciones de los elementos. Notar que en el nuevo código no es necesario pedir las contibuciones:
-
-```{r, eval=FALSE}
-TUCKER3(X = var_cubo,
-        norm = TRUE,
-        p = 3,
-        q = 4,
-        r = 3,
-        P1 = 1,
-        P2 = 2,
-        Q1 = 1,
-        Q2 = 2,
-        R1 = 1,
-        R2 = 2,
-        coloresf = col_filas,
-        coloresc = col_col_y)
-```
-
-```{r elem_1_2, out.width="100%", fig.cap="Biplots de contribuciones 1 y 2"}
-knitr::include_graphics("interaccion_var_1_2.pdf")
-```
-
-```{r elem_1_2_may, out.width="100%", fig.cap="Elementos de 1 y 2 con mayor contribución"}
-knitr::include_graphics("interaccion_var_1_2_mayor.pdf")
-```
-
-Se obtienen los gráficos . El primero muestra la interacción desglosada por dimensiones, mientras que el segundo señala los elementos con mayor contribución.
-
-<!-- \@ref{fig:elem_1_2} y \@ref{fig:elem_1_2_may} -->
-Continuando con el ejercicio, los siguientes elementos serían:
-
-```{r}
-TUCKER3(X = var_cubo,
-        norm = TRUE,
-        p = 3,
-        q = 4,
-        r = 3,
-        P1 = 2,
-        P2 = 3,
-        Q1 = 3,
-        Q2 = 4,
-        R1 = 1,
-        R2 = 2,
-        coloresf = col_filas,
-        coloresc = col_col_y)
-```
-
-```{r elem_3_4, out.width="100%", fig.cap="Biplots de contribuciones 1 y 2"}
-knitr::include_graphics("interaccion_var_3_4.pdf")
-```
-
-```{r elem_3_4_may, out.width="100%", fig.cap="Elementos de 1 y 2 con mayor contribución"}
-knitr::include_graphics("interaccion_var_3_4_mayor.pdf")
-```
-
-<!-- Así también, los gráficos \@ref{fig:elem_3_4} y \@ref{fig:elem_3_4_may} -->
-
-
+En suma, el criterio para elegir las combinaciones de signos adecuados es considerar los elementos que tengan la varianza explicada más alta, con los elementos de valores residuales con 
 ## Conclusiones 
 
 Con este manual se intentó mostrar cómo aplicar el modelo Tucker-3 para datos de tres dimensiones. Esta técnica permite fácilmente desglosar las interacciones entre variables que de otra forma solo se podrían obtener agregadamente. Existe mucha investigación por realizar con estas técnicas, con especial atención a datos espaciales.

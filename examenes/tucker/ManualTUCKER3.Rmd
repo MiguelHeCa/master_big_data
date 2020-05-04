@@ -7,8 +7,6 @@ output:
     latex_engine: xelatex
     toc: false
     number_sections: false
-    include:
-      in_header: preamble.tex
 documentclass: article
 geometry: margin=1in
 mainfont: "Open Sans"
@@ -17,9 +15,13 @@ linestretch: 1.15
 lang: es
 csl: https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl
 bibliography: tucker.bib
+header-includes:
+  - \makeatletter
+  - \def\verbatim@nolig@list{}
+  - \makeatother
 ---
 
-```{r setup, echo=FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
